@@ -1,0 +1,13 @@
+LDA #$00
+LDA #$81
+LDA #$02
+TAX
+ASL A
+STA #$00
+STX #$01
+
+ASL A
+ASL A
+ASL A
+TAY
+STY #$02

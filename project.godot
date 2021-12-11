@@ -1,0 +1,45 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Control",
+"class": "DebugDisplay",
+"language": "GDScript",
+"path": "res://src/globals/DebugDisplay.gd"
+}, {
+"base": "Panel",
+"class": "ScriptPanel",
+"language": "GDScript",
+"path": "res://src/globals/ScriptPanel.gd"
+} ]
+_global_script_class_icons={
+"DebugDisplay": "",
+"ScriptPanel": ""
+}
+
+[application]
+
+config/name="NESGodot"
+run/main_scene="res://NESDebug.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Nes="*res://src/globals/NES.tscn"
+Opcodes="*res://src/globals/Opcodes.tscn"
+Helpers="*res://src/globals/Helpers.tscn"
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
