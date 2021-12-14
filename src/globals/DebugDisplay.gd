@@ -18,14 +18,18 @@ var ready_to_render = true
 var _page = 0
 
 
+func _ready():
+	Nes.connect("tick", self, "on_tick")
+
+
 func _process(delta):
 	if ready_to_render:
-		a_label.text = "0x%02X"  % Nes.registers[Nes.CPU_Registers.A]
-		x_label.text = "0x%02X"  % Nes.registers[Nes.CPU_Registers.X]
-		y_label.text = "0x%02X"  % Nes.registers[Nes.CPU_Registers.Y]
-		pc_label.text = "0x%02X" % Nes.registers[Nes.CPU_Registers.PC]
-		s_label.text = "0x%02X"  % Nes.registers[Nes.CPU_Registers.S]
-		p_label.text = "0x%02X"  % Nes.registers[Nes.CPU_Registers.P]
+		a_label.text = "0x%02X"  % Nes.registers[Consts.CPU_Registers.A]
+		x_label.text = "0x%02X"  % Nes.registers[Consts.CPU_Registers.X]
+		y_label.text = "0x%02X"  % Nes.registers[Consts.CPU_Registers.Y]
+		pc_label.text = "0x%02X" % Nes.registers[Consts.CPU_Registers.PC]
+		s_label.text = "0b%s"  % Helpers.to_binary_string(Nes.registers[Consts.CPU_Registers.S])
+		p_label.text = "0x%02X"  % Nes.registers[Consts.CPU_Registers.P]
 		
 		var row_index = 0
 		var page_size = rows_per_page * bytes_per_row
@@ -44,3 +48,7 @@ func _process(delta):
 				memory.text += " "
 		
 		ready_to_render = false
+
+
+func on_tick():
+	ready_to_render = true

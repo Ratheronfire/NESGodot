@@ -10,9 +10,19 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Control",
+"class": "CSVEditor",
+"language": "GDScript",
+"path": "res://addons/file-editor/scripts/CSVEditor.gd"
+}, {
+"base": "Control",
 "class": "DebugDisplay",
 "language": "GDScript",
 "path": "res://src/globals/DebugDisplay.gd"
+}, {
+"base": "HTTPRequest",
+"class": "GoogleTranslateAPI",
+"language": "GDScript",
+"path": "res://addons/file-editor/scripts/GoogleTranslatorAPI.gd"
 }, {
 "base": "Panel",
 "class": "ScriptPanel",
@@ -20,7 +30,9 @@ _global_script_classes=[ {
 "path": "res://src/globals/ScriptPanel.gd"
 } ]
 _global_script_class_icons={
+"CSVEditor": "",
 "DebugDisplay": "",
+"GoogleTranslateAPI": "",
 "ScriptPanel": ""
 }
 
@@ -35,6 +47,12 @@ config/icon="res://icon.png"
 Nes="*res://src/globals/NES.tscn"
 Opcodes="*res://src/globals/Opcodes.tscn"
 Helpers="*res://src/globals/Helpers.tscn"
+LastOpenedFiles="*res://addons/file-editor/scripts/LastOpenedFiles.gd"
+Consts="*res://src/globals/Consts.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/file-editor/plugin.cfg" )
 
 [physics]
 

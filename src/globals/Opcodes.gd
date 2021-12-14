@@ -1,375 +1,352 @@
 extends Node
 
-enum AddressingModes {
-	Implied,
-	Immediate,
-	Absolute,
-	ZeroPage,
-	Relative,
-	Indirect,
-	ZPInd_X,
-	ZPInd_Y
-}
-
 
 class OperandAddressingContext:
 	var address_mode: int
-	var index_by: int
-	var value: int
+	var value_low: int
+	var value_high: int = -1
 	
-	func _init(value, address_mode: int, index_by: int = Nes.CPU_Registers.A):
-		if value is String:
-			value = Helpers.hex_string_to_decimal(value)
-		self.value = value
-		
+	func _init(address_mode: int, value_low, value_high = -1):
 		self.address_mode = address_mode
-		self.index_by = index_by
+		
+		if value_low is String:
+			value_low = Helpers.hex_string_to_decimal(value_low)
+		self.value_low = value_low
+		if value_high is String:
+			value_high = Helpers.hex_string_to_decimal(value_high)
+		self.value_high = value_high
 
 
-func LDA(operand: String):
-	var context = _determine_addressing_context(operand)
-	var value = _read_value_from_memory(context.address_mode, context.value, context.index_by)
-	Nes.registers[Nes.CPU_Registers.A] = value
+func LDA(context: OperandAddressingContext):
+	var value = _read_value_from_memory(context)
+	Nes.registers[Consts.CPU_Registers.A] = value
 	
-	Nes.set_status_flag(Nes.StatusFlags.Zero, value == 0)
-	Nes.set_status_flag(Nes.StatusFlags.Negative, value >= 128)
+	Nes.set_status_flag(Consts.StatusFlags.Zero, value == 0)
+	Nes.set_status_flag(Consts.StatusFlags.Negative, value >= 128)
 
 
-func LDX(operand: String):
-	var context = _determine_addressing_context(operand)
-	var value = _read_value_from_memory(context.address_mode, context.value, context.index_by)
-	Nes.registers[Nes.CPU_Registers.X] = value
+func LDX(context: OperandAddressingContext):
+	var value = _read_value_from_memory(context)
+	Nes.registers[Consts.CPU_Registers.X] = value
 	
-	Nes.set_status_flag(Nes.StatusFlags.Zero, value == 0)
-	Nes.set_status_flag(Nes.StatusFlags.Negative, value >= 128)
+	Nes.set_status_flag(Consts.StatusFlags.Zero, value == 0)
+	Nes.set_status_flag(Consts.StatusFlags.Negative, value >= 128)
 
 
-func LDY(operand: String):
-	var context = _determine_addressing_context(operand)
-	var value = _read_value_from_memory(context.address_mode, context.value, context.index_by)
-	Nes.registers[Nes.CPU_Registers.Y] = value
+func LDY(context: OperandAddressingContext):
+	var value = _read_value_from_memory(context)
+	Nes.registers[Consts.CPU_Registers.Y] = value
 	
-	Nes.set_status_flag(Nes.StatusFlags.Zero, value == 0)
-	Nes.set_status_flag(Nes.StatusFlags.Negative, value >= 128)
+	Nes.set_status_flag(Consts.StatusFlags.Zero, value == 0)
+	Nes.set_status_flag(Consts.StatusFlags.Negative, value >= 128)
 
 
-func STA(operand: String):
-	var context = _determine_addressing_context(operand)
-	_write_value_to_memory(context.address_mode, Nes.registers[Nes.CPU_Registers.A], context.value, context.index_by)
+func STA(context: OperandAddressingContext):
+	_write_value_to_memory(context, Nes.registers[Consts.CPU_Registers.A])
 
 
-func STX(operand: String):
-	var context = _determine_addressing_context(operand)
-	_write_value_to_memory(context.address_mode, Nes.registers[Nes.CPU_Registers.X], context.value, context.index_by)
+func STX(context: OperandAddressingContext):
+	_write_value_to_memory(context, Nes.registers[Consts.CPU_Registers.X])
 
 
-func STY(operand: String):
-	var context = _determine_addressing_context(operand)
-	_write_value_to_memory(context.address_mode, Nes.registers[Nes.CPU_Registers.Y], context.value, context.index_by)
+func STY(context: OperandAddressingContext):
+	_write_value_to_memory(context, Nes.registers[Consts.CPU_Registers.Y])
 
 
-func ADC():
+func ADC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func SBC():
+func SBC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func INC():
+func INC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func INX():
+func INX(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func INY():
+func INY(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func DEC():
+func DEC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func DEX():
+func DEX(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func DEY():
+func DEY(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func ASL(operand: String):
-	var context = _determine_addressing_context(operand)
+func ASL(context: OperandAddressingContext):
+	var value = _read_value_from_memory(context)
 	
-	var shifted_value = context.value << 1
-	Nes.set_status_flag(Nes.StatusFlags.Carry, context.value & 0x80)
-	Nes.set_status_flag(Nes.StatusFlags.Zero, shifted_value == 0)
-	Nes.set_status_flag(Nes.StatusFlags.Negative, shifted_value >= 128)
+	var shifted_value = (value << 1) & 0xFF
+	Nes.set_status_flag(Consts.StatusFlags.Carry, value | 0x80)
+	Nes.set_status_flag(Consts.StatusFlags.Zero, shifted_value == 0)
+	Nes.set_status_flag(Consts.StatusFlags.Negative, shifted_value >= 128)
 	
-	if context.address_mode == AddressingModes.Implied:
-		Nes.registers[Nes.CPU_Registers.A] = shifted_value
-	else:
-		_write_value_to_memory(context.address_mode, context.value, context.index_by)
+	_write_value_to_memory(context, shifted_value)
 
 
-func LSR():
+func LSR(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func ROL():
+func ROL(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func ROR():
+func ROR(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func AND():
+func AND(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func ORA():
+func ORA(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func EOR():
+func EOR(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func CMP():
+func CMP(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func CPX():
+func CPX(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func CPY():
+func CPY(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BIT():
+func BIT(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BCC():
+func BCC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BCS():
+func BCS(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BNE():
+func BNE(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BEQ():
+func BEQ(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BPL():
+func BPL(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BMI():
+func BMI(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BVC():
+func BVC(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func BVS():
+func BVS(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func TAX():
-	_transfer(Nes.CPU_Registers.A, Nes.CPU_Registers.X)
+func TAX(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.A, Consts.CPU_Registers.X)
 
 
-func TXA():
-	_transfer(Nes.CPU_Registers.X, Nes.CPU_Registers.A)
+func TXA(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.X, Consts.CPU_Registers.A)
 
 
-func TAY():
-	_transfer(Nes.CPU_Registers.A, Nes.CPU_Registers.Y)
+func TAY(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.A, Consts.CPU_Registers.Y)
 
 
-func TYA():
-	_transfer(Nes.CPU_Registers.Y, Nes.CPU_Registers.A)
+func TYA(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.Y, Consts.CPU_Registers.A)
 
 
-func TSX():
-	_transfer(Nes.CPU_Registers.S, Nes.CPU_Registers.X)
+func TSX(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.S, Consts.CPU_Registers.X)
 
 
-func TXS():
-	_transfer(Nes.CPU_Registers.X, Nes.CPU_Registers.S)
+func TXS(context: OperandAddressingContext):
+	_transfer(Consts.CPU_Registers.X, Consts.CPU_Registers.S)
 
 
-func PHA():
+func PHA(context: OperandAddressingContext):
+	Nes.registers[Consts.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.S] + 1
+	Nes.memory[Consts.Cpu.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.A]
+
+
+func PLA(context: OperandAddressingContext):
+	Nes.registers[Consts.CPU_Registers.A] = Nes.memory[Consts.Cpu.CPU_Registers.S]
+	Nes.registers[Consts.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.S] - 1
+
+
+func PHP(context: OperandAddressingContext):
+	Nes.registers[Consts.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.S] + 1
+	Nes.memory[Consts.Cpu.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.P]
+
+
+func PLP(context: OperandAddressingContext):
+	Nes.registers[Consts.CPU_Registers.P] = Nes.memory[Consts.Cpu.CPU_Registers.S]
+	Nes.registers[Consts.CPU_Registers.S] = Nes.registers[Consts.CPU_Registers.S] - 1
+
+
+func JMP(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func PLA():
+func JSR(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func PHP():
+func RTS(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func PLP():
+func RTI(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func JMP():
+func CLC(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.Carry, false)
+
+
+func SEC(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.Carry, true)
+
+
+func CLD(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.Decimal, false)
+
+
+func SED(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.Decimal, true)
+
+
+func CLI(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.InterruptDisable, false)
+
+
+func SEI(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.InterruptDisable, true)
+
+
+func CLV(context: OperandAddressingContext):
+	Nes.set_status_flag(Consts.StatusFlags.Overflow, true)
+
+
+func BRK(context: OperandAddressingContext):
 	print("Opcode not implemented.")
 	assert(false)
 
 
-func JSR():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func RTS():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func RTI():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func CLC():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func SEC():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func CLD():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func SED():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func CLI():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func SEI():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func CLV():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func BRK():
-	print("Opcode not implemented.")
-	assert(false)
-
-
-func NOP():
+func NOP(context: OperandAddressingContext):
 	pass
 
 
-func _determine_addressing_context(operand: String) -> OperandAddressingContext:
+func determine_addressing_context(operand: String) -> OperandAddressingContext:
 	var regex = RegEx.new()
 	var result: RegExMatch
 	
-	if operand == "A":
-		return OperandAddressingContext.new(Nes.registers[Nes.CPU_Registers.A], AddressingModes.Implied)
+	if operand == "":
+		return OperandAddressingContext.new(Consts.AddressingModes.Implied, Nes.registers[Consts.CPU_Registers.A])
+	elif operand == "A":
+		return OperandAddressingContext.new(Consts.AddressingModes.Accumulator, Nes.registers[Consts.CPU_Registers.A])
 	
 	regex.compile("#\\$([0-9A-Fa-f]+)")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.Immediate)
+		return OperandAddressingContext.new(Consts.AddressingModes.Immediate, result.get_string(1))
 	
-	regex.compile("\\$([0-9A-Fa-f]{4})")
+	regex.compile("\\$([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.Absolute)
+		return OperandAddressingContext.new(Consts.AddressingModes.Absolute, result.get_string(2), result.get_string(1))
 	
-	regex.compile("\\$()[0-9A-Fa-f]{4}),(X|Y)")
+	regex.compile("\\$([0-9A-Fa-f]{2})([0-9A-Fa-f]{2}),(X|Y)")
 	result = regex.search(operand)
 	if result:
-		var index_char = result.get_string(2)
-		var index_by = Nes.CPU_Registers.X if index_char == "X" else Nes.CPU_Registers.Y
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.Absolute, index_by)
+		var index_char = result.get_string(3)
+		var address_mode = Consts.AddressingModes.Absolute_X if index_char == "X" else Consts.AddressingModes.Absolute_Y
+		return OperandAddressingContext.new(address_mode, result.get_string(2), result.get_string(1))
 	
-	regex.compile("\\$([0-9A-Fa-f]{4})")
+	regex.compile("\\$([0-9A-Fa-f]{2})")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.ZeroPage)
+		return OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, result.get_string(1))
 	
-	regex.compile("\\$([0-9A-Fa-f]{4})")
+	regex.compile("\\(\\$([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})\\)")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.Indirect)
+		return OperandAddressingContext.new(Consts.AddressingModes.Indirect, result.get_string(2), result.get_string(1))
 	
 	regex.compile("\\$([0-9A-Fa-f]{2}),(X|Y)")
 	result = regex.search(operand)
 	if result:
 		var index_char = result.get_string(2)
-		var index_by = Nes.CPU_Registers.X if index_char == "X" else Nes.CPU_Registers.Y
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.ZeroPage, index_by)
+		var address_mode = Consts.AddressingModes.Absolute_X if index_char == "X" else Consts.AddressingModes.Absolute_Y
+		return OperandAddressingContext.new(address_mode, result.get_string(1))
 	
 	regex.compile("\\(\\$([0-9A-Fa-f]{2}),X\\)")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.ZPInd_X)
+		return OperandAddressingContext.new(Consts.AddressingModes.ZPInd_X, result.get_string(1))
 	
 	regex.compile("\\(\\$([0-9A-Fa-f]{2})\\),Y")
 	result = regex.search(operand)
 	if result:
-		return OperandAddressingContext.new(result.get_string(1), AddressingModes.ZPInd_Y)
+		return OperandAddressingContext.new(Consts.AddressingModes.ZPInd_Y, result.get_string(1))
 	
 	print_debug("Unable to determine addressing mode. Operand: %s" % operand)
 	return null
@@ -379,51 +356,45 @@ func _transfer(from_register: int, to_register: int):
 	Nes.registers[to_register] = Nes.registers[from_register]
 
 
-func _load(to_register: int, addressing_mode: int, value: int, index_by: int = Nes.CPU_Registers.A):
-	Nes.registers[to_register] = _read_value_from_memory(addressing_mode, value, index_by)
-
-
-func _write_value_to_memory(addressing_mode: int, value: int, address = -1, index_by: int = Nes.CPU_Registers.A):
-	if addressing_mode == AddressingModes.Immediate:
-		Nes.memory[address] = value
-	elif addressing_mode == AddressingModes.Absolute or addressing_mode == AddressingModes.ZeroPage:
-		if index_by == Nes.CPU_Registers.X:
-			address += Nes.registers[Nes.CPU_Registers.X]
-		if index_by == Nes.CPU_Registers.Y:
-			address += Nes.registers[Nes.CPU_Registers.Y]
-		
-		Nes.memory[address] = value
-	elif addressing_mode == AddressingModes.Relative:
-		assert(value >= -128 and value <= 127)
-		
-		var pc = Nes.registers[Nes.CPU_Registers.PC]
-		Nes.memory[pc + address] = value
-	elif addressing_mode == AddressingModes.Indirect:
-		var ram_value = Nes.memory[address]
-		
-		Nes.memory[ram_value] = value
+func _write_value_to_memory(context: OperandAddressingContext, value, implied_register = Consts.CPU_Registers.A):
+	if context.address_mode == Consts.AddressingModes.Accumulator:
+		Nes.registers[Consts.CPU_Registers.A] = value
+	elif context.address_mode == Consts.AddressingModes.Implied:
+		Nes.registers[implied_register] = value
 	else:
-		print_debug("Addressing mode not implemented.")
+		var address = _determine_memory_address(context)
+		Nes.memory[address] = value
 
 
-func _read_value_from_memory(addressing_mode: int, value_or_addr: int, index_by: int = Nes.CPU_Registers.A):
-	if addressing_mode == AddressingModes.Immediate:
-		return value_or_addr
-	elif addressing_mode == AddressingModes.Absolute or addressing_mode == AddressingModes.ZeroPage:
-		if index_by == Nes.CPU_Registers.X:
-			value_or_addr += Nes.registers[Nes.CPU_Registers.X]
-		if index_by == Nes.CPU_Registers.Y:
-			value_or_addr += Nes.registers[Nes.CPU_Registers.Y]
-		
-		return Nes.memory[value_or_addr]
-	elif addressing_mode == AddressingModes.Relative:
-		assert(value_or_addr >= -128 and value_or_addr <= 127)
-		
-		var pc = Nes.registers[Nes.CPU_Registers.PC]
-		return Nes.memory[pc + value_or_addr]
-	elif addressing_mode == AddressingModes.Indirect:
-		var ram_value = Nes.memory[value_or_addr]
-		
-		return Nes.memory[ram_value]
+func _read_value_from_memory(context: OperandAddressingContext, implied_register = Consts.CPU_Registers.A):
+	if context.address_mode == Consts.AddressingModes.Immediate:
+		return context.value_low
+	elif context.address_mode == Consts.AddressingModes.Accumulator:
+		return Nes.registers[Consts.CPU_Registers.A]
+	elif context.address_mode == Consts.AddressingModes.Implied:
+		return Nes.registers[implied_register]
 	else:
-		print_debug("Addressing mode not implemented.")
+		var address = _determine_memory_address(context)
+		return Nes.memory[address]
+
+
+func _determine_memory_address(context: OperandAddressingContext):
+	var address = context.value_low
+	
+	if context.address_mode in [Consts.AddressingModes.Absolute, Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y, Consts.AddressingModes.Indirect]:
+		address += context.value_high * 256
+	
+	if context.address_mode in [Consts.AddressingModes.Absolute_X, Consts.AddressingModes.ZPInd_X, Consts.AddressingModes.ZeroPage_X]:
+		address += Nes.registers[Consts.CPU_Registers.X]
+	
+	if context.address_mode in [Consts.AddressingModes.Absolute_Y, Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.ZeroPage_Y]:
+		address += Nes.registers[Consts.CPU_Registers.Y]
+	
+	if context.address_mode == Consts.AddressingModes.Relative:
+		assert(context.value_low >= -128 and context.value_low <= 127)
+		address = Nes.registers[Consts.CPU_Registers.PC] + context.value_low
+	
+	if context.address_mode == Consts.AddressingModes.Indirect:
+		address = Nes.memory[address] * 16 + Nes.memory[address + 1]
+	
+	return address

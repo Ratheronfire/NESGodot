@@ -14,20 +14,20 @@ __meta__ = {
 [node name="Registers" type="ScrollContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -104.0
-margin_right = -4.0
+margin_left = -150.0
 margin_bottom = 140.0
+rect_min_size = Vector2( 150, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Registers"]
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 140.0
-rect_min_size = Vector2( 100, 0 )
+rect_min_size = Vector2( 150, 0 )
 
 [node name="A" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 20.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/A"]
@@ -39,15 +39,15 @@ text = "A"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/A"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
+rect_min_size = Vector2( 125, 20 )
 text = "0x0"
 readonly = true
 
 [node name="X" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 24.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 44.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/X"]
@@ -59,15 +59,15 @@ text = "X"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/X"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
+rect_min_size = Vector2( 125, 20 )
 text = "0x0"
 readonly = true
 
 [node name="Y" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 48.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 68.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/Y"]
@@ -79,15 +79,15 @@ text = "Y"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/Y"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
+rect_min_size = Vector2( 125, 20 )
 text = "0x0"
 readonly = true
 
 [node name="PC" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 72.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 92.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/PC"]
@@ -99,15 +99,15 @@ text = "PC"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/PC"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
+rect_min_size = Vector2( 125, 20 )
 text = "0x0"
 readonly = true
 
 [node name="S" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 96.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 116.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/S"]
@@ -119,15 +119,15 @@ text = "S"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/S"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
-text = "0x0"
+rect_min_size = Vector2( 125, 20 )
+text = "0b00000000"
 readonly = true
 
 [node name="P" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 120.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 140.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/P"]
@@ -139,9 +139,9 @@ text = "P"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/P"]
 margin_left = 20.0
-margin_right = 100.0
+margin_right = 145.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 80, 20 )
+rect_min_size = Vector2( 125, 20 )
 text = "0x0"
 readonly = true
 
@@ -169,6 +169,9 @@ text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 ..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ScriptPanel" type="Panel" parent="."]
 anchor_left = 1.0
@@ -210,6 +213,23 @@ margin_right = 384.0
 margin_bottom = 54.0
 text = "Run Script"
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScriptPanel/VBoxContainer"]
+margin_top = 58.0
+margin_right = 384.0
+margin_bottom = 82.0
+
+[node name="StepByStepCheckBox" type="CheckBox" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
+margin_right = 136.0
+margin_bottom = 24.0
+pressed = true
+text = "Run Step By Step"
+
+[node name="StepButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
+margin_left = 140.0
+margin_right = 180.0
+margin_bottom = 24.0
+text = "Step"
+
 [node name="FileDialog" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -227,4 +247,6 @@ __meta__ = {
 
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/RunScriptButton" to="ScriptPanel" method="_on_RunScriptButton_pressed"]
+[connection signal="toggled" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepByStepCheckBox" to="ScriptPanel" method="_on_StepByStepCheckBox_toggled"]
+[connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepButton" to="ScriptPanel" method="_on_StepButton_pressed"]
 [connection signal="file_selected" from="FileDialog" to="ScriptPanel" method="_on_FileDialog_file_selected"]
