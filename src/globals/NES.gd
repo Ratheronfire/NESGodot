@@ -8,7 +8,8 @@ onready var registers = {
 	Consts.CPU_Registers.X:  0x00,
 	Consts.CPU_Registers.Y:  0x00,
 	Consts.CPU_Registers.PC: 0x00,
-	Consts.CPU_Registers.S:  0xFD,
+	Consts.CPU_Registers.SP: 0xFF,
+	Consts.CPU_Registers.SR: 0xFD,
 	Consts.CPU_Registers.P:  0x34
 }
 
@@ -31,7 +32,8 @@ func init():
 		Consts.CPU_Registers.X:  0x00,
 		Consts.CPU_Registers.Y:  0x00,
 		Consts.CPU_Registers.PC: 0x00,
-		Consts.CPU_Registers.S:  0xFD,
+		Consts.CPU_Registers.SP: 0xFF,
+		Consts.CPU_Registers.SR: 0xFD,
 		Consts.CPU_Registers.P:  0x34
 	}
 
@@ -80,14 +82,14 @@ func start_running():
 
 
 func get_status_flag(status: int):
-	return registers[Consts.CPU_Registers.S] & status
+	return registers[Consts.CPU_Registers.SR] & status
 
 
 func set_status_flag(status: int, state: bool):
 	if state:
-		registers[Consts.CPU_Registers.S] |= status
+		registers[Consts.CPU_Registers.SR] |= status
 	else:
-		registers[Consts.CPU_Registers.S] &= ~status
+		registers[Consts.CPU_Registers.SR] &= ~status
 
 
 func compile_script(script: String):

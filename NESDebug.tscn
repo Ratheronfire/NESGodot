@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
+[ext_resource path="res://assets/monospace_theme.tres" type="Theme" id=1]
 [ext_resource path="res://src/globals/ScriptPanel.gd" type="Script" id=2]
 [ext_resource path="res://src/globals/DebugDisplay.gd" type="Script" id=4]
 
@@ -10,144 +11,239 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+bytes_per_page = 256
 
 [node name="Registers" type="ScrollContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -150.0
 margin_bottom = 140.0
-rect_min_size = Vector2( 150, 0 )
+rect_min_size = Vector2( 150, 200 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Registers"]
 margin_right = 150.0
-margin_bottom = 140.0
-rect_min_size = Vector2( 150, 0 )
+margin_bottom = 200.0
+rect_min_size = Vector2( 150, 200 )
 
 [node name="A" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_right = 150.0
-margin_bottom = 20.0
+margin_bottom = 25.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/A"]
-margin_top = 3.0
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
 text = "A"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/A"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
 [node name="X" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 150.0
-margin_bottom = 44.0
+margin_bottom = 54.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/X"]
-margin_top = 3.0
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
 text = "X"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/X"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
 [node name="Y" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 48.0
+margin_top = 58.0
 margin_right = 150.0
-margin_bottom = 68.0
+margin_bottom = 83.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/Y"]
-margin_top = 3.0
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
 text = "Y"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/Y"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
 [node name="PC" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 72.0
+margin_top = 87.0
 margin_right = 150.0
-margin_bottom = 92.0
+margin_bottom = 112.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/PC"]
-margin_top = 3.0
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
 text = "PC"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/PC"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
-[node name="S" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 96.0
+[node name="SP" type="HBoxContainer" parent="Registers/VBoxContainer"]
+margin_top = 116.0
 margin_right = 150.0
-margin_bottom = 116.0
+margin_bottom = 141.0
 
-[node name="Label" type="Label" parent="Registers/VBoxContainer/S"]
-margin_top = 3.0
+[node name="Label" type="Label" parent="Registers/VBoxContainer/SP"]
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
-text = "S"
+text = "SP"
 
-[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/S"]
+[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/SP"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
+text = "0x0"
+readonly = true
+
+[node name="SR" type="HBoxContainer" parent="Registers/VBoxContainer"]
+margin_top = 145.0
+margin_right = 150.0
+margin_bottom = 170.0
+
+[node name="Label" type="Label" parent="Registers/VBoxContainer/SR"]
+margin_top = 5.0
+margin_right = 16.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 16, 0 )
+text = "SR"
+
+[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/SR"]
+margin_left = 20.0
+margin_right = 145.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0b00000000"
 readonly = true
 
 [node name="P" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 120.0
+margin_top = 174.0
 margin_right = 150.0
-margin_bottom = 140.0
+margin_bottom = 199.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/P"]
-margin_top = 3.0
+margin_top = 5.0
 margin_right = 16.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 16, 0 )
 text = "P"
 
 [node name="Text" type="TextEdit" parent="Registers/VBoxContainer/P"]
 margin_left = 20.0
 margin_right = 145.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 125, 20 )
+margin_bottom = 25.0
+rect_min_size = Vector2( 125, 25 )
+theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
-[node name="Memory" type="TextEdit" parent="."]
-margin_right = 492.0
-margin_bottom = 448.0
+[node name="MemoryPanel" type="Panel" parent="."]
+margin_right = 488.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Page1" type="RichTextLabel" parent="MemoryPanel"]
+margin_top = 3.0
+margin_right = 32.0
+margin_bottom = 20.0
+text = "Page"
+
+[node name="PageNumber" type="TextEdit" parent="MemoryPanel"]
+margin_left = 32.0
+margin_right = 80.0
+margin_bottom = 24.0
+text = "0"
+
+[node name="Page2" type="RichTextLabel" parent="MemoryPanel"]
+margin_left = 80.0
+margin_top = 3.0
+margin_right = 136.0
+margin_bottom = 20.0
+text = "Of X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FirstButton" type="Button" parent="MemoryPanel"]
+margin_left = 136.0
+margin_right = 164.0
+margin_bottom = 20.0
+text = "<<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PrevButton" type="Button" parent="MemoryPanel"]
+margin_left = 168.0
+margin_right = 196.0
+margin_bottom = 20.0
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextButton" type="Button" parent="MemoryPanel"]
+margin_left = 200.0
+margin_right = 228.0
+margin_bottom = 20.0
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LastButton" type="Button" parent="MemoryPanel"]
+margin_left = 232.0
+margin_right = 260.0
+margin_bottom = 20.0
+text = ">>"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MemoryDisplay" type="TextEdit" parent="MemoryPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 24.0
+theme = ExtResource( 1 )
 text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -177,8 +273,8 @@ __meta__ = {
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -384.0
-margin_top = 142.0
-margin_bottom = 264.0
+margin_top = 206.0
+margin_bottom = 328.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -245,6 +341,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="text_changed" from="MemoryPanel/PageNumber" to="." method="_on_PageNumber_text_changed"]
+[connection signal="pressed" from="MemoryPanel/FirstButton" to="." method="_on_FirstButton_pressed"]
+[connection signal="pressed" from="MemoryPanel/PrevButton" to="." method="_on_PrevButton_pressed"]
+[connection signal="pressed" from="MemoryPanel/NextButton" to="." method="_on_NextButton_pressed"]
+[connection signal="pressed" from="MemoryPanel/LastButton" to="." method="_on_LastButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/RunScriptButton" to="ScriptPanel" method="_on_RunScriptButton_pressed"]
 [connection signal="toggled" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepByStepCheckBox" to="ScriptPanel" method="_on_StepByStepCheckBox_toggled"]

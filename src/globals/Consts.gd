@@ -6,8 +6,9 @@ enum CPU_Registers {
 	X  = 0x1,
 	Y  = 0x2,
 	PC = 0x3,
-	S  = 0x4,
-	P  = 0x5
+	SP = 0x4,
+	SR = 0x5,
+	P  = 0x6
 }
 
 enum StatusFlags {
@@ -50,7 +51,7 @@ enum AddressingModes {
 
 
 # NES RAM Values
-const MEMORY_SIZE = 0xFFFF
+const MEMORY_SIZE = 0x10000
 
 const WORK_RAM_ADDRESS  = 0x0000
 const WORK_RAM_MIRROR   = 0x0800

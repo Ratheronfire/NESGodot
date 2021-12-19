@@ -25,3 +25,14 @@ func to_binary_string(number):
 		int_number = int_number >> 1
 	
 	return bin_str
+
+
+func from_twos_complement(number):
+	if number > 0xFF:
+		assert(false, "Failed converting from two's complement: %d is larger than 1 byte." % number)
+	
+	if not number & 0x80:
+		return number
+	
+	number = ~number + 1
+	return -number
