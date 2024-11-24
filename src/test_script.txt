@@ -1,11 +1,13 @@
-LDA $4020
-TAX
-CLC
-ASL A
-STA $00
-STX $01
-ASL A
-ASL A
-ASL A
-TAY
-STY $02
+	LDX #0 ;Comments should be ignored.
+	LDA #0
+loop1:
+	STA 0,X
+	CLC
+	ADC #1
+	INX
+	CPX #$10
+	BEQ end
+	JMP loop1
+end:
+	NOP
+	JMP end

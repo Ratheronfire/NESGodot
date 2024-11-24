@@ -120,6 +120,11 @@ _global_script_classes=[ {
 "path": "res://addons/gdUnit3/src/core/parse/GdClassDescriptor.gd"
 }, {
 "base": "Reference",
+"class": "GdDiffTool",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/GdDiffTool.gd"
+}, {
+"base": "Reference",
 "class": "GdFunctionArgument",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/core/parse/GdFunctionArgument.gd"
@@ -148,6 +153,16 @@ _global_script_classes=[ {
 "class": "GdScriptParser",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/core/parse/GdScriptParser.gd"
+}, {
+"base": "Reference",
+"class": "GdTestParameterSet",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/parse/GdTestParameterSet.gd"
+}, {
+"base": "Reference",
+"class": "GdUnit3MonoAPI",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/mono/GdUnit3MonoAPI.gd"
 }, {
 "base": "Reference",
 "class": "GdUnit3Version",
@@ -184,6 +199,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/GdUnitAssertImpl.gd"
 }, {
+"base": "Reference",
+"class": "GdUnitAwaiter",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/GdUnitAwaiter.gd"
+}, {
 "base": "GdUnitAssert",
 "class": "GdUnitBoolAssert",
 "language": "GDScript",
@@ -203,6 +223,11 @@ _global_script_classes=[ {
 "class": "GdUnitClassDoubler",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/core/GdUnitClassDoubler.gd"
+}, {
+"base": "Reference",
+"class": "GdUnitConstants",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/GdUnitConstants.gd"
 }, {
 "base": "GdUnitAssert",
 "class": "GdUnitDictionaryAssert",
@@ -243,6 +268,11 @@ _global_script_classes=[ {
 "class": "GdUnitFloatAssertImpl",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/GdUnitFloatAssertImpl.gd"
+}, {
+"base": "Reference",
+"class": "GdUnitFonts",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/ui/GdUnitFonts.gd"
 }, {
 "base": "GdUnitAssert",
 "class": "GdUnitFuncAssert",
@@ -354,11 +384,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/core/GdUnitProperty.gd"
 }, {
-"base": "Node",
-"class": "GdUnitPushErrorHandler",
-"language": "GDScript",
-"path": "res://addons/gdUnit3/src/network/GdUnitPushErrorHandler.gd"
-}, {
 "base": "Resource",
 "class": "GdUnitReport",
 "language": "GDScript",
@@ -402,7 +427,22 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GdUnitSceneRunner",
 "language": "GDScript",
-"path": "res://addons/gdUnit3/src/core/GdUnitSceneRunner.gd"
+"path": "res://addons/gdUnit3/src/GdUnitSceneRunner.gd"
+}, {
+"base": "GdUnitSceneRunner",
+"class": "GdUnitSceneRunnerImpl",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/GdUnitSceneRunnerImpl.gd"
+}, {
+"base": "Reference",
+"class": "GdUnitScriptType",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/GdUnitScriptType.gd"
+}, {
+"base": "Reference",
+"class": "GdUnitServerConstants",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/network/GdUnitServerConstants.gd"
 }, {
 "base": "Reference",
 "class": "GdUnitSettings",
@@ -418,6 +458,11 @@ _global_script_classes=[ {
 "class": "GdUnitSignalAssertImpl",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/GdUnitSignalAssertImpl.gd"
+}, {
+"base": "Reference",
+"class": "GdUnitSignalAwaiter",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/GdUnitSignalAwaiter.gd"
 }, {
 "base": "Resource",
 "class": "GdUnitSingleton",
@@ -478,6 +523,11 @@ _global_script_classes=[ {
 "class": "GdUnitTestSuite",
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/GdUnitTestSuite.gd"
+}, {
+"base": "Resource",
+"class": "GdUnitTestSuiteBuilder",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/core/GdUnitTestSuiteBuilder.gd"
 }, {
 "base": "Reference",
 "class": "GdUnitTestSuiteDefaultTemplate",
@@ -544,6 +594,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/GdUnitVector3AssertImpl.gd"
 }, {
+"base": "GdUnitMonitor",
+"class": "GodotGdErrorMonitor",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/monitor/GodotGdErrorMonitor.gd"
+}, {
 "base": "HTTPRequest",
 "class": "GoogleTranslateAPI",
 "language": "GDScript",
@@ -554,6 +609,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/fuzzers/IntFuzzer.gd"
 }, {
+"base": "Reference",
+"class": "JUnitXmlReport",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/report/JUnitXmlReport.gd"
+}, {
 "base": "Resource",
 "class": "LocalTime",
 "language": "GDScript",
@@ -563,11 +623,6 @@ _global_script_classes=[ {
 "class": "OpcodesTest",
 "language": "GDScript",
 "path": "res://test/globals/OpcodesTest.gd"
-}, {
-"base": "GdUnitMonitor",
-"class": "PushErrorMonitor",
-"language": "GDScript",
-"path": "res://addons/gdUnit3/src/monitor/PushErrorMonitor.gd"
 }, {
 "base": "Reference",
 "class": "RPC",
@@ -654,6 +709,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/fuzzers/Vector3Fuzzer.gd"
 }, {
+"base": "Reference",
+"class": "XmlElement",
+"language": "GDScript",
+"path": "res://addons/gdUnit3/src/report/XmlElement.gd"
+}, {
 "base": "Node",
 "class": "_TestCase",
 "language": "GDScript",
@@ -687,12 +747,15 @@ _global_script_class_icons={
 "GdAssertMessages": "",
 "GdAssertReports": "",
 "GdClassDescriptor": "",
+"GdDiffTool": "",
 "GdFunctionArgument": "",
 "GdFunctionDescriptor": "",
 "GdFunctionDoubler": "",
 "GdMarkDownReader": "",
 "GdObjects": "",
 "GdScriptParser": "",
+"GdTestParameterSet": "",
+"GdUnit3MonoAPI": "",
 "GdUnit3Version": "",
 "GdUnitArgumentMatcher": "",
 "GdUnitArgumentMatchers": "",
@@ -700,10 +763,12 @@ _global_script_class_icons={
 "GdUnitArrayAssertImpl": "",
 "GdUnitAssert": "",
 "GdUnitAssertImpl": "",
+"GdUnitAwaiter": "",
 "GdUnitBoolAssert": "",
 "GdUnitBoolAssertImpl": "",
 "GdUnitByPathReport": "",
 "GdUnitClassDoubler": "",
+"GdUnitConstants": "",
 "GdUnitDictionaryAssert": "",
 "GdUnitDictionaryAssertImpl": "",
 "GdUnitEvent": "",
@@ -712,6 +777,7 @@ _global_script_class_icons={
 "GdUnitFileAssertImpl": "",
 "GdUnitFloatAssert": "",
 "GdUnitFloatAssertImpl": "",
+"GdUnitFonts": "",
 "GdUnitFuncAssert": "",
 "GdUnitFuncAssertImpl": "",
 "GdUnitFuncValueExtractor": "",
@@ -734,7 +800,6 @@ _global_script_class_icons={
 "GdUnitPatch": "",
 "GdUnitPatcher": "",
 "GdUnitProperty": "",
-"GdUnitPushErrorHandler": "",
 "GdUnitReport": "",
 "GdUnitReportCollector": "",
 "GdUnitReportConsumer": "",
@@ -744,9 +809,13 @@ _global_script_class_icons={
 "GdUnitResultAssertImpl": "",
 "GdUnitRunnerConfig": "",
 "GdUnitSceneRunner": "",
+"GdUnitSceneRunnerImpl": "",
+"GdUnitScriptType": "",
+"GdUnitServerConstants": "",
 "GdUnitSettings": "",
 "GdUnitSignalAssert": "",
 "GdUnitSignalAssertImpl": "",
+"GdUnitSignalAwaiter": "",
 "GdUnitSingleton": "",
 "GdUnitSpyBuilder": "",
 "GdUnitSpyImpl": "",
@@ -759,6 +828,7 @@ _global_script_class_icons={
 "GdUnitTestCaseDto": "",
 "GdUnitTestCaseReport": "",
 "GdUnitTestSuite": "",
+"GdUnitTestSuiteBuilder": "",
 "GdUnitTestSuiteDefaultTemplate": "",
 "GdUnitTestSuiteDto": "",
 "GdUnitTestSuiteReport": "",
@@ -772,11 +842,12 @@ _global_script_class_icons={
 "GdUnitVector2AssertImpl": "",
 "GdUnitVector3Assert": "",
 "GdUnitVector3AssertImpl": "",
+"GodotGdErrorMonitor": "",
 "GoogleTranslateAPI": "",
 "IntFuzzer": "",
+"JUnitXmlReport": "",
 "LocalTime": "",
 "OpcodesTest": "",
-"PushErrorMonitor": "",
 "RPC": "",
 "RPCClientConnect": "",
 "RPCClientDisconnect": "",
@@ -794,6 +865,7 @@ _global_script_class_icons={
 "ValueProvider": "",
 "Vector2Fuzzer": "",
 "Vector3Fuzzer": "",
+"XmlElement": "",
 "_TestCase": "",
 "_TestSuiteScanner": ""
 }
@@ -801,6 +873,7 @@ _global_script_class_icons={
 [application]
 
 config/name="NESGodot"
+config/description="No Description"
 run/main_scene="res://NESDebug.tscn"
 config/icon="res://icon.png"
 

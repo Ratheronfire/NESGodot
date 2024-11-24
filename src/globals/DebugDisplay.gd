@@ -9,7 +9,6 @@ onready var x_label  = $Registers/VBoxContainer/X/Text
 onready var y_label  = $Registers/VBoxContainer/Y/Text
 onready var pc_label = $Registers/VBoxContainer/PC/Text
 onready var sp_label = $Registers/VBoxContainer/SP/Text
-onready var sr_label = $Registers/VBoxContainer/SR/Text
 onready var p_label  = $Registers/VBoxContainer/P/Text
 
 onready var memory = $MemoryPanel/MemoryDisplay
@@ -20,6 +19,9 @@ onready var first_button = $MemoryPanel/FirstButton
 onready var prev_button = $MemoryPanel/PrevButton
 onready var next_button = $MemoryPanel/NextButton
 onready var last_button = $MemoryPanel/LastButton
+
+onready var last_delta_label = $LastDeltaPanel/RichTextLabel
+onready var last_command_label = $ScriptPanel/VBoxContainer/LastCommandLabel
 
 onready var _total_pages = len(Nes.memory) / bytes_per_page - 1
 onready var _page_num_input = 0
@@ -34,15 +36,25 @@ func _ready():
 	page_total_field.text = "Of %d" % _total_pages
 
 
-func _process(delta):
+func _physics_process(delta):
+	last_delta_label.text = "Last Delta: %f" % Nes.last_delta
+	
 	if ready_to_render:
+		if Nes.last_instruction:
+			var bytes = Consts.BYTES_PER_MODE[Nes.last_instruction.context.address_mode]
+			last_command_label.text = "Last Command: %s %s(%s, %d Byte%s)" % [
+				Nes.last_instruction.instruction,
+				(str(Nes.last_instruction.context.value) + " ") if Nes.last_instruction.context.address_mode != Consts.AddressingModes.Implied else "",
+				Consts.AddressingModes.keys()[Nes.last_instruction.context.address_mode],
+				bytes, "" if bytes == 1 else "s"
+			]
+		
 		a_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.A]
 		x_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.X]
 		y_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.Y]
 		pc_label.text = "0x%02X" % Nes.registers[Consts.CPU_Registers.PC]
 		sp_label.text = "0x%02X" % Nes.registers[Consts.CPU_Registers.SP]
-		sr_label.text  = "0b%s"  % Helpers.to_binary_string(Nes.registers[Consts.CPU_Registers.SR])
-		p_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.P]
+		p_label.text  = "0b%s"   % Helpers.to_binary_string(Nes.registers[Consts.CPU_Registers.P])
 		
 		memory.text = "       ||"
 		

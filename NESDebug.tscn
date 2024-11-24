@@ -8,9 +8,6 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 bytes_per_page = 256
 
 [node name="Registers" type="ScrollContainer" parent="."]
@@ -132,31 +129,10 @@ theme = ExtResource( 1 )
 text = "0x0"
 readonly = true
 
-[node name="SR" type="HBoxContainer" parent="Registers/VBoxContainer"]
+[node name="P" type="HBoxContainer" parent="Registers/VBoxContainer"]
 margin_top = 145.0
 margin_right = 150.0
 margin_bottom = 170.0
-
-[node name="Label" type="Label" parent="Registers/VBoxContainer/SR"]
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 16, 0 )
-text = "SR"
-
-[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/SR"]
-margin_left = 20.0
-margin_right = 145.0
-margin_bottom = 25.0
-rect_min_size = Vector2( 125, 25 )
-theme = ExtResource( 1 )
-text = "0b00000000"
-readonly = true
-
-[node name="P" type="HBoxContainer" parent="Registers/VBoxContainer"]
-margin_top = 174.0
-margin_right = 150.0
-margin_bottom = 199.0
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/P"]
 margin_top = 5.0
@@ -171,7 +147,7 @@ margin_right = 145.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 125, 25 )
 theme = ExtResource( 1 )
-text = "0x0"
+text = "0b00000000"
 readonly = true
 
 [node name="MemoryPanel" type="Panel" parent="."]
@@ -283,9 +259,6 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="ScriptPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScriptPanel/VBoxContainer"]
 margin_right = 384.0
@@ -326,6 +299,13 @@ margin_right = 180.0
 margin_bottom = 24.0
 text = "Step"
 
+[node name="LastCommandLabel" type="RichTextLabel" parent="ScriptPanel/VBoxContainer"]
+margin_top = 86.0
+margin_right = 384.0
+margin_bottom = 118.0
+rect_min_size = Vector2( 0, 32 )
+text = "Last Command: N/A"
+
 [node name="FileDialog" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -337,9 +317,23 @@ margin_right = 320.0
 margin_bottom = 170.5
 window_title = "Open a File"
 mode = 0
+show_hidden_files = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="LastDeltaPanel" type="Panel" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -192.0
+margin_top = -24.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LastDeltaPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Last Delta: 0"
 
 [connection signal="text_changed" from="MemoryPanel/PageNumber" to="." method="_on_PageNumber_text_changed"]
 [connection signal="pressed" from="MemoryPanel/FirstButton" to="." method="_on_FirstButton_pressed"]

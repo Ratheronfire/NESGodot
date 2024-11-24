@@ -1,25 +1,25 @@
 extends Node
 
-# Enums
+## The NES's CPU registers.
 enum CPU_Registers {
-	A  = 0x0,
-	X  = 0x1,
-	Y  = 0x2,
-	PC = 0x3,
-	SP = 0x4,
-	SR = 0x5,
-	P  = 0x6
+	A  = 0x0, ## The accumulator.
+	X  = 0x1, ## The X index.
+	Y  = 0x2, ## The Y index.
+	PC = 0x3, ## The program counter.
+	SP = 0x4, ## The stack pointer.
+	P  = 0x5  ## Status flags. Explained in [Consts.StatusFlags].
 }
 
+## The status flags making up the SR register.
 enum StatusFlags {
-	Carry            = 0x01,
-	Zero             = 0x02,
-	InterruptDisable = 0x04,
-	Decimal          = 0x08, # Unused on the NES
-	B_1              = 0x10,
-	B_2              = 0x20,
-	Overflow         = 0x40,
-	Negative         = 0x80
+	Carry            = 0x01, ## The carry flag for arithmetic and shift operations.
+	Zero             = 0x02, ## Set to 1 if the previous instruction evaluated to zero.
+	InterruptDisable = 0x04, ## When this flag is enabled, IRQ interrupts are blocked.
+	Decimal          = 0x08, ## Enables binary-coded decimal mode. Unused on the NES.
+	B_1              = 0x10, ## Set by the CPU following interrupts. Set to 0 after NMI or IRQ, and 1 after BRK or PHP.
+	B_2              = 0x20, ## This flag is always set to 1.
+	Overflow         = 0x40, ## Set to 1 if arithmetic instructions overflow.
+	Negative         = 0x80  ## Set to 1 if the previous instruction resulted in a negative value (mirrors bit 7 of the resulting number).
 }
 
 enum PPU_Registers {
@@ -33,20 +33,21 @@ enum PPU_Registers {
 	OAMDATA2  = 0x7
 }
 
+## The different modes of addressing data for an instruction.
 enum AddressingModes {
-	Implied,
-	Accumulator,
-	Immediate,
-	Absolute,
-	Absolute_X,
-	Absolute_Y,
-	ZeroPage,
-	ZeroPage_X,
-	ZeroPage_Y,
-	Relative,
-	Indirect,
-	ZPInd_X,
-	ZPInd_Y
+	Implied, ## This instruction's addressing mode is implied (e.g. RTS).
+	Accumulator, ## This instruction acts on the accumulator (e.g. LSR A).
+	Immediate, ## The value passed to the instruction is used as the addressed value directly.
+	Absolute, ## Fetches the value from a 16-bit address anywhere in memory.
+	Absolute_X, ## Fetches the value from a 16-bit address anywhere in memory, indexed by X.
+	Absolute_Y, ## Fetches the value from a 16-bit address anywhere in memory, indexed by Y.
+	ZeroPage, ## Fetches the value from the zero page.
+	ZeroPage_X, ## Fetches the value from the zero page, indexed by X.
+	ZeroPage_Y, ## Fetches the value from the zero page, indexed by Y.
+	Relative, ## Fetches a value from an address relative to the program counter. Limited to 128 in either direction.
+	Indirect, ## Fetches a 16-bit address, then treats that value as an address and fetches from that.
+	ZPInd_X, ## Indexed indirect. Fetches a zero-page address indexed by X, then fetches from the address specified. (d,x)
+	ZPInd_Y ## Indirect indexed. Fetches a zero-page address, then fetches from the address specified, indexed by Y. (d),y
 }
 
 
@@ -341,7 +342,7 @@ const INSTRUCTION_OPCODES = {
 		AddressingModes.Implied: 0xB8
 	},
 	'BRK': {
-		AddressingModes.Implied: 0x00
+		AddressingModes.Immediate: 0x00
 	},
 	'NOP': {
 		AddressingModes.Implied: 0xEA
@@ -499,7 +500,7 @@ const OPCODE_MODES = {
 	0x58: AddressingModes.Implied,
 	0x78: AddressingModes.Implied,
 	0xB8: AddressingModes.Implied,
-	0x00: AddressingModes.Implied,
+	0x00: AddressingModes.Immediate,
 	0xEA: AddressingModes.Implied
 }
 

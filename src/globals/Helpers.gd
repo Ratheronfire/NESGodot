@@ -9,7 +9,7 @@ func hex_string_to_decimal(hex_string: String) -> int:
 	var value = 0
 	
 	for i in range(len(hex_string)):
-		var character = hex_string[len(hex_string) - i - 1].to_lower()
+		var character = hex_string[len(hex_string) - i - 1].to_upper()
 		value += hex_digits.find(character) * pow(16, i)
 	return value
 
