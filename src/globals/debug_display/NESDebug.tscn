@@ -196,7 +196,7 @@ layout_mode = 2
 
 [node name="LoadButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Load Script"
+text = "Load File"
 
 [node name="ScriptPath" type="TextEdit" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 34)
@@ -211,10 +211,21 @@ text = "Run Script"
 [node name="HBoxContainer2" type="HBoxContainer" parent="ScriptPanel/VBoxContainer"]
 layout_mode = 2
 
-[node name="StepByStepCheckBox" type="CheckBox" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
+[node name="CPUSpeedIndicator" type="Label" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-button_pressed = true
-text = "Run Step By Step"
+size_flags_horizontal = 3
+text = "Manual"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CPUSpeedSlider" type="HSlider" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 10.0
+rounded = true
+tick_count = 10
+ticks_on_borders = true
 
 [node name="StepButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -269,6 +280,6 @@ separation_vertical = null
 [connection signal="pressed" from="MemoryPanel/VBoxContainer/HBoxContainer/LastButton" to="." method="_on_LastButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/RunScriptButton" to="ScriptPanel" method="_on_RunScriptButton_pressed"]
-[connection signal="toggled" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepByStepCheckBox" to="ScriptPanel" method="_on_StepByStepCheckBox_toggled"]
+[connection signal="drag_ended" from="ScriptPanel/VBoxContainer/HBoxContainer2/CPUSpeedSlider" to="ScriptPanel" method="_on_cpu_speed_slider_drag_ended"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepButton" to="ScriptPanel" method="_on_StepButton_pressed"]
 [connection signal="file_selected" from="FileDialog" to="ScriptPanel" method="_on_FileDialog_file_selected"]

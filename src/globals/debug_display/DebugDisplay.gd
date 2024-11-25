@@ -31,11 +31,11 @@ var _page = 0
 
 
 func _ready():
-	Nes.tick.connect(on_tick)
+	Nes.ticked.connect(on_ticked)
 	page_total_field.text = "Of %d" % _total_pages
 
 
-func on_tick():
+func on_ticked():
 	last_delta_label.text = "Last Delta: %f" % Nes.last_delta
 	
 	if Nes.last_instruction:
@@ -67,7 +67,7 @@ func _set_memory_page(page_index: int):
 	page_number_field.set_caret_column(page_number_field.text.length())
 	
 	memory.page = page_index
-	on_tick()
+	on_ticked()
 
 
 func _on_FirstButton_pressed():

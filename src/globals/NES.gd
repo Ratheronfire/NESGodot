@@ -1,10 +1,12 @@
 extends Node
 
 var last_delta: float
+var _time_since_last_tick: float = 0
 
 var last_instruction: Opcodes.InstructionData
 
-@export var run_step_by_step: bool = true
+## The number of CPU instructions to run per second. -1 to run at max speed, 0 to run by manual steps only.
+@export var instructions_per_second: int = 0
 
 @onready var memory = []
 @onready var registers = {
@@ -18,7 +20,7 @@ var last_instruction: Opcodes.InstructionData
 
 var _is_running = false
 
-signal tick
+signal ticked
 
 
 func _ready():
@@ -42,29 +44,33 @@ func init():
 
 func _process(delta):
 	last_delta = delta
+	_time_since_last_tick += delta
 	
 	if _is_running:
-		var pc = registers[Consts.CPU_Registers.PC]
-		
-		var instruction_data = get_instruction_data(pc)
-		if instruction_data:
-			instruction_data.execute()
-			last_instruction = instruction_data
-		else:
-			print('Invalid opcode, stopping.')
-			_is_running = false
+		if instructions_per_second == 0 or _time_since_last_tick < 1.0 / instructions_per_second:
 			return
 		
-#		print("Executed instruction: %s" % str(instruction_data))
-		
-		if registers[Consts.CPU_Registers.PC] == pc:
-			# Don't increment the program counter if we just jumped
-			registers[Consts.CPU_Registers.PC] += instruction_data.bytes_to_read
-		
-		if run_step_by_step:
-			_is_running = false
-		
-		emit_signal("tick")
+		_time_since_last_tick = 0
+		tick()
+
+
+func tick():
+	var pc = registers[Consts.CPU_Registers.PC]
+	
+	var instruction_data = get_instruction_data(pc)
+	if instruction_data:
+		instruction_data.execute()
+		last_instruction = instruction_data
+	else:
+		print('Invalid opcode, stopping.')
+		_is_running = false
+		return
+	
+	if registers[Consts.CPU_Registers.PC] == pc:
+		# Don't increment the program counter if we just jumped
+		registers[Consts.CPU_Registers.PC] += instruction_data.bytes_to_read
+	
+	ticked.emit()
 
 
 func get_instruction_data(start_byte: int):

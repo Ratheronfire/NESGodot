@@ -26,8 +26,7 @@ func run_script():
 		Nes.memory[i + Consts.CARTRIDGE_ADDRESS] = bytecode[i]
 	Nes.registers[Consts.CPU_Registers.PC] = Consts.CARTRIDGE_ADDRESS
 	
-	if not Nes.run_step_by_step:
-		Nes.start_running()
+	Nes.start_running()
 
 
 func _on_LoadButton_pressed():
@@ -48,5 +47,27 @@ func _on_StepByStepCheckBox_toggled(button_pressed):
 	step_button.disabled = !button_pressed
 
 
+func _on_cpu_speed_slider_drag_ended(value_changed: bool) -> void:
+	var slider_value = $VBoxContainer/HBoxContainer2/CPUSpeedSlider.value
+	
+	if slider_value == $VBoxContainer/HBoxContainer2/CPUSpeedSlider.min_value:
+		slider_value = 0
+	elif slider_value == $VBoxContainer/HBoxContainer2/CPUSpeedSlider.max_value:
+		slider_value = -1
+	
+	Nes.instructions_per_second = slider_value
+	
+	step_button.disabled = slider_value != 0
+	
+	if slider_value == -1:
+		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "Max Speed"
+	elif slider_value == 0:
+		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "CPU Paused"
+	else:
+		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "%d inst%s/sec" % [
+			slider_value, "" if slider_value == 1 else "s"
+		]
+
+
 func _on_StepButton_pressed():
-	Nes.start_running()
+	Nes.tick()

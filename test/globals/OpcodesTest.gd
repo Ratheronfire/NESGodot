@@ -185,10 +185,10 @@ func test_STA() -> void:
 	assert_int(Nes.memory[0x20]).is_equal(2)
 	
 	Nes.registers[Consts.CPU_Registers.A] = 3
-	Nes.registers[Consts.CPU_Registers.X] = 1
-	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0x20)
+	Nes.registers[Consts.CPU_Registers.X] = 0xFF
+	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0)
 	Opcodes.STA(context)
-	assert_int(Nes.memory[0x21]).is_equal(3)
+	assert_int(Nes.memory[0xFF]).is_equal(3)
 	
 	Nes.registers[Consts.CPU_Registers.A] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)

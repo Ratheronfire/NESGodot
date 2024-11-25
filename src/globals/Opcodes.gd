@@ -689,7 +689,7 @@ func _determine_memory_address(context: OperandAddressingContext):
 		
 	if context.address_mode in [Consts.AddressingModes.ZeroPage_X, Consts.AddressingModes.ZeroPage_Y]:
 		# Ensuring we stay on the zero page
-		address %= 0xFF
+		address %= 0x100
 	elif context.address_mode == Consts.AddressingModes.ZPInd_X:
 		# Ensuring we stay on the zero page, and grabbing the high byte while we're at it
 		var high_address = (address + 1) % 256
