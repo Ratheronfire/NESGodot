@@ -1,0 +1,6 @@
+[gd_resource type="DynamicFont" load_steps=2 format=2]
+
+[ext_resource type="DynamicFontData" uid="uid://dkganv7c3o7fc" path="res://assets/fonts/static/RobotoMono-Bold.ttf" id="1"]
+
+[resource]
+font_data = ExtResource( 1 )

@@ -5,7 +5,7 @@ loop1:
 	CLC
 	ADC #1
 	INX
-	CPX #$10
+	CPX #$00
 	BEQ end
 	JMP loop1
 end:

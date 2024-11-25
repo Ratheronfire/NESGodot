@@ -2,12 +2,12 @@ extends Node
 
 var last_delta: float
 
-var last_instruction#: Opcodes.InstructionData
+var last_instruction: Opcodes.InstructionData
 
-export (bool) var run_step_by_step = true
+@export var run_step_by_step: bool = true
 
-onready var memory = []
-onready var registers = {
+@onready var memory = []
+@onready var registers = {
 	Consts.CPU_Registers.A:  0x00,
 	Consts.CPU_Registers.X:  0x00,
 	Consts.CPU_Registers.Y:  0x00,
@@ -111,7 +111,7 @@ func set_status_flag(status: int, state: bool):
 
 
 func compile_script(script: String):
-	var bytecode = PoolByteArray()
+	var bytecode = PackedByteArray()
 	var labels = {}
 	
 	var lines = []
@@ -156,9 +156,9 @@ func compile_script(script: String):
 			
 			for label in labels:
 				if is_branch:
-					operands[1] = operands[1].replace(label, labels[label] - bytes_so_far)
+					operands[1] = operands[1].replace(label, str(labels[label] - bytes_so_far))
 				else:
-					operands[1] = operands[1].replace(label, Consts.CARTRIDGE_ADDRESS + labels[label])
+					operands[1] = operands[1].replace(label, str(Consts.CARTRIDGE_ADDRESS + labels[label]))
 			
 			lines[i] = operands[0] + " " + operands[1]
 	

@@ -29,7 +29,7 @@ enum PPU_Registers {
 	OAMADDR   = 0x3,
 	OAMDATA1  = 0x4,
 	PPUSCROLL = 0x5,
-	PPUADDR   = 0x6
+	PPUADDR   = 0x6,
 	OAMDATA2  = 0x7
 }
 
@@ -658,4 +658,3 @@ const OPCODE_INSTRUCTIONS = {
 	0x00: 'BRK',
 	0xEA: 'NOP'
 }
-

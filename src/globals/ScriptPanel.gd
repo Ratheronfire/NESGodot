@@ -1,11 +1,11 @@
 class_name ScriptPanel
 extends Panel
 
-onready var debug_display = get_parent()
+@onready var debug_display = get_parent()
 
-onready var file_dialog = $"../FileDialog"
-onready var file_text = $VBoxContainer/HBoxContainer/ScriptPath
-onready var step_button = $VBoxContainer/HBoxContainer2/StepButton
+@onready var file_dialog = $"../FileDialog"
+@onready var file_text = $VBoxContainer/HBoxContainer/ScriptPath
+@onready var step_button = $VBoxContainer/HBoxContainer2/StepButton
 
 var _file_path
 
@@ -16,9 +16,7 @@ func _ready():
 
 
 func run_script():
-	var file = File.new()
-	file.open(_file_path, File.READ)
-	
+	var file = FileAccess.open(_file_path, FileAccess.READ)
 	var script = file.get_as_text()
 	file.close()
 	
@@ -33,7 +31,7 @@ func run_script():
 
 
 func _on_LoadButton_pressed():
-	file_dialog.popup()
+	file_dialog.popup_centered()
 
 
 func _on_FileDialog_file_selected(path):

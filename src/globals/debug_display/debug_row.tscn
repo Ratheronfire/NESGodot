@@ -1,0 +1,182 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6rvjf1jo3io2"]
+
+[ext_resource type="Script" path="res://src/globals/debug_display/debug_row.gd" id="1_0xldy"]
+[ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="1_cbrkn"]
+[ext_resource type="PackedScene" uid="uid://c2i2a41g10iuu" path="res://src/globals/debug_display/debug_byte.tscn" id="2_tk0hp"]
+[ext_resource type="Script" path="res://src/globals/debug_display/debug_byte.gd" id="4_nrsc3"]
+
+[node name="Row0" type="HBoxContainer"]
+custom_minimum_size = Vector2(0, 23)
+size_flags_horizontal = 3
+script = ExtResource("1_0xldy")
+
+[node name="RowStart" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+bbcode_enabled = true
+text = "0x0000 || "
+autowrap_mode = 0
+
+[node name="Divider" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(26, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+bbcode_enabled = true
+text = "[center]||[/center]"
+autowrap_mode = 0
+
+[node name="Byte0" parent="." instance=ExtResource("2_tk0hp")]
+layout_mode = 2
+
+[node name="Byte1" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "01"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 1
+
+[node name="Byte2" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "02"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 2
+
+[node name="Byte3" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "03"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 3
+
+[node name="Byte4" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "04"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 4
+
+[node name="Byte5" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "05"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 5
+
+[node name="Byte6" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "06"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 6
+
+[node name="Byte7" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "07"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 7
+
+[node name="Byte8" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "08"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 8
+
+[node name="Byte9" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "09"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 9
+
+[node name="ByteA" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0A"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 10
+
+[node name="ByteB" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0B"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 11
+
+[node name="ByteC" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0C"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 12
+
+[node name="ByteD" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0D"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 13
+
+[node name="ByteE" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0E"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 14
+
+[node name="ByteF" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_cbrkn")
+text = "0F"
+autowrap_mode = 0
+script = ExtResource("4_nrsc3")
+row_byte = 15

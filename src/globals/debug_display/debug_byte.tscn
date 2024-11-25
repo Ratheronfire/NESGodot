@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2i2a41g10iuu"]
+
+[ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="1_bvj2d"]
+[ext_resource type="Script" path="res://src/globals/debug_display/debug_byte.gd" id="2_btn15"]
+
+[node name="Byte0" type="RichTextLabel"]
+custom_minimum_size = Vector2(20, 23)
+size_flags_horizontal = 3
+theme = ExtResource("1_bvj2d")
+text = "00"
+autowrap_mode = 0
+script = ExtResource("2_btn15")

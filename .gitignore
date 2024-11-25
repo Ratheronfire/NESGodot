@@ -8,3 +8,5 @@ lib/
 addons/
 CONTRIBUTING.md
 LICENSE
+
+.godot/

@@ -5,8 +5,10 @@ class InstructionData:
 	var opcode: int
 	var context: OperandAddressingContext
 	
-	var instruction: String setget , get_instruction
-	var bytes_to_read: int setget , get_bytes_to_read
+	var instruction: String:
+		get = get_instruction
+	var bytes_to_read: int:
+		get = get_bytes_to_read
 	
 	func _init(opcode: int, context: OperandAddressingContext):
 		self.opcode = opcode
@@ -22,8 +24,8 @@ class InstructionData:
 		return Consts.BYTES_PER_MODE[self.context.address_mode]
 	
 	func execute():
-		var opcode_func = funcref(Opcodes, self.instruction)
-		opcode_func.call_func(self.context)
+		var opcode_func = Callable(Opcodes, self.instruction)
+		opcode_func.call(self.context)
 	
 	func _to_string():
 		var operand_str = " $%02X" % context.value
