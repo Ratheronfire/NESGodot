@@ -52,14 +52,15 @@ enum AddressingModes {
 
 
 # NES RAM Values
-const MEMORY_SIZE = 0x10000
+const CPU_MEMORY_SIZE = 0x10000
+const PPU_MEMORY_SIZE = 0x04000
 
 const WORK_RAM_ADDRESS  = 0x0000
 const WORK_RAM_MIRROR   = 0x0800
 const PPU_REGISTERS     = 0x2000
 const PPU_MIRROR        = 0x2008
 const APU_IO            = 0x4000
-const CARTRIDGE_ADDRESS = 0x4020
+const CARTRIDGE_ADDRESS = 0x8000
 
 const WORK_RAM_SIZE = 0x0800
 const PPU_RAM_SIZE  = 0x0008

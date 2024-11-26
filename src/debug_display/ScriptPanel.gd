@@ -1,13 +1,20 @@
 class_name ScriptPanel
 extends Panel
 
+enum FileType {
+	Script = 0,
+	ROM = 1
+}
+
 @onready var debug_display = get_parent()
 
 @onready var file_dialog = $"../FileDialog"
 @onready var file_text = $VBoxContainer/HBoxContainer/ScriptPath
 @onready var step_button = $VBoxContainer/HBoxContainer2/StepButton
 
-var _file_path
+var _file_type: FileType = FileType.Script
+
+var _file_path: String
 
 
 func _ready():
@@ -16,17 +23,7 @@ func _ready():
 
 
 func run_script():
-	var file = FileAccess.open(_file_path, FileAccess.READ)
-	var script = file.get_as_text()
-	file.close()
-	
-	var bytecode = Nes.compile_script(script)
-	
-	for i in range(len(bytecode)):
-		Nes.memory[i + Consts.CARTRIDGE_ADDRESS] = bytecode[i]
-	Nes.registers[Consts.CPU_Registers.PC] = Consts.CARTRIDGE_ADDRESS
-	
-	Nes.start_running()
+	NES.start_running()
 
 
 func _on_LoadButton_pressed():
@@ -35,7 +32,22 @@ func _on_LoadButton_pressed():
 
 func _on_FileDialog_file_selected(path):
 	_file_path = path
-	file_text.text = path
+	file_text.text = _file_path
+	
+	if _file_type == FileType.Script:
+		var file = FileAccess.open(_file_path, FileAccess.READ)
+		
+		var script = file.get_as_text()
+		var bytecode = NES.compile_script(script)
+		
+		file.close()
+		
+		for i in range(len(bytecode)):
+			NES.cpu_memory[i + Consts.CARTRIDGE_ADDRESS] = bytecode[i]
+		
+		NES.registers[Consts.CPU_Registers.PC] = Consts.CARTRIDGE_ADDRESS
+	elif _file_type == FileType.ROM:
+		NES.setup_rom(_file_path)
 
 
 func _on_RunScriptButton_pressed():
@@ -43,7 +55,7 @@ func _on_RunScriptButton_pressed():
 
 
 func _on_StepByStepCheckBox_toggled(button_pressed):
-	Nes.run_step_by_step = button_pressed
+	NES.run_step_by_step = button_pressed
 	step_button.disabled = !button_pressed
 
 
@@ -55,7 +67,7 @@ func _on_cpu_speed_slider_drag_ended(value_changed: bool) -> void:
 	elif slider_value == $VBoxContainer/HBoxContainer2/CPUSpeedSlider.max_value:
 		slider_value = -1
 	
-	Nes.instructions_per_second = slider_value
+	NES.instructions_per_second = slider_value
 	
 	step_button.disabled = slider_value != 0
 	
@@ -70,4 +82,9 @@ func _on_cpu_speed_slider_drag_ended(value_changed: bool) -> void:
 
 
 func _on_StepButton_pressed():
-	Nes.tick()
+	NES.tick()
+
+
+func _on_file_type_option_button_item_selected(index: int) -> void:
+	$VBoxContainer/RunScriptButton.text = "Run Script" if index == 0 else "Run ROM"
+	_file_type = index

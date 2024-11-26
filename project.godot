@@ -12,13 +12,13 @@ config_version=5
 
 config/name="NESGodot"
 config/description="No Description"
-run/main_scene="res://src/globals/debug_display/NESDebug.tscn"
+run/main_scene="res://src/debug_display/NESDebug.tscn"
 config/features=PackedStringArray("4.3")
 config/icon="res://icon.png"
 
 [autoload]
 
-Nes="*res://src/globals/NES.tscn"
+NES="*res://src/globals/NES.tscn"
 Opcodes="*res://src/globals/Opcodes.tscn"
 Helpers="*res://src/globals/Helpers.tscn"
 LastOpenedFiles="*res://addons/file-editor/scripts/LastOpenedFiles.gd"

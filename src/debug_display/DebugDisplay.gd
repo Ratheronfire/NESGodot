@@ -23,7 +23,7 @@ extends Control
 @onready var last_delta_label = $LastDeltaPanel/RichTextLabel
 @onready var last_command_label = $ScriptPanel/VBoxContainer/LastCommandLabel
 
-@onready var _total_pages = len(Nes.memory) / bytes_per_page - 1
+@onready var _total_pages = len(NES.cpu_memory) / bytes_per_page - 1
 
 var _page_num_input = 0
 
@@ -31,28 +31,28 @@ var _page = 0
 
 
 func _ready():
-	Nes.ticked.connect(on_ticked)
+	NES.ticked.connect(on_ticked)
 	page_total_field.text = "Of %d" % _total_pages
 
 
 func on_ticked():
-	last_delta_label.text = "Last Delta: %f" % Nes.last_delta
+	last_delta_label.text = "Last Delta: %f" % NES.last_delta
 	
-	if Nes.last_instruction:
-		var bytes = Consts.BYTES_PER_MODE[Nes.last_instruction.context.address_mode]
+	if NES.last_instruction:
+		var bytes = Consts.BYTES_PER_MODE[NES.last_instruction.context.address_mode]
 		last_command_label.text = "Last Command: %s %s(%s, %d Byte%s)" % [
-			Nes.last_instruction.instruction,
-			(str(Nes.last_instruction.context.value) + " ") if Nes.last_instruction.context.address_mode != Consts.AddressingModes.Implied else "",
-			Consts.AddressingModes.keys()[Nes.last_instruction.context.address_mode],
+			NES.last_instruction.instruction,
+			(str(NES.last_instruction.context.value) + " ") if NES.last_instruction.context.address_mode != Consts.AddressingModes.Implied else "",
+			Consts.AddressingModes.keys()[NES.last_instruction.context.address_mode],
 			bytes, "" if bytes == 1 else "s"
 		]
 	
-	a_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.A]
-	x_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.X]
-	y_label.text  = "0x%02X" % Nes.registers[Consts.CPU_Registers.Y]
-	pc_label.text = "0x%02X" % Nes.registers[Consts.CPU_Registers.PC]
-	sp_label.text = "0x%02X" % Nes.registers[Consts.CPU_Registers.SP]
-	p_label.text  = "0b%s"   % Helpers.to_binary_string(Nes.registers[Consts.CPU_Registers.P])
+	a_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.A]
+	x_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.X]
+	y_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.Y]
+	pc_label.text = "0x%02X" % NES.registers[Consts.CPU_Registers.PC]
+	sp_label.text = "0x%02X" % NES.registers[Consts.CPU_Registers.SP]
+	p_label.text  = "0b%s"   % Helpers.to_binary_string(NES.registers[Consts.CPU_Registers.P])
 
 
 func _set_memory_page(page_index: int):

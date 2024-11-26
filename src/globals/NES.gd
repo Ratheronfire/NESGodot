@@ -8,7 +8,8 @@ var last_instruction: Opcodes.InstructionData
 ## The number of CPU instructions to run per second. -1 to run at max speed, 0 to run by manual steps only.
 @export var instructions_per_second: int = 0
 
-@onready var memory = []
+@onready var cpu_memory = []
+@onready var ppu_memory = []
 @onready var registers = {
 	Consts.CPU_Registers.A:  0x00,
 	Consts.CPU_Registers.X:  0x00,
@@ -17,6 +18,12 @@ var last_instruction: Opcodes.InstructionData
 	Consts.CPU_Registers.SP: 0xFD,
 	Consts.CPU_Registers.P:  0x34
 }
+
+var _rom_mapper: NES_Mapper
+
+var _nmi_vector: int
+var _reset_vector: int
+var _irq_vector: int
 
 var _is_running = false
 
@@ -28,9 +35,13 @@ func _ready():
 
 
 func init():
-	memory = []
-	for i in range(Consts.MEMORY_SIZE):
-		memory.append(0)
+	cpu_memory = []
+	for i in range(Consts.CPU_MEMORY_SIZE):
+		cpu_memory.append(0)
+	
+	ppu_memory = []
+	for i in range(Consts.PPU_MEMORY_SIZE):
+		ppu_memory.append(0)
 	
 	registers = {
 		Consts.CPU_Registers.A:  0x00,
@@ -74,7 +85,7 @@ func tick():
 
 
 func get_instruction_data(start_byte: int):
-	var next_opcode = memory[start_byte]
+	var next_opcode = cpu_memory[start_byte]
 	
 	if next_opcode == 0xFF or next_opcode == 0:
 		_is_running = false
@@ -88,9 +99,9 @@ func get_instruction_data(start_byte: int):
 	var value_high = 0
 	
 	if bytes_to_read >= 1:
-		value_low = memory[start_byte + 1]
+		value_low = cpu_memory[start_byte + 1]
 	if bytes_to_read >= 2:
-		value_high = memory[start_byte + 2]
+		value_high = cpu_memory[start_byte + 2]
 	
 	var context = Opcodes.OperandAddressingContext.new(addressing_mode, value_low + (value_high << 8))
 	
@@ -102,7 +113,19 @@ func get_instruction_data(start_byte: int):
 
 
 func start_running():
+	ticked.emit()
 	_is_running = true
+
+
+func setup_rom(rom_path: String):
+	_rom_mapper = NES_Mapper.create_mapper(rom_path)
+	_rom_mapper.load_initial_map()
+	
+	_nmi_vector = get_word(0xFFFA)
+	_reset_vector = get_word(0xFFFC)
+	_irq_vector = get_word(0xFFFE)
+	
+	registers[Consts.CPU_Registers.PC] = _reset_vector
 
 
 func get_status_flag(status: int):
@@ -116,7 +139,7 @@ func set_status_flag(status: int, state: bool):
 		registers[Consts.CPU_Registers.P] &= ~status
 
 
-func compile_script(script: String):
+func compile_script(script: String) -> PackedByteArray:
 	var bytecode = PackedByteArray()
 	var labels = {}
 	
@@ -194,7 +217,7 @@ func compile_script(script: String):
 
 
 func get_word(address: int):
-	return memory[address] + (memory[address + 1] << 8)
+	return cpu_memory[address] + (cpu_memory[address + 1] << 8)
 
 
 func copy_ram(from: int, to: int, length: int):
@@ -209,7 +232,7 @@ func copy_ram(from: int, to: int, length: int):
 		return
 	
 	for i in range(length):
-		memory[to + i] = memory[from + i]
+		cpu_memory[to + i] = cpu_memory[from + i]
 
 
 func _mirror_memory_regions():

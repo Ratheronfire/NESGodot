@@ -24,5 +24,6 @@ func update_display():
 	for child in get_children():
 		if child is NES_DebugByte:
 			child.rom_byte = (0x10 * (row_index + (page * BYTES_PER_PAGE / BYTES_PER_ROW))) + child.row_byte
+			child.update()
 	
 	$RowStart.text = "0x%03X0 || " % (row_index + (page * BYTES_PER_PAGE / BYTES_PER_ROW))
