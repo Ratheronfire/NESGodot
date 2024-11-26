@@ -4,17 +4,67 @@
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_17l4e"]
 [ext_resource type="PackedScene" uid="uid://c6rvjf1jo3io2" path="res://src/debug_display/debug_row.tscn" id="3_0b61g"]
 
-[node name="SpanningTableContainer" type="VBoxContainer"]
-offset_right = 484.0
-offset_bottom = 499.0
+[node name="DebugTable" type="VBoxContainer" node_paths=PackedStringArray("_rows")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_osrmm")
+_rows = [NodePath("SpanningTableContainer/Row0"), NodePath("SpanningTableContainer/Row1"), NodePath("SpanningTableContainer/Row2"), NodePath("SpanningTableContainer/Row3"), NodePath("SpanningTableContainer/Row4"), NodePath("SpanningTableContainer/Row5"), NodePath("SpanningTableContainer/Row6"), NodePath("SpanningTableContainer/Row7"), NodePath("SpanningTableContainer/Row8"), NodePath("SpanningTableContainer/Row9"), NodePath("SpanningTableContainer/Row10"), NodePath("SpanningTableContainer/Row11"), NodePath("SpanningTableContainer/Row12"), NodePath("SpanningTableContainer/Row13"), NodePath("SpanningTableContainer/Row14"), NodePath("SpanningTableContainer/Row15")]
 
-[node name="HeaderRow" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Page1" type="Label" parent="HBoxContainer"]
+custom_minimum_size = Vector2(59, 0)
+layout_mode = 2
+text = "Page"
+horizontal_alignment = 2
+
+[node name="PageNumber" type="TextEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "0"
+
+[node name="Page2" type="Label" parent="HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Of X"
+
+[node name="FirstButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "<<"
+
+[node name="PrevButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "<"
+
+[node name="NextButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[node name="LastButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = ">>"
+
+[node name="MemoryCategoryOptionButton" type="OptionButton" parent="HBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "CPU"
+popup/item_1/text = "PPU"
+popup/item_1/id = 1
+
+[node name="SpanningTableContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="SpanningTableContainer"]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Spacer" type="RichTextLabel" parent="HeaderRow"]
+[node name="Spacer" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -22,7 +72,7 @@ theme = ExtResource("2_17l4e")
 text = " "
 autowrap_mode = 0
 
-[node name="Divider" type="RichTextLabel" parent="HeaderRow"]
+[node name="Divider" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(26, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -31,7 +81,7 @@ bbcode_enabled = true
 text = "[center]||[/center]"
 autowrap_mode = 0
 
-[node name="Byte0" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte0" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -39,7 +89,7 @@ theme = ExtResource("2_17l4e")
 text = "00"
 autowrap_mode = 0
 
-[node name="Byte1" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte1" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -47,7 +97,7 @@ theme = ExtResource("2_17l4e")
 text = "01"
 autowrap_mode = 0
 
-[node name="Byte2" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte2" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -55,7 +105,7 @@ theme = ExtResource("2_17l4e")
 text = "02"
 autowrap_mode = 0
 
-[node name="Byte3" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte3" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -63,7 +113,7 @@ theme = ExtResource("2_17l4e")
 text = "03"
 autowrap_mode = 0
 
-[node name="Byte4" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte4" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -71,7 +121,7 @@ theme = ExtResource("2_17l4e")
 text = "04"
 autowrap_mode = 0
 
-[node name="Byte5" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte5" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -79,7 +129,7 @@ theme = ExtResource("2_17l4e")
 text = "05"
 autowrap_mode = 0
 
-[node name="Byte6" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte6" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -87,7 +137,7 @@ theme = ExtResource("2_17l4e")
 text = "06"
 autowrap_mode = 0
 
-[node name="Byte7" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte7" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -95,7 +145,7 @@ theme = ExtResource("2_17l4e")
 text = "07"
 autowrap_mode = 0
 
-[node name="Byte8" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte8" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -103,7 +153,7 @@ theme = ExtResource("2_17l4e")
 text = "08"
 autowrap_mode = 0
 
-[node name="Byte9" type="RichTextLabel" parent="HeaderRow"]
+[node name="Byte9" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -111,7 +161,7 @@ theme = ExtResource("2_17l4e")
 text = "09"
 autowrap_mode = 0
 
-[node name="ByteA" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteA" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -119,7 +169,7 @@ theme = ExtResource("2_17l4e")
 text = "0A"
 autowrap_mode = 0
 
-[node name="ByteB" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteB" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -127,7 +177,7 @@ theme = ExtResource("2_17l4e")
 text = "0B"
 autowrap_mode = 0
 
-[node name="ByteC" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteC" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -135,7 +185,7 @@ theme = ExtResource("2_17l4e")
 text = "0C"
 autowrap_mode = 0
 
-[node name="ByteD" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteD" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -143,7 +193,7 @@ theme = ExtResource("2_17l4e")
 text = "0D"
 autowrap_mode = 0
 
-[node name="ByteE" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteE" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -151,7 +201,7 @@ theme = ExtResource("2_17l4e")
 text = "0E"
 autowrap_mode = 0
 
-[node name="ByteF" type="RichTextLabel" parent="HeaderRow"]
+[node name="ByteF" type="RichTextLabel" parent="SpanningTableContainer/HeaderRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -159,12 +209,12 @@ theme = ExtResource("2_17l4e")
 text = "0F"
 autowrap_mode = 0
 
-[node name="SpacerRow" type="HBoxContainer" parent="."]
+[node name="SpacerRow" type="HBoxContainer" parent="SpanningTableContainer"]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Divider" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -173,7 +223,7 @@ bbcode_enabled = true
 text = "[right]=======[/right]"
 autowrap_mode = 0
 
-[node name="Divider2" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider2" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(26, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -182,177 +232,184 @@ bbcode_enabled = true
 text = "[center]||[/center]"
 autowrap_mode = 0
 
-[node name="Divider3" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider3" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider4" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider4" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider5" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider5" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider6" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider6" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider7" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider7" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider8" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider8" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider9" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider9" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider10" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider10" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider11" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider11" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider12" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider12" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider13" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider13" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider14" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider14" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider15" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider15" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider16" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider16" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider17" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider17" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Divider18" type="RichTextLabel" parent="SpacerRow"]
+[node name="Divider18" type="RichTextLabel" parent="SpanningTableContainer/SpacerRow"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_17l4e")
 text = "=="
 
-[node name="Row0" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row0" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 
-[node name="Row1" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row1" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 1
 
-[node name="Row2" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row2" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 2
 
-[node name="Row3" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row3" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 3
 
-[node name="Row4" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row4" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 4
 
-[node name="Row5" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row5" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 5
 
-[node name="Row6" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row6" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 6
 
-[node name="Row7" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row7" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 7
 
-[node name="Row8" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row8" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 8
 
-[node name="Row9" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row9" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 9
 
-[node name="Row10" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row10" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 10
 
-[node name="Row11" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row11" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 11
 
-[node name="Row12" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row12" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 12
 
-[node name="Row13" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row13" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 13
 
-[node name="Row14" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row14" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 14
 
-[node name="Row15" parent="." instance=ExtResource("3_0b61g")]
+[node name="Row15" parent="SpanningTableContainer" instance=ExtResource("3_0b61g")]
 layout_mode = 2
 row_index = 15
+
+[connection signal="text_changed" from="HBoxContainer/PageNumber" to="." method="_on_page_number_text_changed"]
+[connection signal="pressed" from="HBoxContainer/FirstButton" to="." method="_on_first_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/PrevButton" to="." method="_on_prev_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/LastButton" to="." method="_on_last_button_pressed"]
+[connection signal="item_selected" from="HBoxContainer/MemoryCategoryOptionButton" to="." method="_on_memory_category_option_button_item_selected"]

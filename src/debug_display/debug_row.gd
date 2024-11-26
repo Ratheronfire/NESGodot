@@ -5,6 +5,8 @@ extends HBoxContainer
 const BYTES_PER_ROW: int = 16
 const BYTES_PER_PAGE: int = 256
 
+var _bytes: Array[NES_DebugByte] = []
+
 @export var row_index: int:
 	set(value):
 		row_index = value
@@ -18,12 +20,16 @@ var page: int:
 func _ready() -> void:
 	page = 0
 	update_display()
+	
+	_bytes = []
+	for child in get_children():
+		if child is NES_DebugByte:
+			_bytes.append(child)
 
 
 func update_display():
-	for child in get_children():
-		if child is NES_DebugByte:
-			child.rom_byte = (0x10 * (row_index + (page * BYTES_PER_PAGE / BYTES_PER_ROW))) + child.row_byte
-			child.update()
+	for byte in _bytes:
+		byte.rom_byte = (0x10 * (row_index + (page * BYTES_PER_PAGE / BYTES_PER_ROW))) + byte.row_byte
+		byte.update()
 	
 	$RowStart.text = "0x%03X0 || " % (row_index + (page * BYTES_PER_PAGE / BYTES_PER_ROW))

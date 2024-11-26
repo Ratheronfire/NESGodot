@@ -37,18 +37,20 @@ func open_rom(path: String):
 		_8_kb_chr_chunks = _bytes[5]
 
 
-func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int) -> void:
+func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int, to_ppu: bool = false) -> void:
 	print("Copying 0x%04X bytes from ROM 0x%04X to RAM 0x%04X." % [
 		length,
 		rom_address,
 		ram_address
 	])
 	
+	var dest_memory = NES.ppu_memory if to_ppu else NES.cpu_memory
+	
 	assert(len(_bytes) - rom_address >= length)
-	assert(len(NES.cpu_memory) - ram_address >= length)
+	assert(len(dest_memory) - ram_address >= length)
 	
 	for i in range(length):
-		NES.cpu_memory[ram_address + i] = _bytes[rom_address + i]
+		dest_memory[ram_address + i] = _bytes[rom_address + i]
 
 
 func load_initial_map() -> void:

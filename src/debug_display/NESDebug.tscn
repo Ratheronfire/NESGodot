@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://src/debug_display/DebugDisplay.gd" id="1_se2qh"]
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_8afru"]
+[ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_3vw4w"]
 [ext_resource type="Script" path="res://src/debug_display/ScriptPanel.gd" id="3_leycn"]
-[ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_wd7t5"]
 [ext_resource type="Script" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
 
 [node name="DebugDisplay" type="Control"]
@@ -14,7 +14,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_se2qh")
-bytes_per_page = 256
 
 [node name="Registers" type="ScrollContainer" parent="."]
 layout_mode = 1
@@ -127,50 +126,8 @@ anchor_bottom = 1.0
 offset_right = 579.0
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MemoryPanel"]
+[node name="DebugTable" parent="MemoryPanel" instance=ExtResource("3_3vw4w")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MemoryPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="Page1" type="RichTextLabel" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(59, 0)
-layout_mode = 2
-text = "Page"
-
-[node name="PageNumber" type="TextEdit" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(100, 35)
-layout_mode = 2
-text = "0"
-
-[node name="Page2" type="RichTextLabel" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(80, 0)
-layout_mode = 2
-text = "Of X"
-
-[node name="FirstButton" type="Button" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "<<"
-
-[node name="PrevButton" type="Button" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "<"
-
-[node name="NextButton" type="Button" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = ">"
-
-[node name="LastButton" type="Button" parent="MemoryPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = ">>"
-
-[node name="SpanningTableContainer" parent="MemoryPanel/VBoxContainer" instance=ExtResource("3_wd7t5")]
-layout_mode = 2
 
 [node name="ScriptPanel" type="Panel" parent="."]
 layout_mode = 1
@@ -281,11 +238,6 @@ script = ExtResource("6_u81j0")
 separation_horizontal = null
 separation_vertical = null
 
-[connection signal="text_changed" from="MemoryPanel/VBoxContainer/HBoxContainer/PageNumber" to="." method="_on_PageNumber_text_changed"]
-[connection signal="pressed" from="MemoryPanel/VBoxContainer/HBoxContainer/FirstButton" to="." method="_on_FirstButton_pressed"]
-[connection signal="pressed" from="MemoryPanel/VBoxContainer/HBoxContainer/PrevButton" to="." method="_on_PrevButton_pressed"]
-[connection signal="pressed" from="MemoryPanel/VBoxContainer/HBoxContainer/NextButton" to="." method="_on_NextButton_pressed"]
-[connection signal="pressed" from="MemoryPanel/VBoxContainer/HBoxContainer/LastButton" to="." method="_on_LastButton_pressed"]
 [connection signal="item_selected" from="ScriptPanel/VBoxContainer/HBoxContainer/FileTypeOptionButton" to="ScriptPanel" method="_on_file_type_option_button_item_selected"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/RunScriptButton" to="ScriptPanel" method="_on_RunScriptButton_pressed"]
