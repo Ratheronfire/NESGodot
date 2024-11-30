@@ -16,22 +16,25 @@ grow_vertical = 2
 script = ExtResource("1_se2qh")
 
 [node name="Registers" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(300, 250)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -151.0
+offset_left = -230.0
 offset_bottom = 225.0
 grow_horizontal = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Registers"]
+[node name="VBoxContainer" type="GridContainer" parent="Registers"]
+custom_minimum_size = Vector2(280, 250)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 size_flags_vertical = 3
+columns = 2
 
 [node name="A" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/A"]
 layout_mode = 2
@@ -46,7 +49,7 @@ text = "0x0"
 
 [node name="X" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/X"]
 layout_mode = 2
@@ -61,7 +64,7 @@ text = "0x0"
 
 [node name="Y" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/Y"]
 layout_mode = 2
@@ -76,7 +79,7 @@ text = "0x0"
 
 [node name="PC" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/PC"]
 layout_mode = 2
@@ -91,7 +94,7 @@ text = "0x0"
 
 [node name="SP" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/SP"]
 layout_mode = 2
@@ -106,7 +109,7 @@ text = "0x0"
 
 [node name="P" type="HBoxContainer" parent="Registers/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Registers/VBoxContainer/P"]
 layout_mode = 2
@@ -118,6 +121,51 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_8afru")
 text = "0b00000000"
+
+[node name="Cycles" type="HBoxContainer" parent="Registers/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Registers/VBoxContainer/Cycles"]
+layout_mode = 2
+text = "Cycles"
+
+[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/Cycles"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_8afru")
+text = "1"
+
+[node name="Scanline" type="HBoxContainer" parent="Registers/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Registers/VBoxContainer/Scanline"]
+layout_mode = 2
+text = "Scanline"
+
+[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/Scanline"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_8afru")
+text = "1"
+
+[node name="Frame" type="HBoxContainer" parent="Registers/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Registers/VBoxContainer/Frame"]
+layout_mode = 2
+text = "Frame"
+
+[node name="Text" type="TextEdit" parent="Registers/VBoxContainer/Frame"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_8afru")
+text = "1"
 
 [node name="MemoryPanel" type="Panel" parent="."]
 layout_mode = 1
@@ -187,9 +235,9 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_vertical = 4
-max_value = 10.0
+max_value = 8.0
 rounded = true
-tick_count = 10
+tick_count = 9
 ticks_on_borders = true
 
 [node name="StepButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]

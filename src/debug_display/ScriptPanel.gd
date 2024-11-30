@@ -16,6 +16,18 @@ var _file_type: FileType = FileType.Script
 
 var _file_path: String
 
+var _speed_settings = [
+	0.0,
+	0.001,
+	0.1,
+	0.5,
+	0.75,
+	1.0,
+	2.0,
+	5.0,
+	10.0
+]
+
 
 func _ready():
 	_on_FileDialog_file_selected("res://src/test_script.txt")
@@ -62,23 +74,14 @@ func _on_StepByStepCheckBox_toggled(button_pressed):
 func _on_cpu_speed_slider_drag_ended(value_changed: bool) -> void:
 	var slider_value = $VBoxContainer/HBoxContainer2/CPUSpeedSlider.value
 	
-	if slider_value == $VBoxContainer/HBoxContainer2/CPUSpeedSlider.min_value:
-		slider_value = 0
-	elif slider_value == $VBoxContainer/HBoxContainer2/CPUSpeedSlider.max_value:
-		slider_value = -1
-	
-	NES.instructions_per_second = slider_value
+	NES.cpu_speed_multiplier = _speed_settings[slider_value]
 	
 	step_button.disabled = slider_value != 0
 	
-	if slider_value == -1:
-		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "Max Speed"
-	elif slider_value == 0:
+	if slider_value == 0:
 		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "CPU Paused"
 	else:
-		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "%d inst%s/sec" % [
-			slider_value, "" if slider_value == 1 else "s"
-		]
+		$VBoxContainer/HBoxContainer2/CPUSpeedIndicator.text = "%0.4f%% Speed" % (_speed_settings[slider_value] * 100)
 
 
 func _on_StepButton_pressed():

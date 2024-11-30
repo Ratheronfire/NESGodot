@@ -15,7 +15,7 @@ class InstructionData:
 		self.context = context
 	
 	func get_instruction():
-		return Consts.OPCODE_INSTRUCTIONS[self.opcode]
+		return Consts.OPCODE_DATA[self.opcode]['instruction']
 	
 	func get_bytes_to_read():
 		if not self.context:
@@ -507,12 +507,15 @@ func JSR(context: OperandAddressingContext):
 
 
 func RTS(context: OperandAddressingContext):
-	NES.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack()
+	NES.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack() + 3
 
 
 func RTI(context: OperandAddressingContext):
 	NES.registers[Consts.CPU_Registers.P] = _pull_from_stack()
 	NES.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack()
+	
+	NES.cpu_speed_multiplier = 0.0
+	print("Returned to $%02X" % NES.registers[Consts.CPU_Registers.PC])
 
 
 func CLC(context: OperandAddressingContext):

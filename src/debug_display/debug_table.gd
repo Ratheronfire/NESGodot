@@ -71,7 +71,7 @@ func _on_last_button_pressed():
 func _on_page_number_text_changed():
 	var new_text = page_number_field.text
 	if not new_text.is_valid_int() or int(new_text) < 0 or int(new_text) >= _total_pages:
-		page_number_field.text = _page_num_input
+		page_number_field.text = str(_page_num_input)
 		return
 	
 	_set_memory_page(int(new_text))
