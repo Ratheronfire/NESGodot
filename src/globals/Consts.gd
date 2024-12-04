@@ -10,6 +10,12 @@ enum CPU_Registers {
 	P  = 0x5  ## Status flags. Explained in [Consts.StatusFlags].
 }
 
+## The different sections of memory that can be accessed.
+enum MemoryTypes {
+	CPU,
+	PPU
+}
+
 ## The status flags making up the SR register.
 enum StatusFlags {
 	Carry            = 0x01, ## The carry flag for arithmetic and shift operations.

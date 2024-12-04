@@ -16,61 +16,61 @@ func test_LDA() -> void:
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(1)
 	
-	NES.cpu_memory[0x20] = 2
+	NES._cpu_memory[0x20] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(2)
 	
-	NES.cpu_memory[0x21] = 3
+	NES._cpu_memory[0x21] = 3
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0x20)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(3)
 	
-	NES.cpu_memory[0x1234] = 4
+	NES._cpu_memory[0x1234] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(4)
 	
-	NES.cpu_memory[0x1236] = 5
+	NES._cpu_memory[0x1236] = 5
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(5)
 	
-	NES.cpu_memory[0x1236] = 5
+	NES._cpu_memory[0x1236] = 5
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_Y, 0x1234)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(5)
 	
-	NES.cpu_memory[0x1234] = 7
-	NES.cpu_memory[0x09] = 0x34
-	NES.cpu_memory[0x0A] = 0x12
+	NES._cpu_memory[0x1234] = 7
+	NES._cpu_memory[0x09] = 0x34
+	NES._cpu_memory[0x0A] = 0x12
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_X, 0x07)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(7)
 	
-	NES.cpu_memory[0x3456] = 8
-	NES.cpu_memory[0xFF] = 0x56
-	NES.cpu_memory[0x00] = 0x34
+	NES._cpu_memory[0x3456] = 8
+	NES._cpu_memory[0xFF] = 0x56
+	NES._cpu_memory[0x00] = 0x34
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_X, 0xFE)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(8)
 	
-	NES.cpu_memory[0x5678] = 9
-	NES.cpu_memory[0x07] = 0x76
-	NES.cpu_memory[0x08] = 0x56
+	NES._cpu_memory[0x5678] = 9
+	NES._cpu_memory[0x07] = 0x76
+	NES._cpu_memory[0x08] = 0x56
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_Y, 0x07)
 	Opcodes.LDA(context)
 	assert_int(NES.registers[Consts.CPU_Registers.A]).is_equal(9)
 	
-	NES.cpu_memory[0x6789] = 10
-	NES.cpu_memory[0xFF] = 0x87
-	NES.cpu_memory[0x00] = 0x67
+	NES._cpu_memory[0x6789] = 10
+	NES._cpu_memory[0xFF] = 0x87
+	NES._cpu_memory[0x00] = 0x67
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_Y, 0xFF)
 	Opcodes.LDA(context)
@@ -97,23 +97,23 @@ func test_LDX() -> void:
 	Opcodes.LDX(context)
 	assert_int(NES.registers[Consts.CPU_Registers.X]).is_equal(1)
 	
-	NES.cpu_memory[0x20] = 2
+	NES._cpu_memory[0x20] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.LDX(context)
 	assert_int(NES.registers[Consts.CPU_Registers.X]).is_equal(2)
 	
-	NES.cpu_memory[0x21] = 3
+	NES._cpu_memory[0x21] = 3
 	NES.registers[Consts.CPU_Registers.Y] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_Y, 0x20)
 	Opcodes.LDX(context)
 	assert_int(NES.registers[Consts.CPU_Registers.X]).is_equal(3)
 	
-	NES.cpu_memory[0x1234] = 4
+	NES._cpu_memory[0x1234] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.LDX(context)
 	assert_int(NES.registers[Consts.CPU_Registers.X]).is_equal(4)
 	
-	NES.cpu_memory[0x1236] = 5
+	NES._cpu_memory[0x1236] = 5
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_Y, 0x1234)
 	Opcodes.LDX(context)
@@ -140,23 +140,23 @@ func test_LDY() -> void:
 	Opcodes.LDY(context)
 	assert_int(NES.registers[Consts.CPU_Registers.Y]).is_equal(1)
 	
-	NES.cpu_memory[0x20] = 2
+	NES._cpu_memory[0x20] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.LDY(context)
 	assert_int(NES.registers[Consts.CPU_Registers.Y]).is_equal(2)
 	
-	NES.cpu_memory[0x21] = 3
+	NES._cpu_memory[0x21] = 3
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0x20)
 	Opcodes.LDY(context)
 	assert_int(NES.registers[Consts.CPU_Registers.Y]).is_equal(3)
 	
-	NES.cpu_memory[0x1234] = 4
+	NES._cpu_memory[0x1234] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.LDY(context)
 	assert_int(NES.registers[Consts.CPU_Registers.Y]).is_equal(4)
 	
-	NES.cpu_memory[0x1236] = 5
+	NES._cpu_memory[0x1236] = 5
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.LDY(context)
@@ -182,82 +182,82 @@ func test_STA() -> void:
 	NES.registers[Consts.CPU_Registers.A] = 2
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x20]).is_equal(2)
+	assert_int(NES._cpu_memory[0x20]).is_equal(2)
 	
 	NES.registers[Consts.CPU_Registers.A] = 3
 	NES.registers[Consts.CPU_Registers.X] = 0xFF
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0xFF]).is_equal(3)
+	assert_int(NES._cpu_memory[0xFF]).is_equal(3)
 	
 	NES.registers[Consts.CPU_Registers.A] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1234]).is_equal(4)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(4)
 	
 	NES.registers[Consts.CPU_Registers.A] = 5
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1236]).is_equal(5)
+	assert_int(NES._cpu_memory[0x1236]).is_equal(5)
 	
 	NES.registers[Consts.CPU_Registers.A] = 6
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_Y, 0x1234)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1236]).is_equal(6)
+	assert_int(NES._cpu_memory[0x1236]).is_equal(6)
 	
-	NES.cpu_memory[0x09] = 0x34
-	NES.cpu_memory[0x0A] = 0x12
+	NES._cpu_memory[0x09] = 0x34
+	NES._cpu_memory[0x0A] = 0x12
 	NES.registers[Consts.CPU_Registers.A] = 7
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_X, 0x07)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1234]).is_equal(7)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(7)
 	
-	NES.cpu_memory[0x07] = 0x34
-	NES.cpu_memory[0x08] = 0x12
+	NES._cpu_memory[0x07] = 0x34
+	NES._cpu_memory[0x08] = 0x12
 	NES.registers[Consts.CPU_Registers.A] = 8
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_Y, 0x07)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1236]).is_equal(8)
+	assert_int(NES._cpu_memory[0x1236]).is_equal(8)
 
 
 func test_STX() -> void:
 	NES.registers[Consts.CPU_Registers.X] = 2
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.STX(context)
-	assert_int(NES.cpu_memory[0x20]).is_equal(2)
+	assert_int(NES._cpu_memory[0x20]).is_equal(2)
 	
 	NES.registers[Consts.CPU_Registers.X] = 3
 	NES.registers[Consts.CPU_Registers.Y] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_Y, 0x20)
 	Opcodes.STX(context)
-	assert_int(NES.cpu_memory[0x21]).is_equal(3)
+	assert_int(NES._cpu_memory[0x21]).is_equal(3)
 	
 	NES.registers[Consts.CPU_Registers.X] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.STX(context)
-	assert_int(NES.cpu_memory[0x1234]).is_equal(4)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(4)
 
 
 func test_STY() -> void:
 	NES.registers[Consts.CPU_Registers.A] = 2
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0x20)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x20]).is_equal(2)
+	assert_int(NES._cpu_memory[0x20]).is_equal(2)
 	
 	NES.registers[Consts.CPU_Registers.A] = 3
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0x20)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x21]).is_equal(3)
+	assert_int(NES._cpu_memory[0x21]).is_equal(3)
 	
 	NES.registers[Consts.CPU_Registers.A] = 4
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.STA(context)
-	assert_int(NES.cpu_memory[0x1234]).is_equal(4)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(4)
 
 
 func test_ADC() -> void:
@@ -273,7 +273,7 @@ func test_ADC() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Overflow)).is_zero()
 	
 	NES.registers[Consts.CPU_Registers.A] = 2
-	NES.cpu_memory[0x1] = 1
+	NES._cpu_memory[0x1] = 1
 	NES.set_status_flag(Consts.StatusFlags.Carry, false)
 
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 1)
@@ -286,7 +286,7 @@ func test_ADC() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 3
 	NES.registers[Consts.CPU_Registers.X] = 1
-	NES.cpu_memory[0x2] = 1
+	NES._cpu_memory[0x2] = 1
 	NES.set_status_flag(Consts.StatusFlags.Carry, false)
 
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 1)
@@ -298,7 +298,7 @@ func test_ADC() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Overflow)).is_zero()
 	
 	NES.registers[Consts.CPU_Registers.A] = 4
-	NES.cpu_memory[0x1234] = 1
+	NES._cpu_memory[0x1234] = 1
 	NES.set_status_flag(Consts.StatusFlags.Carry, false)
 
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
@@ -311,7 +311,7 @@ func test_ADC() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 5
 	NES.registers[Consts.CPU_Registers.X] = 2
-	NES.cpu_memory[0x1236] = 1
+	NES._cpu_memory[0x1236] = 1
 	NES.set_status_flag(Consts.StatusFlags.Carry, false)
 
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
@@ -324,7 +324,7 @@ func test_ADC() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 6
 	NES.registers[Consts.CPU_Registers.Y] = 3
-	NES.cpu_memory[0x1237] = 1
+	NES._cpu_memory[0x1237] = 1
 	NES.set_status_flag(Consts.StatusFlags.Carry, false)
 
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_Y, 0x1234)
@@ -391,37 +391,37 @@ func test_INC() -> void:
 	NES.set_status_flag(Consts.StatusFlags.Zero, false)
 	NES.set_status_flag(Consts.StatusFlags.Negative, false)
 	
-	NES.cpu_memory[0] = 5
+	NES._cpu_memory[0] = 5
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0)
 	Opcodes.INC(context)
 	
-	assert_int(NES.cpu_memory[0]).is_equal(6)
+	assert_int(NES._cpu_memory[0]).is_equal(6)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[1] = 6
+	NES._cpu_memory[1] = 6
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0)
 	Opcodes.INC(context)
 	
-	assert_int(NES.cpu_memory[1]).is_equal(7)
+	assert_int(NES._cpu_memory[1]).is_equal(7)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x1234] = 0xFF
+	NES._cpu_memory[0x1234] = 0xFF
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.INC(context)
 	
-	assert_int(NES.cpu_memory[0x1234]).is_equal(0)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(0)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x1233] = 0x7F
+	NES._cpu_memory[0x1233] = 0x7F
 	NES.registers[Consts.CPU_Registers.X] = -1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.INC(context)
 	
-	assert_int(NES.cpu_memory[0x1233]).is_equal(0x80)
+	assert_int(NES._cpu_memory[0x1233]).is_equal(0x80)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 
@@ -488,37 +488,37 @@ func test_DEC() -> void:
 	NES.set_status_flag(Consts.StatusFlags.Zero, false)
 	NES.set_status_flag(Consts.StatusFlags.Negative, false)
 	
-	NES.cpu_memory[0] = 5
+	NES._cpu_memory[0] = 5
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0)
 	Opcodes.DEC(context)
 	
-	assert_int(NES.cpu_memory[0]).is_equal(4)
+	assert_int(NES._cpu_memory[0]).is_equal(4)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[1] = 6
+	NES._cpu_memory[1] = 6
 	NES.registers[Consts.CPU_Registers.X] = 1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 0)
 	Opcodes.DEC(context)
 	
-	assert_int(NES.cpu_memory[1]).is_equal(5)
+	assert_int(NES._cpu_memory[1]).is_equal(5)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x1233] = 1
+	NES._cpu_memory[0x1233] = 1
 	NES.registers[Consts.CPU_Registers.X] = -1
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.DEC(context)
 	
-	assert_int(NES.cpu_memory[0x1233]).is_equal(0)
+	assert_int(NES._cpu_memory[0x1233]).is_equal(0)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x1234] = 0
+	NES._cpu_memory[0x1234] = 0
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.DEC(context)
 	
-	assert_int(NES.cpu_memory[0x1234]).is_equal(0xFF)
+	assert_int(NES._cpu_memory[0x1234]).is_equal(0xFF)
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 
@@ -834,7 +834,7 @@ func test_CMP() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
 	NES.registers[Consts.CPU_Registers.A] = 2
-	NES.cpu_memory[1] = 0x3
+	NES._cpu_memory[1] = 0x3
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 1)
 	Opcodes.CMP(context)
 	
@@ -844,7 +844,7 @@ func test_CMP() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 2
 	NES.registers[Consts.CPU_Registers.X] = 3
-	NES.cpu_memory[4] = 0x3
+	NES._cpu_memory[4] = 0x3
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage_X, 1)
 	Opcodes.CMP(context)
 	
@@ -853,7 +853,7 @@ func test_CMP() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 	
 	NES.registers[Consts.CPU_Registers.A] = 0xFF
-	NES.cpu_memory[0x1234] = 0xFF
+	NES._cpu_memory[0x1234] = 0xFF
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.CMP(context)
 	
@@ -863,7 +863,7 @@ func test_CMP() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 0xEE
 	NES.registers[Consts.CPU_Registers.X] = 4
-	NES.cpu_memory[0x1238] = 0xEE
+	NES._cpu_memory[0x1238] = 0xEE
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_X, 0x1234)
 	Opcodes.CMP(context)
 	
@@ -873,7 +873,7 @@ func test_CMP() -> void:
 	
 	NES.registers[Consts.CPU_Registers.A] = 0xDD
 	NES.registers[Consts.CPU_Registers.Y] = 6
-	NES.cpu_memory[0x123A] = 0xDD
+	NES._cpu_memory[0x123A] = 0xDD
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute_Y, 0x1234)
 	Opcodes.CMP(context)
 	
@@ -881,9 +881,9 @@ func test_CMP() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x1221] = 0xCC
-	NES.cpu_memory[0x09] = 0x21
-	NES.cpu_memory[0x0A] = 0x12
+	NES._cpu_memory[0x1221] = 0xCC
+	NES._cpu_memory[0x09] = 0x21
+	NES._cpu_memory[0x0A] = 0x12
 	NES.registers[Consts.CPU_Registers.A] = 0xCC
 	NES.registers[Consts.CPU_Registers.X] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_X, 0x07)
@@ -893,9 +893,9 @@ func test_CMP() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Zero)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
-	NES.cpu_memory[0x5678] = 0xBB
-	NES.cpu_memory[0x07] = 0x76
-	NES.cpu_memory[0x08] = 0x56
+	NES._cpu_memory[0x5678] = 0xBB
+	NES._cpu_memory[0x07] = 0x76
+	NES._cpu_memory[0x08] = 0x56
 	NES.registers[Consts.CPU_Registers.A] = 0xBB
 	NES.registers[Consts.CPU_Registers.Y] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZPInd_Y, 0x07)
@@ -916,7 +916,7 @@ func test_CPX() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
 	NES.registers[Consts.CPU_Registers.X] = 2
-	NES.cpu_memory[1] = 0x3
+	NES._cpu_memory[1] = 0x3
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 1)
 	Opcodes.CPX(context)
 	
@@ -925,7 +925,7 @@ func test_CPX() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 	
 	NES.registers[Consts.CPU_Registers.X] = 0xFF
-	NES.cpu_memory[0x1234] = 0xFF
+	NES._cpu_memory[0x1234] = 0xFF
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.CPX(context)
 	
@@ -944,7 +944,7 @@ func test_CPY() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_zero()
 	
 	NES.registers[Consts.CPU_Registers.Y] = 2
-	NES.cpu_memory[1] = 0x3
+	NES._cpu_memory[1] = 0x3
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 1)
 	Opcodes.CPY(context)
 	
@@ -953,7 +953,7 @@ func test_CPY() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 	
 	NES.registers[Consts.CPU_Registers.Y] = 0xFF
-	NES.cpu_memory[0x1234] = 0xFF
+	NES._cpu_memory[0x1234] = 0xFF
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x1234)
 	Opcodes.CPY(context)
 	
@@ -963,7 +963,7 @@ func test_CPY() -> void:
 
 
 func test_BIT() -> void:
-	NES.cpu_memory[0] = 0x81
+	NES._cpu_memory[0] = 0x81
 	NES.registers[Consts.CPU_Registers.A] = 2
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0)
 	Opcodes.BIT(context)
@@ -972,7 +972,7 @@ func test_BIT() -> void:
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Negative)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Overflow)).is_zero()
 	
-	NES.cpu_memory[0] = 0xC3
+	NES._cpu_memory[0] = 0xC3
 	NES.registers[Consts.CPU_Registers.A] = 2
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.ZeroPage, 0)
 	Opcodes.BIT(context)
@@ -983,10 +983,10 @@ func test_BIT() -> void:
 
 
 func test_BCC() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Carry, 1)
@@ -1003,21 +1003,21 @@ func test_BCC() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BCC(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BCS() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Carry, 0)
@@ -1034,21 +1034,21 @@ func test_BCS() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BCS(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BNE() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Zero, 1)
@@ -1065,21 +1065,21 @@ func test_BNE() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BNE(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BEQ() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Zero, 0)
@@ -1096,21 +1096,21 @@ func test_BEQ() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BEQ(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BPL() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Negative, 1)
@@ -1127,21 +1127,21 @@ func test_BPL() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BPL(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BMI() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Negative, 0)
@@ -1158,21 +1158,21 @@ func test_BMI() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BMI(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BVC() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Overflow, 1)
@@ -1189,21 +1189,21 @@ func test_BVC() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BVC(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_BVS() -> void:
-	NES.cpu_memory[0] = 0x34
-	NES.cpu_memory[1] = 0x12
-	NES.cpu_memory[3] = 0x78
-	NES.cpu_memory[4] = 0x56
+	NES._cpu_memory[0] = 0x34
+	NES._cpu_memory[1] = 0x12
+	NES._cpu_memory[3] = 0x78
+	NES._cpu_memory[4] = 0x56
 	
 	NES.registers[Consts.CPU_Registers.PC] = 2
 	NES.set_status_flag(Consts.StatusFlags.Overflow, 0)
@@ -1220,14 +1220,14 @@ func test_BVS() -> void:
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0)
-	assert_int(NES.get_word(pc)).is_equal(0x1234)
+	assert_int(NES.read_word(pc)).is_equal(0x1234)
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Relative, 1)
 	Opcodes.BVS(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(3)
-	assert_int(NES.get_word(pc)).is_equal(0x5678)
+	assert_int(NES.read_word(pc)).is_equal(0x5678)
 
 
 func test_TAX() -> void:
@@ -1442,11 +1442,11 @@ func test_PHA() -> void:
 	Opcodes.PHA(null)
 	
 	assert_int(NES.registers[Consts.CPU_Registers.SP]).is_equal(0xFC)
-	assert_int(NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0x0F)
+	assert_int(NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0x0F)
 
 
 func test_PLA() -> void:
-	NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP]] = 0x0F
+	NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP]] = 0x0F
 	NES.registers[Consts.CPU_Registers.SP] = 0xFC
 	
 	Opcodes.PLA(null)
@@ -1464,11 +1464,11 @@ func test_PHP() -> void:
 	Opcodes.PHP(null)
 	
 	assert_int(NES.registers[Consts.CPU_Registers.SP]).is_equal(0xFC)
-	assert_int(NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0b10110101)
+	assert_int(NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0b10110101)
 
 
 func test_PLP() -> void:
-	NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP]] = 0b10110101
+	NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP]] = 0b10110101
 	NES.registers[Consts.CPU_Registers.SP] = 0xFC
 	
 	assert_int(NES.get_status_flag(Consts.StatusFlags.Carry)).is_zero()
@@ -1482,53 +1482,53 @@ func test_PLP() -> void:
 
 
 func test_JMP() -> void:
-	NES.cpu_memory[0x12] = 0x56
-	NES.cpu_memory[0x13] = 0x34
+	NES._cpu_memory[0x12] = 0x56
+	NES._cpu_memory[0x13] = 0x34
 	
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x12)
 	Opcodes.JMP(context)
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0x12)
-	assert_int(NES.get_word(pc)).is_equal(0x3456)
+	assert_int(NES.read_word(pc)).is_equal(0x3456)
 	
-	NES.cpu_memory[0x2005] = 0x12
-	NES.cpu_memory[0x2006] = 0x20
-	NES.cpu_memory[0x2012] = 0x9A
-	NES.cpu_memory[0x2013] = 0x78
+	NES._cpu_memory[0x2005] = 0x12
+	NES._cpu_memory[0x2006] = 0x20
+	NES._cpu_memory[0x2012] = 0x9A
+	NES._cpu_memory[0x2013] = 0x78
 	
 	context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Indirect, 0x2005)
 	Opcodes.JMP(context)
 	
 	pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0x2012)
-	assert_int(NES.get_word(pc)).is_equal(0x789A)
+	assert_int(NES.read_word(pc)).is_equal(0x789A)
 
 
 func test_JSR() -> void:
 	NES.registers[Consts.CPU_Registers.PC] = 0x1234
 	NES.registers[Consts.CPU_Registers.SP] = 0xFD
 	
-	NES.cpu_memory[0x12] = 0x56
-	NES.cpu_memory[0x13] = 0x34
+	NES._cpu_memory[0x12] = 0x56
+	NES._cpu_memory[0x13] = 0x34
 	
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Absolute, 0x12)
 	Opcodes.JSR(context)
 	
 	var pc = NES.registers[Consts.CPU_Registers.PC]
 	assert_int(pc).is_equal(0x12)
-	assert_int(NES.get_word(pc)).is_equal(0x3456)
+	assert_int(NES.read_word(pc)).is_equal(0x3456)
 	
 	assert_int(NES.registers[Consts.CPU_Registers.SP]).is_equal(0xFB)
 	
-	assert_int(NES.cpu_memory[0x01FD]).is_equal(0x34)
-	assert_int(NES.cpu_memory[0x01FC]).is_equal(0x12)
+	assert_int(NES._cpu_memory[0x01FD]).is_equal(0x34)
+	assert_int(NES._cpu_memory[0x01FC]).is_equal(0x12)
 
 
 func test_RTS() -> void:
 	NES.registers[Consts.CPU_Registers.PC] = 0
-	NES.cpu_memory[0x01FD] = 0x34
-	NES.cpu_memory[0x01FC] = 0x12
+	NES._cpu_memory[0x01FD] = 0x34
+	NES._cpu_memory[0x01FC] = 0x12
 	NES.registers[Consts.CPU_Registers.SP] = 0xFB
 	
 	var context = Opcodes.OperandAddressingContext.new(Consts.AddressingModes.Implied, 0)
@@ -1540,9 +1540,9 @@ func test_RTS() -> void:
 
 func test_RTI() -> void:
 	NES.registers[Consts.CPU_Registers.PC] = 0
-	NES.cpu_memory[0x01FD] = 0x34
-	NES.cpu_memory[0x01FC] = 0x12
-	NES.cpu_memory[0x01FB] = 0b10110101
+	NES._cpu_memory[0x01FD] = 0x34
+	NES._cpu_memory[0x01FC] = 0x12
+	NES._cpu_memory[0x01FB] = 0b10110101
 	NES.registers[Consts.CPU_Registers.SP] = 0xFA
 	
 	NES.set_status_flag(Consts.StatusFlags.Carry, 0)
@@ -1627,9 +1627,9 @@ func test_BRK() -> void:
 	assert_int(NES.registers[Consts.CPU_Registers.SP]).is_equal(0xFA)
 	assert_int(NES.registers[Consts.CPU_Registers.PC]).is_equal(0xFFFE)
 	
-	assert_int(NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0b10110101)
-	assert_int(NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 2]).is_equal(0x12)
-	assert_int(NES.cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 3]).is_equal(0x34)
+	assert_int(NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1]).is_equal(0b10110101)
+	assert_int(NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 2]).is_equal(0x12)
+	assert_int(NES._cpu_memory[0x0100 + NES.registers[Consts.CPU_Registers.SP] + 3]).is_equal(0x34)
 	
 	assert_int(NES.get_status_flag(Consts.StatusFlags.InterruptDisable)).is_not_zero()
 	assert_int(NES.get_status_flag(Consts.StatusFlags.B_1)).is_not_zero()

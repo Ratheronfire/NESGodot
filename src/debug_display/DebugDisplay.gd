@@ -28,9 +28,10 @@ func on_ticked():
 	
 	if weakref(NES.last_instruction).get_ref():
 		var bytes = Consts.BYTES_PER_MODE[NES.last_instruction.context.address_mode]
+		
 		last_command_label.text = "Last Command: %s %s(%s, %d Byte%s)" % [
 			NES.last_instruction.instruction,
-			(str(NES.last_instruction.context.value) + " ") if NES.last_instruction.context.address_mode != Consts.AddressingModes.Implied else "",
+			(("$%02X" % NES.last_instruction.context.value) + " ") if NES.last_instruction.context.address_mode != Consts.AddressingModes.Implied else "",
 			Consts.AddressingModes.keys()[NES.last_instruction.context.address_mode],
 			bytes, "" if bytes == 1 else "s"
 		]

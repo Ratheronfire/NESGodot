@@ -6,7 +6,7 @@ extends RichTextLabel
 
 var rom_byte: int
 
-var _is_tracking_cpu := true
+var memory_category: Consts.MemoryTypes = Consts.MemoryTypes.CPU
 
 
 func _ready() -> void:
@@ -21,10 +21,10 @@ func on_ticked() -> void:
 
 func on_table_category_updated(memory_category: int):
 	if not Engine.is_editor_hint():
-		_is_tracking_cpu = memory_category == 0
+		self.memory_category = memory_category
 		update()
 
 
 func update():
 	if not Engine.is_editor_hint():
-		text = "%02X" % NES.cpu_memory[rom_byte] if _is_tracking_cpu else NES.ppu_memory[rom_byte]
+		text = "%02X" % NES.read_byte(rom_byte, memory_category)

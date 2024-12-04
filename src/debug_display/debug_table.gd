@@ -22,7 +22,7 @@ extends VBoxContainer
 @onready var _total_pages = 0
 var _page_num_input = 0
 
-var memory_category = 0
+var memory_category: Consts.MemoryTypes = Consts.MemoryTypes.CPU
 
 signal table_category_updated
 
@@ -43,9 +43,9 @@ func _set_memory_page(page_index: int):
 	page_number_field.set_caret_column(page_number_field.text.length())
 
 
-func _set_memory_category(category_index: int):
+func _set_memory_category(category_index: Consts.MemoryTypes):
 	page = 0
-	_total_pages = len(NES.cpu_memory if category_index == 0 else NES.ppu_memory) / bytes_per_page - 1
+	_total_pages = NES.get_memory_size(category_index) / bytes_per_page - 1
 	page_total_field.text = "Of %d" % _total_pages
 	
 	memory_category = category_index
