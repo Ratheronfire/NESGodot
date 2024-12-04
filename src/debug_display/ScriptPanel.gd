@@ -6,13 +6,15 @@ enum FileType {
 	ROM = 1
 }
 
+const LAST_LOADED_PATH = ".last_loaded"
+
 @onready var debug_display = get_parent()
 
 @onready var file_dialog = $"../FileDialog"
 @onready var file_text = $VBoxContainer/HBoxContainer/ScriptPath
 @onready var step_button = $VBoxContainer/HBoxContainer2/StepButton
 
-var _file_type: FileType = FileType.Script
+var _file_type: FileType = FileType.ROM
 
 var _file_path: String
 
@@ -30,8 +32,11 @@ var _speed_settings = [
 
 
 func _ready():
-	_on_FileDialog_file_selected("res://src/test_script.txt")
-	run_script()
+	var loaded_file = FileAccess.open(LAST_LOADED_PATH, FileAccess.READ)
+	if loaded_file:
+		_on_FileDialog_file_selected(loaded_file.get_as_text())
+		run_script()
+		loaded_file.close()
 
 
 func run_script():
@@ -60,6 +65,10 @@ func _on_FileDialog_file_selected(path):
 		NES.registers[Consts.CPU_Registers.PC] = Consts.CARTRIDGE_ADDRESS
 	elif _file_type == FileType.ROM:
 		NES.setup_rom(_file_path)
+	
+	var loaded_file = FileAccess.open(LAST_LOADED_PATH, FileAccess.WRITE)
+	loaded_file.store_string(path)
+	loaded_file.close()
 
 
 func _on_RunScriptButton_pressed():

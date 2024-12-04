@@ -201,7 +201,7 @@ layout_mode = 2
 
 [node name="FileTypeOptionButton" type="OptionButton" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-selected = 0
+selected = 1
 item_count = 2
 popup/item_0/text = "Script"
 popup/item_1/text = "ROM"
