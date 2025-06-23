@@ -19,7 +19,7 @@ enum FileFormat {
 var mapper_id: int:
 	get = get_mapper_id
 
-var _bytes: PackedByteArray
+var _rom_bytes: PackedByteArray
 
 var _format: FileFormat
 
@@ -28,13 +28,13 @@ var _8_kb_chr_chunks: int = 1
 
 
 func open_rom(path: String):
-	_bytes = FileAccess.get_file_as_bytes(path)
+	_rom_bytes = FileAccess.get_file_as_bytes(path)
 	
-	_format = determine_format(_bytes)
+	_format = determine_format(_rom_bytes)
 	
 	if _format in [FileFormat.INES, FileFormat.NES_2]:
-		_16_kb_prg_chunks = _bytes[4]
-		_8_kb_chr_chunks = _bytes[5]
+		_16_kb_prg_chunks = _rom_bytes[4]
+		_8_kb_chr_chunks = _rom_bytes[5]
 
 
 func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int, to_ppu: bool = false) -> void:
@@ -46,11 +46,11 @@ func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int, to_ppu: 
 	
 	var dest_memory = Consts.MemoryTypes.PPU if to_ppu else Consts.MemoryTypes.CPU
 	
-	assert(len(_bytes) - rom_address >= length)
+	assert(len(_rom_bytes) - rom_address >= length)
 	assert(NES.get_memory_size(dest_memory) - ram_address >= length)
 	
 	for i in range(length):
-		NES.write_byte(ram_address + i, _bytes[rom_address + i], dest_memory)
+		NES.write_byte(ram_address + i, _rom_bytes[rom_address + i], dest_memory)
 
 
 func load_initial_map() -> void:

@@ -101,11 +101,14 @@ func init():
 	for i in range(Consts.PPU_MEMORY_SIZE):
 		_ppu_memory.append(0)
 	
+	init_registers()
+
+func init_registers():
 	registers = {
 		Consts.CPU_Registers.A:  0x00,
 		Consts.CPU_Registers.X:  0x00,
 		Consts.CPU_Registers.Y:  0x00,
-		Consts.CPU_Registers.PC: 0xFFFC,
+		Consts.CPU_Registers.PC: read_word(0xFFFC),
 		Consts.CPU_Registers.SP: 0xFD,
 		Consts.CPU_Registers.P:  0x34
 	}
@@ -147,7 +150,7 @@ func cpu_loop():
 				_cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS] |= 0x80
 				var ppu_ctrl = _cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUCTRL]
 				
-				if ppu_ctrl & 0x80 == 1:
+				if ppu_ctrl & 0x80 > 0:
 					pending_interrupt = Consts.Interrupts.NMI
 			
 			if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
@@ -238,6 +241,13 @@ func get_instruction_data(start_byte: int):
 
 func start_running():
 	_cycles = 0
+	_scanline = 0
+	_frame = 0
+	
+	_seconds_this_cycle = 0.0
+	_seconds_this_scanline = 0.0
+	
+	init_registers()
 	
 	ticked.emit()
 	_is_running = true
@@ -247,6 +257,13 @@ func start_running():
 
 
 func setup_rom(rom_path: String):
+	var rom_bytes = FileAccess.get_file_as_bytes(rom_path)
+
+	if len(rom_bytes) < 16000:
+		# This probably isn't a ROM.
+		print("ROM %s is too small, is this really a ROM?" % rom_path)
+		return
+	
 	_rom_mapper = NES_Mapper.create_mapper(rom_path)
 	_rom_mapper.load_initial_map()
 	
@@ -359,6 +376,13 @@ func read_byte(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryT
 	
 	if memory_section == Consts.MemoryTypes.CPU:
 		return_value = _cpu_memory[address]
+		
+		if address >= 0x0800 and address < 0x2000:
+			var relative_address = address % 0x0800
+			return_value = _cpu_memory[relative_address]
+		elif address >= 0x2008 and address < 0x4000:
+			var relative_address = 0x2000 + ((address - 0x2000) % 0x08)
+			return_value = _cpu_memory[relative_address]
 	elif memory_section == Consts.MemoryTypes.PPU:
 		return_value = _ppu_memory[address]
 	
@@ -405,16 +429,3 @@ func copy_ram(from: int, to: int, length: int):
 func _process_read_byte_side_effects(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU):
 	if address == Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS and memory_section == Consts.MemoryTypes.CPU:
 		_cpu_memory[address] &= 0x7F
-
-
-func _mirror_memory_regions():
-	for i in range(3):
-		copy_ram(
-			Consts.WORK_RAM_ADDRESS,
-			Consts.WORK_RAM_MIRROR + i * Consts.WORK_RAM_SIZE,
-			Consts.WORK_RAM_SIZE)
-	for i in range(1022):
-		copy_ram(
-			Consts.PPU_REGISTERS,
-			Consts.PPU_MIRROR + i * Consts.PPU_RAM_SIZE,
-			Consts.PPU_RAM_SIZE)

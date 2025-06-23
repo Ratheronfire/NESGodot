@@ -33,10 +33,13 @@ var _speed_settings = [
 
 func _ready():
 	var loaded_file = FileAccess.open(LAST_LOADED_PATH, FileAccess.READ)
-	if loaded_file:
-		_on_FileDialog_file_selected(loaded_file.get_as_text())
+	var loaded_file_json = JSON.parse_string(loaded_file.get_as_text())
+	loaded_file.close()
+
+	if loaded_file_json:
+		_file_type = loaded_file_json['file_type']
+		_on_FileDialog_file_selected(loaded_file_json['file_path'])
 		run_script()
-		loaded_file.close()
 
 
 func run_script():
@@ -67,7 +70,12 @@ func _on_FileDialog_file_selected(path):
 		NES.setup_rom(_file_path)
 	
 	var loaded_file = FileAccess.open(LAST_LOADED_PATH, FileAccess.WRITE)
-	loaded_file.store_string(path)
+	loaded_file.store_string(
+		JSON.stringify({
+			'file_path': _file_path,
+			'file_type': _file_type
+		})
+	)
 	loaded_file.close()
 
 
