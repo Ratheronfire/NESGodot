@@ -22,16 +22,8 @@ var last_instruction: Opcodes.InstructionData
 ## Sets the speed of the emulated CPU. 1.0 equals the default value (60fps for NTSC/50fps for PAL), and 0.0 means the CPU is stopped.
 @export var cpu_speed_multiplier: float = 0.0
 
-@onready var _cpu_memory = []
-@onready var _ppu_memory = []
-@onready var registers = {
-	Consts.CPU_Registers.A:  0x00,
-	Consts.CPU_Registers.X:  0x00,
-	Consts.CPU_Registers.Y:  0x00,
-	Consts.CPU_Registers.PC: 0xFFFC,
-	Consts.CPU_Registers.SP: 0xFD,
-	Consts.CPU_Registers.P:  0x34
-}
+var cpu_memory: CPU_Memory
+var ppu_memory: PPU_Memory
 
 var pending_interrupt := Consts.Interrupts.NONE
 
@@ -93,25 +85,8 @@ func _process(delta: float) -> void:
 
 
 func init():
-	_cpu_memory = []
-	for i in range(Consts.CPU_MEMORY_SIZE):
-		_cpu_memory.append(0)
-	
-	_ppu_memory = []
-	for i in range(Consts.PPU_MEMORY_SIZE):
-		_ppu_memory.append(0)
-	
-	init_registers()
-
-func init_registers():
-	registers = {
-		Consts.CPU_Registers.A:  0x00,
-		Consts.CPU_Registers.X:  0x00,
-		Consts.CPU_Registers.Y:  0x00,
-		Consts.CPU_Registers.PC: read_word(0xFFFC),
-		Consts.CPU_Registers.SP: 0xFD,
-		Consts.CPU_Registers.P:  0x34
-	}
+	cpu_memory = preload("res://src/globals/CPU_Memory.gd").new(Consts.CPU_MEMORY_SIZE)
+	ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(Consts.PPU_MEMORY_SIZE)
 
 
 func cpu_loop():
@@ -147,8 +122,10 @@ func cpu_loop():
 			if _scanline > NTSC_SCANLINES:
 				# VBlank begins.
 				
-				_cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS] |= 0x80
-				var ppu_ctrl = _cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUCTRL]
+				var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
+				var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUCTRL, false)
+				
+				cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
 				
 				if ppu_ctrl & 0x80 > 0:
 					pending_interrupt = Consts.Interrupts.NMI
@@ -159,7 +136,8 @@ func cpu_loop():
 				_frame += 1
 				_scanline = 0
 				
-				_cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS] &= 0x7F
+				var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
+				cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
 			
 			if _cycles_before_next_instruction <= 0:
 				tick()
@@ -168,10 +146,10 @@ func cpu_loop():
 
 
 func tick():
-	var pc = registers[Consts.CPU_Registers.PC]
+	var pc = cpu_memory.registers[Consts.CPU_Registers.PC]
 	
 	if pending_interrupt == Consts.Interrupts.NMI:
-		var old_pc = registers[Consts.CPU_Registers.PC]
+		var old_pc = cpu_memory.registers[Consts.CPU_Registers.PC]
 		Opcodes.JSR(Opcodes.OperandAddressingContext.new(
 			Consts.AddressingModes.Absolute, _nmi_vector
 		))
@@ -180,7 +158,8 @@ func tick():
 		
 		pending_interrupt = Consts.Interrupts.NONE
 		
-		_cpu_memory[Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS] |= 0x80
+		var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
+		cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
 		
 		return
 	
@@ -206,13 +185,13 @@ func tick():
 		_is_running = false
 		return
 	
-	if registers[Consts.CPU_Registers.PC] == pc:
+	if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
 		# Don't increment the program counter if we just jumped
-		registers[Consts.CPU_Registers.PC] += instruction_data.bytes_to_read
+		cpu_memory.registers[Consts.CPU_Registers.PC] += instruction_data.bytes_to_read
 
 
 func get_instruction_data(start_byte: int):
-	var next_opcode = _cpu_memory[start_byte]
+	var next_opcode = cpu_memory.read_byte(start_byte, false)
 	
 	if next_opcode == 0xFF or next_opcode == 0:
 		_is_running = false
@@ -226,9 +205,9 @@ func get_instruction_data(start_byte: int):
 	var value_high = 0
 	
 	if bytes_to_read >= 1:
-		value_low = _cpu_memory[start_byte + 1]
+		value_low = cpu_memory.read_byte(start_byte + 1, false)
 	if bytes_to_read >= 2:
-		value_high = _cpu_memory[start_byte + 2]
+		value_high = cpu_memory.read_byte(start_byte + 2, false)
 	
 	var context = Opcodes.OperandAddressingContext.new(addressing_mode, value_low + (value_high << 8))
 	
@@ -247,7 +226,8 @@ func start_running():
 	_seconds_this_cycle = 0.0
 	_seconds_this_scanline = 0.0
 	
-	init_registers()
+	cpu_memory.init_registers()
+	ppu_memory.init_registers()
 	
 	ticked.emit()
 	_is_running = true
@@ -267,22 +247,22 @@ func setup_rom(rom_path: String):
 	_rom_mapper = NES_Mapper.create_mapper(rom_path)
 	_rom_mapper.load_initial_map()
 	
-	_nmi_vector = read_word(0xFFFA)
-	_reset_vector = read_word(0xFFFC)
-	_irq_vector = read_word(0xFFFE)
+	_nmi_vector = cpu_memory.read_word(0xFFFA, false)
+	_reset_vector = cpu_memory.read_word(0xFFFC, false)
+	_irq_vector = cpu_memory.read_word(0xFFFE, false)
 	
-	registers[Consts.CPU_Registers.PC] = _reset_vector
+	cpu_memory.registers[Consts.CPU_Registers.PC] = _reset_vector
 
 
 func get_status_flag(status: int):
-	return registers[Consts.CPU_Registers.P] & status
+	return cpu_memory.registers[Consts.CPU_Registers.P] & status
 
 
 func set_status_flag(status: int, state: bool):
 	if state:
-		registers[Consts.CPU_Registers.P] |= status
+		cpu_memory.registers[Consts.CPU_Registers.P] |= status
 	else:
-		registers[Consts.CPU_Registers.P] &= ~status
+		cpu_memory.registers[Consts.CPU_Registers.P] &= ~status
 
 
 func compile_script(script: String) -> PackedByteArray:
@@ -360,72 +340,3 @@ func compile_script(script: String) -> PackedByteArray:
 	
 	bytecode.append(0xFF)
 	return bytecode
-
-
-func get_memory_size(memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU) -> int:
-	if memory_section == Consts.MemoryTypes.CPU:
-		return len(_cpu_memory)
-	elif memory_section == Consts.MemoryTypes.PPU:
-		return len(_ppu_memory)
-	
-	return 0
-
-
-func read_byte(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU):
-	var return_value = -1
-	
-	if memory_section == Consts.MemoryTypes.CPU:
-		return_value = _cpu_memory[address]
-		
-		if address >= 0x0800 and address < 0x2000:
-			var relative_address = address % 0x0800
-			return_value = _cpu_memory[relative_address]
-		elif address >= 0x2008 and address < 0x4000:
-			var relative_address = 0x2000 + ((address - 0x2000) % 0x08)
-			return_value = _cpu_memory[relative_address]
-	elif memory_section == Consts.MemoryTypes.PPU:
-		return_value = _ppu_memory[address]
-	
-	_process_read_byte_side_effects(address, memory_section)
-	
-	return return_value
-
-
-func read_word(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU):
-	return read_byte(address, memory_section) + (read_byte(address + 1, memory_section) << 8)
-
-
-func write_byte(address: int, value: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU):
-	if not can_write_byte(address, memory_section):
-		return
-	
-	if memory_section == Consts.MemoryTypes.CPU:
-		_cpu_memory[address] = value
-	elif memory_section == Consts.MemoryTypes.PPU:
-		_ppu_memory[address] = value
-	else:
-		print_debug("Attempted to write to invalid memory section %s." % Consts.MemoryTypes.values()[memory_section])
-
-
-func can_write_byte(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU) -> bool:
-	return true
-
-
-func copy_ram(from: int, to: int, length: int):
-	if from + length > Consts.MEMORY_SIZE or from < 0:
-		print_debug("Copy failed; From region would exceed memory limits.")
-		return
-	elif to + length > Consts.MEMORY_SIZE or to < 0:
-		print_debug("Copy failed; To region would exceed memory limits.")
-		return
-	elif from + length >= to:
-		print_debug("Copy failed; From region would overlap To region.")
-		return
-	
-	for i in range(length):
-		_cpu_memory[to + i] = _cpu_memory[from + i]
-
-
-func _process_read_byte_side_effects(address: int, memory_section: Consts.MemoryTypes = Consts.MemoryTypes.CPU):
-	if address == Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS and memory_section == Consts.MemoryTypes.CPU:
-		_cpu_memory[address] &= 0x7F

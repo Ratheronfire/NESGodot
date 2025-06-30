@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://ch8fidgopvyt8"]
 
-[ext_resource type="Script" path="res://src/debug_display/DebugDisplay.gd" id="1_se2qh"]
+[ext_resource type="Script" uid="uid://dqtcodoc3hwn5" path="res://src/debug_display/DebugDisplay.gd" id="1_se2qh"]
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_8afru"]
 [ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_3vw4w"]
-[ext_resource type="Script" path="res://src/debug_display/ScriptPanel.gd" id="3_leycn"]
-[ext_resource type="Script" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
+[ext_resource type="Script" uid="uid://bmami7vnnvu0j" path="res://src/debug_display/ScriptPanel.gd" id="3_leycn"]
+[ext_resource type="Script" uid="uid://dbnn0bgm33eyb" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
 
 [node name="DebugDisplay" type="Control"]
 layout_mode = 3
@@ -204,6 +204,7 @@ layout_mode = 2
 selected = 1
 item_count = 2
 popup/item_0/text = "Script"
+popup/item_0/id = 0
 popup/item_1/text = "ROM"
 popup/item_1/id = 1
 

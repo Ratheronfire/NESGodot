@@ -46,11 +46,20 @@ func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int, to_ppu: 
 	
 	var dest_memory = Consts.MemoryTypes.PPU if to_ppu else Consts.MemoryTypes.CPU
 	
+	var memory_size = -1.0
+	if dest_memory == Consts.MemoryTypes.CPU:
+		memory_size = NES.cpu_memory.get_memory_size()
+	elif dest_memory == Consts.MemoryTypes.PPU:
+		memory_size = NES.ppu_memory.get_memory_size()
+	
 	assert(len(_rom_bytes) - rom_address >= length)
-	assert(NES.get_memory_size(dest_memory) - ram_address >= length)
+	assert(memory_size - ram_address >= length)
 	
 	for i in range(length):
-		NES.write_byte(ram_address + i, _rom_bytes[rom_address + i], dest_memory)
+		if dest_memory == Consts.MemoryTypes.CPU:
+			NES.cpu_memory.write_byte(ram_address + i, _rom_bytes[rom_address + i])
+		elif dest_memory == Consts.MemoryTypes.PPU:
+			NES.ppu_memory.write_byte(ram_address + i, _rom_bytes[rom_address + i])
 
 
 func load_initial_map() -> void:

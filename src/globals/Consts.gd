@@ -7,7 +7,11 @@ enum CPU_Registers {
 	Y  = 0x2, ## The Y index.
 	PC = 0x3, ## The program counter.
 	SP = 0x4, ## The stack pointer.
-	P  = 0x5  ## Status flags. Explained in [Consts.StatusFlags].
+	P  = 0x5,  ## Status flags. Explained in [Consts.StatusFlags].
+	PPU_V = 0x10, ## PPU internal register: During rendering, used for the scroll position. Outside of rendering, used as the current VRAM address.
+	PPU_T = 0x11, ## PPU internal register: During rendering, specifies the starting coarse-x scroll for the next scanline and the starting y scroll for the screen. Outside of rendering, holds the scroll or VRAM address before transferring it to v.
+	PPU_X = 0x12, ## The fine-x position of the current scroll, used during rendering alongside v.
+	PPU_W = 0x13, ## Toggles on each write to either PPUSCROLL or PPUADDR, indicating whether this is the first or second write. Clears on reads of PPUSTATUS. Sometimes called the 'write latch' or 'write toggle'.
 }
 
 ## The different sections of memory that can be accessed.

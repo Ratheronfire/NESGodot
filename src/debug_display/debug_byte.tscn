@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c2i2a41g10iuu"]
 
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="1_bvj2d"]
-[ext_resource type="Script" path="res://src/debug_display/debug_byte.gd" id="2_btn15"]
+[ext_resource type="Script" uid="uid://uvxeikt0bf3c" path="res://src/debug_display/debug_byte.gd" id="2_btn15"]
 
 [node name="Byte0" type="RichTextLabel"]
 custom_minimum_size = Vector2(20, 23)

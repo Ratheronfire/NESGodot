@@ -45,7 +45,14 @@ func _set_memory_page(page_index: int):
 
 func _set_memory_category(category_index: Consts.MemoryTypes):
 	page = 0
-	_total_pages = NES.get_memory_size(category_index) / bytes_per_page - 1
+	
+	var memory_size = -1.0
+	if category_index == Consts.MemoryTypes.CPU:
+		memory_size = NES.cpu_memory.get_memory_size()
+	elif category_index == Consts.MemoryTypes.PPU:
+		memory_size = NES.ppu_memory.get_memory_size()
+
+	_total_pages = memory_size / bytes_per_page - 1
 	page_total_field.text = "Of %d" % _total_pages
 	
 	memory_category = category_index

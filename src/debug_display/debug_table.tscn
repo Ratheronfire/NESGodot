@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bmhnmmq6ikml8"]
 
-[ext_resource type="Script" path="res://src/debug_display/debug_table.gd" id="1_osrmm"]
+[ext_resource type="Script" uid="uid://cvidkh5vvy0na" path="res://src/debug_display/debug_table.gd" id="1_osrmm"]
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_17l4e"]
 [ext_resource type="PackedScene" uid="uid://c6rvjf1jo3io2" path="res://src/debug_display/debug_row.tscn" id="3_0b61g"]
 
@@ -53,6 +53,7 @@ layout_mode = 2
 selected = 0
 item_count = 2
 popup/item_0/text = "CPU"
+popup/item_0/id = 0
 popup/item_1/text = "PPU"
 popup/item_1/id = 1
 

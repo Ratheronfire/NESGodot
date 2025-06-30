@@ -13,7 +13,7 @@ config_version=5
 config/name="NESGodot"
 config/description="No Description"
 run/main_scene="res://src/debug_display/NESDebug.tscn"
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.4")
 config/icon="res://icon.png"
 
 [autoload]

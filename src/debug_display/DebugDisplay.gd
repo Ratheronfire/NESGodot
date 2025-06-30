@@ -36,12 +36,12 @@ func on_ticked():
 			bytes, "" if bytes == 1 else "s"
 		]
 	
-	a_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.A]
-	x_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.X]
-	y_label.text  = "0x%02X" % NES.registers[Consts.CPU_Registers.Y]
-	pc_label.text = "0x%02X" % NES.registers[Consts.CPU_Registers.PC]
-	sp_label.text = "0x%02X" % NES.registers[Consts.CPU_Registers.SP]
-	p_label.text  = "0b%s"   % Helpers.to_binary_string(NES.registers[Consts.CPU_Registers.P])
+	a_label.text  = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.A]
+	x_label.text  = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.X]
+	y_label.text  = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.Y]
+	pc_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC]
+	sp_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.SP]
+	p_label.text  = "0b%s"   % Helpers.to_binary_string(NES.cpu_memory.registers[Consts.CPU_Registers.P])
 	cycles_label.text = str(NES.cycles)
 	scanline_label.text = str(NES.scanline)
 	frame_label.text = str(NES.frame)

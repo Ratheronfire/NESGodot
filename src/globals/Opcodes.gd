@@ -69,7 +69,7 @@ class OperandAddressingContext:
 
 func LDA(context: OperandAddressingContext):
 	var value = _read_value_from_memory(context)
-	NES.registers[Consts.CPU_Registers.A] = value
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, value == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, value >= 0x80)
@@ -77,7 +77,7 @@ func LDA(context: OperandAddressingContext):
 
 func LDX(context: OperandAddressingContext):
 	var value = _read_value_from_memory(context)
-	NES.registers[Consts.CPU_Registers.X] = value
+	NES.cpu_memory.registers[Consts.CPU_Registers.X] = value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, value == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, value >= 0x80)
@@ -85,26 +85,26 @@ func LDX(context: OperandAddressingContext):
 
 func LDY(context: OperandAddressingContext):
 	var value = _read_value_from_memory(context)
-	NES.registers[Consts.CPU_Registers.Y] = value
+	NES.cpu_memory.registers[Consts.CPU_Registers.Y] = value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, value == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, value >= 0x80)
 
 
 func STA(context: OperandAddressingContext):
-	_write_value_to_memory(context, NES.registers[Consts.CPU_Registers.A])
+	_write_value_to_memory(context, NES.cpu_memory.registers[Consts.CPU_Registers.A])
 
 
 func STX(context: OperandAddressingContext):
-	_write_value_to_memory(context, NES.registers[Consts.CPU_Registers.X])
+	_write_value_to_memory(context, NES.cpu_memory.registers[Consts.CPU_Registers.X])
 
 
 func STY(context: OperandAddressingContext):
-	_write_value_to_memory(context, NES.registers[Consts.CPU_Registers.Y])
+	_write_value_to_memory(context, NES.cpu_memory.registers[Consts.CPU_Registers.Y])
 
 
 func ADC(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	
 	if NES.get_status_flag(Consts.StatusFlags.Carry):
 		a += 1
@@ -117,11 +117,11 @@ func ADC(context: OperandAddressingContext):
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, a == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, a >= 0x80)
-	NES.registers[Consts.CPU_Registers.A] = a
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = a
 
 
 func SBC(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	
 	if not NES.get_status_flag(Consts.StatusFlags.Carry):
 		a -= 1
@@ -137,7 +137,7 @@ func SBC(context: OperandAddressingContext):
 	NES.set_status_flag(Consts.StatusFlags.Zero, a == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, a >= 0x80)
 	
-	NES.registers[Consts.CPU_Registers.A] = a
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = a
 
 
 func INC(context: OperandAddressingContext):
@@ -150,11 +150,11 @@ func INC(context: OperandAddressingContext):
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, value == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, value >= 0x80)
-	NES.write_byte(address, value, Consts.MemoryTypes.CPU)
+	NES.cpu_memory.write_byte(address, value, Consts.MemoryTypes.CPU)
 
 
 func INX(context: OperandAddressingContext):
-	var x = NES.registers[Consts.CPU_Registers.X]
+	var x = NES.cpu_memory.registers[Consts.CPU_Registers.X]
 	
 	x += 1
 	
@@ -162,11 +162,11 @@ func INX(context: OperandAddressingContext):
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, x == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, x >= 0x80)
-	NES.registers[Consts.CPU_Registers.X] = x
+	NES.cpu_memory.registers[Consts.CPU_Registers.X] = x
 
 
 func INY(context: OperandAddressingContext):
-	var y = NES.registers[Consts.CPU_Registers.Y]
+	var y = NES.cpu_memory.registers[Consts.CPU_Registers.Y]
 	
 	y += 1
 	
@@ -174,7 +174,7 @@ func INY(context: OperandAddressingContext):
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, y == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, y >= 0x80)
-	NES.registers[Consts.CPU_Registers.Y] = y
+	NES.cpu_memory.registers[Consts.CPU_Registers.Y] = y
 
 
 func DEC(context: OperandAddressingContext):
@@ -189,11 +189,11 @@ func DEC(context: OperandAddressingContext):
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, value == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, value >= 0x80)
-	NES.write_byte(address, value, Consts.MemoryTypes.CPU)
+	NES.cpu_memory.write_byte(address, value, Consts.MemoryTypes.CPU)
 
 
 func DEX(context: OperandAddressingContext):
-	var x = NES.registers[Consts.CPU_Registers.X]
+	var x = NES.cpu_memory.registers[Consts.CPU_Registers.X]
 	
 	x -= 1
 	if x < 0:
@@ -204,11 +204,11 @@ func DEX(context: OperandAddressingContext):
 	NES.set_status_flag(Consts.StatusFlags.Zero, x == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, x >= 0x80)
 	
-	NES.registers[Consts.CPU_Registers.X] = x
+	NES.cpu_memory.registers[Consts.CPU_Registers.X] = x
 
 
 func DEY(context: OperandAddressingContext):
-	var y = NES.registers[Consts.CPU_Registers.Y]
+	var y = NES.cpu_memory.registers[Consts.CPU_Registers.Y]
 	
 	y -= 1
 	if y < 0:
@@ -219,7 +219,7 @@ func DEY(context: OperandAddressingContext):
 	NES.set_status_flag(Consts.StatusFlags.Zero, y == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, y >= 0x80)
 	
-	NES.registers[Consts.CPU_Registers.Y] = y
+	NES.cpu_memory.registers[Consts.CPU_Registers.Y] = y
 
 
 func ASL(context: OperandAddressingContext):
@@ -281,37 +281,37 @@ func ROR(context: OperandAddressingContext):
 
 
 func AND(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	
 	a &= context.value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, a == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, a >= 0x80)
-	NES.registers[Consts.CPU_Registers.A] = a
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = a
 
 
 func ORA(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	
 	a |= context.value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, a == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, a >= 0x80)
-	NES.registers[Consts.CPU_Registers.A] = a
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = a
 
 
 func EOR(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	
 	a ^= context.value
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, a == 0)
 	NES.set_status_flag(Consts.StatusFlags.Negative, a >= 0x80)
-	NES.registers[Consts.CPU_Registers.A] = a
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = a
 
 
 func CMP(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	var value = _read_value_from_memory(context)
 	
 	NES.set_status_flag(Consts.StatusFlags.Carry, a >= value)
@@ -320,7 +320,7 @@ func CMP(context: OperandAddressingContext):
 
 
 func CPX(context: OperandAddressingContext):
-	var x = NES.registers[Consts.CPU_Registers.X]
+	var x = NES.cpu_memory.registers[Consts.CPU_Registers.X]
 	var value = _read_value_from_memory(context)
 	
 	NES.set_status_flag(Consts.StatusFlags.Carry, x >= value)
@@ -329,7 +329,7 @@ func CPX(context: OperandAddressingContext):
 
 
 func CPY(context: OperandAddressingContext):
-	var y = NES.registers[Consts.CPU_Registers.Y]
+	var y = NES.cpu_memory.registers[Consts.CPU_Registers.Y]
 	var value = _read_value_from_memory(context)
 	
 	NES.set_status_flag(Consts.StatusFlags.Carry, y >= value)
@@ -338,7 +338,7 @@ func CPY(context: OperandAddressingContext):
 
 
 func BIT(context: OperandAddressingContext):
-	var a = NES.registers[Consts.CPU_Registers.A]
+	var a = NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	var value = _read_value_from_memory(context)
 	
 	NES.set_status_flag(Consts.StatusFlags.Zero, a & value == 0)
@@ -354,7 +354,7 @@ func BCC(context: OperandAddressingContext):
 		return
 	
 	var address = _determine_memory_address(context)
-	NES.registers[Consts.CPU_Registers.PC] += address + 2
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BCS(context: OperandAddressingContext):
@@ -365,7 +365,7 @@ func BCS(context: OperandAddressingContext):
 		return
 	
 	var address = _determine_memory_address(context)
-	NES.registers[Consts.CPU_Registers.PC] += address + 2
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BNE(context: OperandAddressingContext):
@@ -378,7 +378,7 @@ func BNE(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BEQ(context: OperandAddressingContext):
@@ -391,7 +391,7 @@ func BEQ(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BPL(context: OperandAddressingContext):
@@ -404,7 +404,7 @@ func BPL(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BMI(context: OperandAddressingContext):
@@ -417,7 +417,7 @@ func BMI(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BVC(context: OperandAddressingContext):
@@ -430,7 +430,7 @@ func BVC(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func BVS(context: OperandAddressingContext):
@@ -443,7 +443,7 @@ func BVS(context: OperandAddressingContext):
 	var address = _determine_memory_address(context)
 	
 	if address != 0:
-		NES.registers[Consts.CPU_Registers.PC] += address + 2
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] += address + 2
 
 
 func TAX(context: OperandAddressingContext):
@@ -471,23 +471,23 @@ func TXS(context: OperandAddressingContext):
 
 
 func PHA(context: OperandAddressingContext):
-	_push_to_stack(NES.registers[Consts.CPU_Registers.A])
+	_push_to_stack(NES.cpu_memory.registers[Consts.CPU_Registers.A])
 
 
 func PLA(context: OperandAddressingContext):
-	NES.registers[Consts.CPU_Registers.A] = _pull_from_stack()
+	NES.cpu_memory.registers[Consts.CPU_Registers.A] = _pull_from_stack()
 
 
 func PHP(context: OperandAddressingContext):
-	_push_to_stack(NES.registers[Consts.CPU_Registers.P])
+	_push_to_stack(NES.cpu_memory.registers[Consts.CPU_Registers.P])
 	
-	var state_stack_addr = 0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1
-	var state_flags = NES.read_byte(state_stack_addr, Consts.MemoryTypes.CPU)
-	NES.write_byte(state_stack_addr, state_flags | 0x10, Consts.MemoryTypes.CPU)
+	var state_stack_addr = 0x0100 + NES.cpu_memory.registers[Consts.CPU_Registers.SP] + 1
+	var state_flags = NES.cpu_memory.read_byte(state_stack_addr, Consts.MemoryTypes.CPU)
+	NES.cpu_memory.write_byte(state_stack_addr, state_flags | 0x10, Consts.MemoryTypes.CPU)
 
 
 func PLP(context: OperandAddressingContext):
-	NES.registers[Consts.CPU_Registers.P] = _pull_from_stack() & 0b11101111
+	NES.cpu_memory.registers[Consts.CPU_Registers.P] = _pull_from_stack() & 0b11101111
 
 
 func JMP(context: OperandAddressingContext):
@@ -495,30 +495,30 @@ func JMP(context: OperandAddressingContext):
 		assert(false, "Invalid addressing method for jump.")
 	
 	var address = context.value if context.address_mode == Consts.AddressingModes.Absolute else _determine_memory_address(context)
-	NES.registers[Consts.CPU_Registers.PC] = address
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = address
 
 
 func JSR(context: OperandAddressingContext):
 	if context.address_mode != Consts.AddressingModes.Absolute:
 		assert(false, "Invalid addressing method for jump.")
 	
-	var pc = NES.registers[Consts.CPU_Registers.PC]
+	var pc = NES.cpu_memory.registers[Consts.CPU_Registers.PC]
 	_push_to_stack(pc & 0xFF)
 	_push_to_stack(pc >> 8)
 	
-	NES.registers[Consts.CPU_Registers.PC] = context.value
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = context.value
 
 
 func RTS(context: OperandAddressingContext):
-	NES.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack() + 3
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack() + 3
 
 
 func RTI(context: OperandAddressingContext):
-	NES.registers[Consts.CPU_Registers.P] = _pull_from_stack()
-	NES.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack()
+	NES.cpu_memory.registers[Consts.CPU_Registers.P] = _pull_from_stack()
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack()
 	
 	NES.cpu_speed_multiplier = 0.0
-	print("Returned to $%02X" % NES.registers[Consts.CPU_Registers.PC])
+	print("Returned to $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
 
 
 func CLC(context: OperandAddressingContext):
@@ -550,19 +550,19 @@ func CLV(context: OperandAddressingContext):
 
 
 func BRK(context: OperandAddressingContext):
-	var pc = NES.registers[Consts.CPU_Registers.PC]
+	var pc = NES.cpu_memory.registers[Consts.CPU_Registers.PC]
 	_push_to_stack(pc & 0xFF)
 	_push_to_stack(pc >> 8)
 	
 	NES.set_status_flag(Consts.StatusFlags.InterruptDisable, 1)
 	
-	_push_to_stack(NES.registers[Consts.CPU_Registers.P])
+	_push_to_stack(NES.cpu_memory.registers[Consts.CPU_Registers.P])
 	
-	var state_stack_addr = 0x0100 + NES.registers[Consts.CPU_Registers.SP] + 1
-	var state_flags = NES.read_byte(state_stack_addr, Consts.MemoryTypes.CPU)
-	NES.write_byte(state_stack_addr, state_flags | 0x10, Consts.MemoryTypes.CPU)
+	var state_stack_addr = 0x0100 + NES.cpu_memory.registers[Consts.CPU_Registers.SP] + 1
+	var state_flags = NES.cpu_memory.read_byte(state_stack_addr, Consts.MemoryTypes.CPU)
+	NES.cpu_memory.write_byte(state_stack_addr, state_flags | 0x10, Consts.MemoryTypes.CPU)
 	
-	NES.registers[Consts.CPU_Registers.PC] = 0xFFFE
+	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = 0xFFFE
 
 
 func NOP(context: OperandAddressingContext):
@@ -576,9 +576,9 @@ func determine_addressing_context(instruction: String, operand: String) -> Opera
 	var is_hex = "$" in operand
 	
 	if operand == "":
-		return OperandAddressingContext.new(Consts.AddressingModes.Implied, NES.registers[Consts.CPU_Registers.A])
+		return OperandAddressingContext.new(Consts.AddressingModes.Implied, NES.cpu_memory.registers[Consts.CPU_Registers.A])
 	elif operand == "A":
-		return OperandAddressingContext.new(Consts.AddressingModes.Accumulator, NES.registers[Consts.CPU_Registers.A])
+		return OperandAddressingContext.new(Consts.AddressingModes.Accumulator, NES.cpu_memory.registers[Consts.CPU_Registers.A])
 	
 	if instruction in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]:
 		return OperandAddressingContext.new(Consts.AddressingModes.Relative, operand, is_hex)
@@ -641,43 +641,43 @@ func determine_addressing_context(instruction: String, operand: String) -> Opera
 
 
 func _push_to_stack(value):
-	NES.write_byte(0x0100 + NES.registers[Consts.CPU_Registers.SP], value, Consts.MemoryTypes.CPU)
-	NES.registers[Consts.CPU_Registers.SP] = NES.registers[Consts.CPU_Registers.SP] - 1
+	NES.cpu_memory.write_byte(0x0100 + NES.cpu_memory.registers[Consts.CPU_Registers.SP], value, Consts.MemoryTypes.CPU)
+	NES.cpu_memory.registers[Consts.CPU_Registers.SP] = NES.cpu_memory.registers[Consts.CPU_Registers.SP] - 1
 
 
 func _pull_from_stack():
-	NES.registers[Consts.CPU_Registers.SP] = NES.registers[Consts.CPU_Registers.SP] + 1
-	return NES.read_byte(0x0100 + NES.registers[Consts.CPU_Registers.SP], Consts.MemoryTypes.CPU)
+	NES.cpu_memory.registers[Consts.CPU_Registers.SP] = NES.cpu_memory.registers[Consts.CPU_Registers.SP] + 1
+	return NES.cpu_memory.read_byte(0x0100 + NES.cpu_memory.registers[Consts.CPU_Registers.SP], Consts.MemoryTypes.CPU)
 
 
 func _transfer(from_register: int, to_register: int):
-	NES.registers[to_register] = NES.registers[from_register]
+	NES.cpu_memory.registers[to_register] = NES.cpu_memory.registers[from_register]
 	
-	NES.set_status_flag(Consts.StatusFlags.Zero, NES.registers[from_register] == 0)
-	NES.set_status_flag(Consts.StatusFlags.Negative, NES.registers[from_register] >= 0x80)
+	NES.set_status_flag(Consts.StatusFlags.Zero, NES.cpu_memory.registers[from_register] == 0)
+	NES.set_status_flag(Consts.StatusFlags.Negative, NES.cpu_memory.registers[from_register] >= 0x80)
 
 
 func _write_value_to_memory(context: OperandAddressingContext, value, implied_register = Consts.CPU_Registers.A):
 	if context.address_mode == Consts.AddressingModes.Accumulator:
-		NES.registers[Consts.CPU_Registers.A] = value
+		NES.cpu_memory.registers[Consts.CPU_Registers.A] = value
 	elif context.address_mode == Consts.AddressingModes.Implied:
-		NES.registers[implied_register] = value
+		NES.cpu_memory.registers[implied_register] = value
 	else:
 		var address = _determine_memory_address(context)
-		NES.write_byte(address, value, Consts.MemoryTypes.CPU)
+		NES.cpu_memory.write_byte(address, value, Consts.MemoryTypes.CPU)
 
 
 func _read_value_from_memory(context: OperandAddressingContext, implied_register = Consts.CPU_Registers.A):
 	if context.address_mode == Consts.AddressingModes.Immediate:
 		return context.value
 	elif context.address_mode == Consts.AddressingModes.Accumulator:
-		return NES.registers[Consts.CPU_Registers.A]
+		return NES.cpu_memory.registers[Consts.CPU_Registers.A]
 	elif context.address_mode == Consts.AddressingModes.Implied:
-		return NES.registers[implied_register]
+		return NES.cpu_memory.registers[implied_register]
 	else:
 		var address = _determine_memory_address(context)
 		
-		return NES.read_byte(address, Consts.MemoryTypes.CPU)
+		return NES.cpu_memory.read_byte(address, Consts.MemoryTypes.CPU)
 
 
 func _determine_memory_address(context: OperandAddressingContext):
@@ -685,13 +685,13 @@ func _determine_memory_address(context: OperandAddressingContext):
 	
 	if context.address_mode == Consts.AddressingModes.Indirect:
 		# Getting the indrect address value (we'll look up the value later.)
-		address = NES.read_word(address)
+		address = NES.cpu_memory.read_word(address)
 	elif context.address_mode in [Consts.AddressingModes.Absolute_X, Consts.AddressingModes.ZeroPage_X, Consts.AddressingModes.ZPInd_X]:
 		# Indexing by X
-		address += NES.registers[Consts.CPU_Registers.X]
+		address += NES.cpu_memory.registers[Consts.CPU_Registers.X]
 	elif context.address_mode in [Consts.AddressingModes.Absolute_Y, Consts.AddressingModes.ZeroPage_Y]:
 		# Indexing by Y (ZPInd_Y is handled separately below.)
-		address += NES.registers[Consts.CPU_Registers.Y]
+		address += NES.cpu_memory.registers[Consts.CPU_Registers.Y]
 	elif context.address_mode == Consts.AddressingModes.Relative:
 		# Relative indexing is limited to a signed byte
 		if address > 0x80:
@@ -706,12 +706,12 @@ func _determine_memory_address(context: OperandAddressingContext):
 		var high_address = (address + 1) % 256
 		address %= 256
 		
-		return NES.read_byte(address, Consts.MemoryTypes.CPU) + (NES.read_byte(high_address, Consts.MemoryTypes.CPU) << 8)
+		return NES.cpu_memory.read_byte(address, Consts.MemoryTypes.CPU) + (NES.cpu_memory.read_byte(high_address, Consts.MemoryTypes.CPU) << 8)
 	elif context.address_mode == Consts.AddressingModes.ZPInd_Y:
 		# ZPInd_Y works slightly differently
 		var high_address = (address + 1) % 256
 		
-		address = NES.read_byte(address, Consts.MemoryTypes.CPU) + (NES.read_byte(high_address, Consts.MemoryTypes.CPU) << 8)
-		address += NES.registers[Consts.CPU_Registers.Y]
+		address = NES.cpu_memory.read_byte(address, Consts.MemoryTypes.CPU) + (NES.cpu_memory.read_byte(high_address, Consts.MemoryTypes.CPU) << 8)
+		address += NES.cpu_memory.registers[Consts.CPU_Registers.Y]
 	
 	return address

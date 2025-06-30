@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://blui2juuwx3ur"]
 
-[ext_resource path="res://src/globals/NES.gd" type="Script" id=1]
+[ext_resource type="Script" uid="uid://cksrkum5g8a78" path="res://src/globals/NES.gd" id="1"]
 
 [node name="NES" type="Node"]
-script = ExtResource( 1 )
+script = ExtResource("1")
