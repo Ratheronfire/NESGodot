@@ -85,8 +85,10 @@ func _process(delta: float) -> void:
 
 
 func init():
-	cpu_memory = preload("res://src/globals/CPU_Memory.gd").new(Consts.CPU_MEMORY_SIZE)
-	ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(Consts.PPU_MEMORY_SIZE)
+	cpu_memory = preload("res://src/globals/CPU_Memory.gd").new(CPU_Memory.CPU_MEMORY_SIZE)
+	ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(PPU_Memory.PPU_MEMORY_SIZE)
+
+	cpu_memory.ppu_register_touched.connect(ppu_memory.on_ppu_register_touched)
 
 
 func cpu_loop():
@@ -122,10 +124,10 @@ func cpu_loop():
 			if _scanline > NTSC_SCANLINES:
 				# VBlank begins.
 				
-				var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
-				var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUCTRL, false)
+				var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+				var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
 				
-				cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
+				cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
 				
 				if ppu_ctrl & 0x80 > 0:
 					pending_interrupt = Consts.Interrupts.NMI
@@ -136,8 +138,8 @@ func cpu_loop():
 				_frame += 1
 				_scanline = 0
 				
-				var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
-				cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
+				var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+				cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
 			
 			if _cycles_before_next_instruction <= 0:
 				tick()
@@ -158,8 +160,8 @@ func tick():
 		
 		pending_interrupt = Consts.Interrupts.NONE
 		
-		var ppu_status = cpu_memory.read_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, false)
-		cpu_memory.write_byte(Consts.PPU_REGISTERS + Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
+		var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+		cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
 		
 		return
 	
@@ -313,7 +315,7 @@ func compile_script(script: String) -> PackedByteArray:
 				if is_branch:
 					operands[1] = operands[1].replace(label, str(labels[label] - bytes_so_far))
 				else:
-					operands[1] = operands[1].replace(label, str(Consts.CARTRIDGE_ADDRESS + labels[label]))
+					operands[1] = operands[1].replace(label, str(CPU_Memory.CARTRIDGE_ADDRESS + labels[label]))
 			
 			lines[i] = operands[0] + " " + operands[1]
 	

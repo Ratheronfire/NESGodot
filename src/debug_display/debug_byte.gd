@@ -30,4 +30,4 @@ func on_table_category_updated(memory_category: int):
 
 func update():
 	if not Engine.is_editor_hint():
-		text = "%02X" % memory.read_byte(rom_byte)
+		text = "%02X" % memory.read_byte(rom_byte, false)

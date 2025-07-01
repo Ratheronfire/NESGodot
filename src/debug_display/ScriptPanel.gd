@@ -63,9 +63,9 @@ func _on_FileDialog_file_selected(path):
 		file.close()
 		
 		for i in range(len(bytecode)):
-			NES.cpu_memory.write_byte(i + Consts.CARTRIDGE_ADDRESS, bytecode[i])
+			NES.cpu_memory.write_byte(i + CPU_Memory.CARTRIDGE_ADDRESS, bytecode[i])
 		
-		NES.cpu_memory.registers[Consts.CPU_Registers.PC] = Consts.CARTRIDGE_ADDRESS
+		NES.cpu_memory.registers[Consts.CPU_Registers.PC] = CPU_Memory.CARTRIDGE_ADDRESS
 	elif _file_type == FileType.ROM:
 		NES.setup_rom(_file_path)
 	

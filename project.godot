@@ -23,6 +23,7 @@ Opcodes="*res://src/globals/Opcodes.tscn"
 Helpers="*res://src/globals/Helpers.tscn"
 LastOpenedFiles="*res://addons/file-editor/scripts/LastOpenedFiles.gd"
 Consts="*res://src/globals/Consts.gd"
+NesRenderer="*res://src/renderer/nes_renderer.tscn"
 
 [display]
 
@@ -38,5 +39,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+textures/default_filters/use_nearest_mipmap_filter=true
 environment/default_environment="res://default_env.tres"
 quality/driver/driver_name="GLES3"

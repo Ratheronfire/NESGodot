@@ -45,10 +45,10 @@ func write_byte(address: int, value: int, process_side_effects=true) -> void:
     if not can_write_byte(address):
         return
     
+    memory_bytes[address] = value
+    
     if process_side_effects:
         _process_write_byte_side_effects(address)
-    
-    memory_bytes[address] = value
 
 
 func can_write_byte(address: int) -> bool:

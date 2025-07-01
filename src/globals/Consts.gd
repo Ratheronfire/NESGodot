@@ -33,14 +33,14 @@ enum StatusFlags {
 }
 
 enum PPU_Registers {
-	PPUCTRL   = 0x0,
-	PPUMASK   = 0x1,
-	PPUSTATUS = 0x2,
-	OAMADDR   = 0x3,
-	OAMDATA1  = 0x4,
-	PPUSCROLL = 0x5,
-	PPUADDR   = 0x6,
-	OAMDATA2  = 0x7
+	PPUCTRL   = 0x2000,
+	PPUMASK   = 0x2001,
+	PPUSTATUS = 0x2002,
+	OAMADDR   = 0x2003,
+	OAMDATA1  = 0x2004,
+	PPUSCROLL = 0x2005,
+	PPUADDR   = 0x2006,
+	PPUDATA   = 0x2007
 }
 
 ## The different modes of addressing data for an instruction.
@@ -66,21 +66,6 @@ enum Interrupts {
 	BRK,
 	NONE
 }
-
-
-# NES RAM Values
-const CPU_MEMORY_SIZE = 0x10000
-const PPU_MEMORY_SIZE = 0x04000
-
-const WORK_RAM_ADDRESS  = 0x0000
-const WORK_RAM_MIRROR   = 0x0800
-const PPU_REGISTERS     = 0x2000
-const PPU_MIRROR        = 0x2008
-const APU_IO            = 0x4000
-const CARTRIDGE_ADDRESS = 0x8000
-
-const WORK_RAM_SIZE = 0x0800
-const PPU_RAM_SIZE  = 0x0008
 
 
 # Opcode values
