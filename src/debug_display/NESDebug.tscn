@@ -4,11 +4,9 @@
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_8afru"]
 [ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_3vw4w"]
 [ext_resource type="Script" uid="uid://bmami7vnnvu0j" path="res://src/debug_display/ScriptPanel.gd" id="3_leycn"]
-[ext_resource type="Script" uid="uid://c0san04lqeowe" path="res://src/renderer/pattern_table_texture.gd" id="6_tna6w"]
+[ext_resource type="PackedScene" uid="uid://rcor2bcrbao8" path="res://src/renderer/pattern_table.tscn" id="6_tna6w"]
 [ext_resource type="Script" uid="uid://dbnn0bgm33eyb" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_tna6w"]
-size = Vector2(128, 128)
+[ext_resource type="PackedScene" uid="uid://ca223huxpi88m" path="res://src/renderer/name_table.tscn" id="7_p63qp"]
 
 [node name="DebugDisplay" type="Control"]
 layout_mode = 3
@@ -291,72 +289,9 @@ script = ExtResource("6_u81j0")
 separation_horizontal = null
 separation_vertical = null
 
-[node name="PatternTablePanel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = -259.0
-offset_right = 287.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="PatternTablePanel" parent="." instance=ExtResource("6_tna6w")]
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PatternTablePanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2, 2)
-
-[node name="PatternTableTexture" type="TextureRect" parent="PatternTablePanel/ScrollContainer"]
-layout_mode = 2
-texture = SubResource("PlaceholderTexture2D_tna6w")
-script = ExtResource("6_tna6w")
-
-[node name="PatternTableTestButton" type="Button" parent="PatternTablePanel"]
-layout_mode = 0
-offset_left = 286.0
-offset_top = 7.0
-offset_right = 444.0
-offset_bottom = 38.0
-text = "Draw Pattern Table 1"
-
-[node name="PatternTableTestButton2" type="Button" parent="PatternTablePanel"]
-layout_mode = 0
-offset_left = 286.0
-offset_top = 38.0
-offset_right = 457.0
-offset_bottom = 69.0
-text = "Draw Pattern Table 2"
-
-[node name="PaletteOptionButton" type="OptionButton" parent="PatternTablePanel"]
-layout_mode = 0
-offset_left = 287.0
-offset_top = 69.0
-offset_right = 459.0
-offset_bottom = 100.0
-item_count = 8
-popup/item_0/text = "Palette 0"
-popup/item_0/id = 0
-popup/item_1/text = "Palette 1"
-popup/item_1/id = 1
-popup/item_2/text = "Palette 2"
-popup/item_2/id = 2
-popup/item_3/text = "Palette 3"
-popup/item_3/id = 3
-popup/item_4/text = "Palette 4"
-popup/item_4/id = 4
-popup/item_5/text = "Palette 5"
-popup/item_5/id = 5
-popup/item_6/text = "Palette 6"
-popup/item_6/id = 6
-popup/item_7/text = "Palette 7"
-popup/item_7/id = 7
+[node name="NameTable" parent="." instance=ExtResource("7_p63qp")]
 
 [connection signal="item_selected" from="ScriptPanel/VBoxContainer/HBoxContainer/FileTypeOptionButton" to="ScriptPanel" method="_on_file_type_option_button_item_selected"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
@@ -364,6 +299,3 @@ popup/item_7/id = 7
 [connection signal="drag_ended" from="ScriptPanel/VBoxContainer/HBoxContainer2/CPUSpeedSlider" to="ScriptPanel" method="_on_cpu_speed_slider_drag_ended"]
 [connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepButton" to="ScriptPanel" method="_on_StepButton_pressed"]
 [connection signal="file_selected" from="FileDialog" to="ScriptPanel" method="_on_FileDialog_file_selected"]
-[connection signal="pressed" from="PatternTablePanel/PatternTableTestButton" to="PatternTablePanel/ScrollContainer/PatternTableTexture" method="_on_pattern_table_test_button_pressed"]
-[connection signal="pressed" from="PatternTablePanel/PatternTableTestButton2" to="PatternTablePanel/ScrollContainer/PatternTableTexture" method="_on_pattern_table_test_button_2_pressed"]
-[connection signal="item_selected" from="PatternTablePanel/PaletteOptionButton" to="PatternTablePanel/ScrollContainer/PatternTableTexture" method="_on_palette_option_button_item_selected"]

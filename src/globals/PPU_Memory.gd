@@ -18,6 +18,8 @@ const ATTRIBUTE_TABLE_2 = 0x2BC0
 const NAMETABLE_3 = 0x2C00
 const ATTRIBUTE_TABLE_3 = 0x2FC0
 
+const NAMETABLE_SIZE = 0x03C0
+
 const PALETTE_DATA = 0x3F00
 
 var _buffered_ppudata_value = 0x0
