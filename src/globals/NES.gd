@@ -27,9 +27,6 @@ var ppu_memory: PPU_Memory
 
 var pending_interrupt := Consts.Interrupts.NONE
 
-# The CPU loop runs too fast, so for now I'll apply this throttle value to roughly approximate 60fps.
-var _fps_throttle := 0.0140186916
-
 var cycles: int:
     get:
         return _cycles
@@ -56,6 +53,8 @@ var _reset_vector: int
 var _irq_vector: int
 
 var _is_running = false
+
+@onready var _cpu_thread: Thread = Thread.new()
 
 var _test_prev_frame := 0
 var _fps_history := []
@@ -110,7 +109,7 @@ func cpu_loop():
             ticked.emit.call_deferred()
             await get_tree().process_frame
         
-        var adjusted_delta = delta * cpu_speed_multiplier * _fps_throttle
+        var adjusted_delta = delta * cpu_speed_multiplier
         _seconds_this_cycle += adjusted_delta
         _seconds_this_scanline += adjusted_delta
         
@@ -190,8 +189,6 @@ func tick():
         
         last_instruction = instruction_data
     else:
-        print('Invalid opcode, stopping.')
-        _is_running = false
         return
     
     if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
@@ -202,7 +199,8 @@ func tick():
 func get_instruction_data(start_byte: int):
     var next_opcode = cpu_memory.read_byte(start_byte, false)
     
-    if next_opcode == 0xFF or next_opcode == 0:
+    if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
+        print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
         _is_running = false
         return
     
@@ -227,7 +225,7 @@ func get_instruction_data(start_byte: int):
     return Opcodes.InstructionData.new(next_opcode, context)
 
 
-func start_running():
+func start_running(): 
     _cycles = 0
     _scanline = 0
     _frame = 0
@@ -241,8 +239,15 @@ func start_running():
     ticked.emit()
     _is_running = true
     
-    var cpu_thread = Thread.new()
-    cpu_thread.start(cpu_loop)
+    print("Starting execution.")
+    _cpu_thread.start(cpu_loop)
+
+
+func stop_running():
+    if _cpu_thread != null && _cpu_thread.is_started():
+        print("Waiting for previous execution to stop.")
+        _is_running = false
+        _cpu_thread.wait_to_finish()
 
 
 func setup_rom(rom_path: String):
@@ -254,6 +259,10 @@ func setup_rom(rom_path: String):
         return
     
     _rom_mapper = NES_Mapper.create_mapper(rom_path)
+    if _rom_mapper == null:
+        print("Unable to find mapper emulator for %s." % rom_path)
+        return
+    
     _rom_mapper.load_initial_map()
     
     _nmi_vector = cpu_memory.read_word(0xFFFA, false)

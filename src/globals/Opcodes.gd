@@ -496,6 +496,7 @@ func JMP(context: OperandAddressingContext):
 	
 	var address = context.value if context.address_mode == Consts.AddressingModes.Absolute else _determine_memory_address(context)
 	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = address
+	# print("Jumped to $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
 
 
 func JSR(context: OperandAddressingContext):
@@ -507,18 +508,20 @@ func JSR(context: OperandAddressingContext):
 	_push_to_stack(pc >> 8)
 	
 	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = context.value
+	# print("Jumped to subroutine at $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
 
 
 func RTS(context: OperandAddressingContext):
 	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack() + 3
+	# print("Returned to $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
 
 
 func RTI(context: OperandAddressingContext):
 	NES.cpu_memory.registers[Consts.CPU_Registers.P] = _pull_from_stack()
 	NES.cpu_memory.registers[Consts.CPU_Registers.PC] = (_pull_from_stack() << 8) + _pull_from_stack()
 	
-	NES.cpu_speed_multiplier = 0.0
-	print("Returned to $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
+	# NES.cpu_speed_multiplier = 0.0
+	# print("Returned from interrupt to $%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC])
 
 
 func CLC(context: OperandAddressingContext):

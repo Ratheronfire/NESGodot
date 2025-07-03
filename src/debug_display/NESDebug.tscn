@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dqtcodoc3hwn5" path="res://src/debug_display/DebugDisplay.gd" id="1_se2qh"]
 [ext_resource type="Theme" uid="uid://d1q1f2f0fyqc6" path="res://assets/monospace_theme.tres" id="2_8afru"]
 [ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_3vw4w"]
-[ext_resource type="Script" uid="uid://bmami7vnnvu0j" path="res://src/debug_display/ScriptPanel.gd" id="3_leycn"]
+[ext_resource type="PackedScene" uid="uid://y3uroqwkr7rs" path="res://src/debug_display/script_panel.tscn" id="4_p63qp"]
 [ext_resource type="PackedScene" uid="uid://rcor2bcrbao8" path="res://src/renderer/pattern_table.tscn" id="6_tna6w"]
 [ext_resource type="Script" uid="uid://dbnn0bgm33eyb" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
 [ext_resource type="PackedScene" uid="uid://ca223huxpi88m" path="res://src/renderer/name_table.tscn" id="7_p63qp"]
@@ -179,78 +179,8 @@ grow_vertical = 2
 [node name="DebugTable" parent="MemoryPanel" instance=ExtResource("3_3vw4w")]
 layout_mode = 1
 
-[node name="ScriptPanel" type="Panel" parent="."]
+[node name="ScriptPanel" parent="." instance=ExtResource("4_p63qp")]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -376.0
-offset_top = -68.0
-offset_bottom = 68.0
-grow_horizontal = 0
-grow_vertical = 2
-script = ExtResource("3_leycn")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ScriptPanel"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ScriptPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="FileTypeOptionButton" type="OptionButton" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-selected = 1
-item_count = 2
-popup/item_0/text = "Script"
-popup/item_0/id = 0
-popup/item_1/text = "ROM"
-popup/item_1/id = 1
-
-[node name="LoadButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Load File"
-
-[node name="ScriptPath" type="TextEdit" parent="ScriptPanel/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(0, 34)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "res://fake_file.tscn"
-
-[node name="RunScriptButton" type="Button" parent="ScriptPanel/VBoxContainer"]
-layout_mode = 2
-text = "Run Script"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScriptPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="CPUSpeedIndicator" type="Label" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Manual"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="CPUSpeedSlider" type="HSlider" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-size_flags_vertical = 4
-max_value = 8.0
-rounded = true
-tick_count = 9
-ticks_on_borders = true
-
-[node name="StepButton" type="Button" parent="ScriptPanel/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-text = "Step"
-
-[node name="LastCommandLabel" type="RichTextLabel" parent="ScriptPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-text = "Last Command: N/A"
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
@@ -292,10 +222,3 @@ separation_vertical = null
 [node name="PatternTablePanel" parent="." instance=ExtResource("6_tna6w")]
 
 [node name="NameTable" parent="." instance=ExtResource("7_p63qp")]
-
-[connection signal="item_selected" from="ScriptPanel/VBoxContainer/HBoxContainer/FileTypeOptionButton" to="ScriptPanel" method="_on_file_type_option_button_item_selected"]
-[connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer/LoadButton" to="ScriptPanel" method="_on_LoadButton_pressed"]
-[connection signal="pressed" from="ScriptPanel/VBoxContainer/RunScriptButton" to="ScriptPanel" method="_on_RunScriptButton_pressed"]
-[connection signal="drag_ended" from="ScriptPanel/VBoxContainer/HBoxContainer2/CPUSpeedSlider" to="ScriptPanel" method="_on_cpu_speed_slider_drag_ended"]
-[connection signal="pressed" from="ScriptPanel/VBoxContainer/HBoxContainer2/StepButton" to="ScriptPanel" method="_on_StepButton_pressed"]
-[connection signal="file_selected" from="FileDialog" to="ScriptPanel" method="_on_FileDialog_file_selected"]

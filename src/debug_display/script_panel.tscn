@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3 uid="uid://y3uroqwkr7rs"]
+
+[ext_resource type="Script" uid="uid://bmami7vnnvu0j" path="res://src/debug_display/ScriptPanel.gd" id="1_8x8ik"]
+
+[node name="ScriptPanel" type="Panel"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -376.0
+offset_top = -68.0
+offset_bottom = 68.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_8x8ik")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="FileTypeOptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+selected = 1
+item_count = 2
+popup/item_0/text = "Script"
+popup/item_0/id = 0
+popup/item_1/text = "ROM"
+popup/item_1/id = 1
+
+[node name="LoadButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Load File"
+
+[node name="ScriptPath" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://fake_file.tscn"
+
+[node name="RunButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reset"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CPUSpeedIndicator" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Manual"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CPUSpeedSlider" type="HSlider" parent="VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 8.0
+rounded = true
+tick_count = 9
+ticks_on_borders = true
+
+[node name="StepButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Step"
+
+[node name="LastCommandLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Last Command: N/A"
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/FileTypeOptionButton" to="." method="_on_file_type_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_LoadButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/RunButton" to="." method="_on_RunScriptButton_pressed"]
+[connection signal="drag_ended" from="VBoxContainer/HBoxContainer2/CPUSpeedSlider" to="." method="_on_cpu_speed_slider_drag_ended"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/StepButton" to="." method="_on_StepButton_pressed"]

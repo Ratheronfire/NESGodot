@@ -2,8 +2,8 @@ extends Window
 
 @export var refresh_every_frame = false
 
-@onready var pattern_table_1 = $HBoxContainer/VBoxContainer/PatternTableTexture
-@onready var pattern_table_2 = $HBoxContainer/VBoxContainer/PatternTableTexture2
+@onready var pattern_table_1 = $HBoxContainer/VBoxContainer/PatternTableImage
+@onready var pattern_table_2 = $HBoxContainer/VBoxContainer/PatternTableImage2
 
 
 func _ready() -> void:

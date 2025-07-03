@@ -1,10 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://rcor2bcrbao8"]
+[gd_scene load_steps=3 format=3 uid="uid://rcor2bcrbao8"]
 
-[ext_resource type="Script" uid="uid://c0san04lqeowe" path="res://src/renderer/pattern_table_texture.gd" id="1_7b0mx"]
 [ext_resource type="Script" uid="uid://c2c70k20eengr" path="res://src/renderer/pattern_table.gd" id="1_wd52w"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_tna6w"]
-size = Vector2(128, 128)
+[ext_resource type="PackedScene" uid="uid://be0qovgluhx1n" path="res://src/renderer/pattern_table_image.tscn" id="2_wd52w"]
 
 [node name="PatternTable" type="Window"]
 auto_translate_mode = 1
@@ -28,30 +25,16 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PatternTableTexture" type="TextureRect" parent="HBoxContainer/VBoxContainer"]
-texture_filter = 3
-custom_minimum_size = Vector2(256, 256)
+[node name="PatternTableImage" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_wd52w")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("PlaceholderTexture2D_tna6w")
-stretch_mode = 5
-script = ExtResource("1_7b0mx")
 
 [node name="Control" type="Control" parent="HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="PatternTableTexture2" type="TextureRect" parent="HBoxContainer/VBoxContainer"]
-texture_filter = 3
-custom_minimum_size = Vector2(256, 256)
+[node name="PatternTableImage2" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_wd52w")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = SubResource("PlaceholderTexture2D_tna6w")
-stretch_mode = 5
-script = ExtResource("1_7b0mx")
 is_first_table = false
 
 [node name="RightControls" type="VBoxContainer" parent="HBoxContainer"]
