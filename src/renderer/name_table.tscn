@@ -10,6 +10,7 @@ initial_position = 4
 size = Vector2i(475, 525)
 min_size = Vector2i(475, 525)
 script = ExtResource("1_2p4vc")
+refresh_every_frame = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 15
@@ -44,6 +45,7 @@ layout_mode = 2
 
 [node name="AutoUpdateCheckBox" type="CheckBox" parent="HBoxContainer/RightControls"]
 layout_mode = 2
+button_pressed = true
 text = "Update Every Frame"
 
 [node name="DrawButton" type="Button" parent="HBoxContainer/RightControls"]

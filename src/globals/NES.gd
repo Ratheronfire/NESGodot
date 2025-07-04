@@ -14,8 +14,6 @@ const PAL_VBLANK_SCANLINES := 70
 
 var last_delta: float
 
-var last_instruction: Opcodes.InstructionData
-
 ## The number of CPU instructions to run per second. -1 to run at max speed, 0 to run by manual steps only.
 @export var instructions_per_second: int = 0
 
@@ -51,6 +49,8 @@ var _rom_mapper: NES_Mapper
 var _nmi_vector: int
 var _reset_vector: int
 var _irq_vector: int
+
+@onready var _instruction_data = Opcodes.InstructionData.new()
 
 var _is_running = false
 
@@ -153,15 +153,22 @@ func cpu_loop():
         last_tick = tick
 
 
+func advance_to_next_tick():
+    _cycles += _cycles_before_next_instruction
+
+
 func tick():
     var pc = cpu_memory.registers[Consts.CPU_Registers.PC]
     
     if pending_interrupt == Consts.Interrupts.NMI:
         var old_pc = cpu_memory.registers[Consts.CPU_Registers.PC]
-        Opcodes.JSR(Opcodes.OperandAddressingContext.new(
-            Consts.AddressingModes.Absolute, _nmi_vector
-        ))
-        
+
+        Opcodes.push_to_stack(old_pc & 0xFF)
+        Opcodes.push_to_stack(old_pc >> 8)
+        Opcodes.push_to_stack(cpu_memory.registers[Consts.CPU_Registers.P])
+
+        cpu_memory.registers[Consts.CPU_Registers.PC] = _nmi_vector
+
         _cycles_before_next_instruction = 5 #TODO: Is this right?
         
         pending_interrupt = Consts.Interrupts.NONE
@@ -171,29 +178,24 @@ func tick():
         
         return
     
-    var instruction_data = get_instruction_data(pc)
+    get_instruction_data(pc)
     
-    if instruction_data:
-        var starting_operand = instruction_data.context.value
-        
-        instruction_data.execute()
-        
-        _cycles_before_next_instruction = Consts.OPCODE_DATA[instruction_data.opcode]['cycles']
-        
-        #if instruction_data.context.address_mode in [
-            #Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y,
-            #Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.Relative
-        #]:
-            #if starting_operand & 0xFF00 != instruction_data.context.value & 0xFF00:
-                #_cycles_before_next_instruction += 1
-        
-        last_instruction = instruction_data
-    else:
-        return
+    var starting_operand = _instruction_data.context.value
+    
+    _instruction_data.execute()
+    
+    _cycles_before_next_instruction = Consts.OPCODE_DATA[_instruction_data.opcode]['cycles']
+    
+    #if instruction_data.context.address_mode in [
+        #Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y,
+        #Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.Relative
+    #]:
+        #if starting_operand & 0xFF00 != instruction_data.context.value & 0xFF00:
+            #_cycles_before_next_instruction += 1
     
     if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
         # Don't increment the program counter if we just jumped
-        cpu_memory.registers[Consts.CPU_Registers.PC] += instruction_data.bytes_to_read
+        cpu_memory.registers[Consts.CPU_Registers.PC] += _instruction_data.bytes_to_read
 
 
 func get_instruction_data(start_byte: int):
@@ -204,10 +206,9 @@ func get_instruction_data(start_byte: int):
         _is_running = false
         return
     
-    var instruction = Consts.OPCODE_DATA[next_opcode]['instruction']
     var addressing_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
     var bytes_to_read = Consts.BYTES_PER_MODE[addressing_mode] - 1
-    
+
     var value_low = 0
     var value_high = 0
     
@@ -216,13 +217,13 @@ func get_instruction_data(start_byte: int):
     if bytes_to_read >= 2:
         value_high = cpu_memory.read_byte(start_byte + 2, false)
     
-    var context = Opcodes.OperandAddressingContext.new(addressing_mode, value_low + (value_high << 8))
+    _instruction_data.opcode = next_opcode
+    _instruction_data.context.address_mode = addressing_mode
+    _instruction_data.context.value = value_low + (value_high << 8)
     
-    if not Opcodes.has_method(instruction):
-        assert(false, 'Unrecognized instruction: %s' % instruction)
+    if not Opcodes.has_method(_instruction_data.instruction):
+        assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
         return null
-    
-    return Opcodes.InstructionData.new(next_opcode, context)
 
 
 func start_running(): 
@@ -310,7 +311,7 @@ func compile_script(script: String) -> PackedByteArray:
                 bytes_so_far += Consts.BYTES_PER_MODE[Consts.AddressingModes.Implied]
         else:
             var context = Opcodes.determine_addressing_context(operands[0], operands[1])
-            bytes_so_far += Consts.BYTES_PER_MODE[context.address_mode]
+            bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
     
     # Replacing the labels with their newly calculated addresses
     bytes_so_far = 0
@@ -325,7 +326,7 @@ func compile_script(script: String) -> PackedByteArray:
             var is_branch = operands[0] in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]
             
             var context = Opcodes.determine_addressing_context(operands[0], operands[1])
-            bytes_so_far += Consts.BYTES_PER_MODE[context.address_mode]
+            bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
             
             for label in labels:
                 if is_branch:
@@ -346,11 +347,11 @@ func compile_script(script: String) -> PackedByteArray:
             
             var context = Opcodes.determine_addressing_context(operands[0], operands[1])
             if is_branch:
-                context.address_mode = Consts.AddressingModes.Relative
+                context[0] = Consts.AddressingModes.Relative
             
-            bytecode.append(Consts.get_opcode(operands[0], context.address_mode))
+            bytecode.append(Consts.get_opcode(operands[0], context[0]))
             
-            var data_byte_count = Consts.BYTES_PER_MODE[context.address_mode]
+            var data_byte_count = Consts.BYTES_PER_MODE[context[0]]
             if data_byte_count >= 2:
                 bytecode.append(context.value & 0xFF)
             if data_byte_count >= 3:
