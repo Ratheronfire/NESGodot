@@ -33,13 +33,13 @@ var _speed_settings = [
 
 func _ready():
     load_last_run()
-    init_system()
-    NES.start_running()
 
     get_viewport().files_dropped.connect(on_files_dropped)
 
 
 func init_system():
+    NES.clear_memory()
+    
     if _file_type == FileType.Script:
         var file = FileAccess.open(_file_path, FileAccess.READ)
         
@@ -94,7 +94,7 @@ func _on_FileDialog_file_selected(path):
     _file_path = path
     file_text.text = _file_path
 
-    NES.stop_running()
+    await NES.stop_running()
     
     init_system()
     save_last_run()
@@ -103,12 +103,7 @@ func _on_FileDialog_file_selected(path):
 
 
 func _on_RunScriptButton_pressed():
-    NES.stop_running()
-
     load_last_run()
-    init_system()
-
-    NES.start_running()
 
 
 func _on_StepByStepCheckBox_toggled(button_pressed):

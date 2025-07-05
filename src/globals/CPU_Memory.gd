@@ -10,10 +10,14 @@ const PPU_MIRROR        = 0x2008
 const APU_IO            = 0x4000
 const CARTRIDGE_ADDRESS = 0x8000
 
+const CONTROLLER_REGISTER = 0x4016
+
 const WORK_RAM_SIZE = 0x0800
 const PPU_RAM_SIZE  = 0x0008
 
 signal ppu_register_touched
+
+signal controller_poll_event
 
 
 func init_registers() -> void:
@@ -42,6 +46,11 @@ func _get_byte_value(address: int) -> int:
     return super._get_byte_value(address)
 
 
+func _process_pre_read_byte_side_effects(address: int):
+    if address == CONTROLLER_REGISTER:
+        controller_poll_event.emit(true, memory_bytes[address])
+
+
 func _process_read_byte_side_effects(address: int):
     if address >= PPU_REGISTERS and address < PPU_MIRROR:
         ppu_register_touched.emit(address, memory_bytes[address], true)
@@ -53,3 +62,6 @@ func _process_read_byte_side_effects(address: int):
 func _process_write_byte_side_effects(address: int):
     if address >= PPU_REGISTERS and address < PPU_MIRROR:
         ppu_register_touched.emit(address, memory_bytes[address], false)
+    
+    if address == CONTROLLER_REGISTER:
+        controller_poll_event.emit(false, memory_bytes[address])

@@ -28,7 +28,10 @@ func get_memory_size() -> int:
     return len(memory_bytes)
 
 
-func read_byte(address: int, process_side_effects=true) -> int:
+func read_byte(address: int, process_side_effects = true) -> int:
+    if process_side_effects:
+        _process_pre_read_byte_side_effects(address)
+    
     var return_value = _get_byte_value(address)
     
     if process_side_effects:
@@ -37,13 +40,16 @@ func read_byte(address: int, process_side_effects=true) -> int:
     return return_value
 
 
-func read_word(address: int, process_side_effects=true) -> int:
+func read_word(address: int, process_side_effects = true) -> int:
     return read_byte(address, process_side_effects) + (read_byte(address + 1, process_side_effects) << 8)
 
 
-func write_byte(address: int, value: int, process_side_effects=true) -> void:
+func write_byte(address: int, value: int, process_side_effects = true) -> void:
     if not can_write_byte(address):
         return
+    
+    if process_side_effects:
+        _process_pre_write_byte_side_effects(address)
     
     memory_bytes[address] = value
     
@@ -70,8 +76,13 @@ func copy_ram(from: int, to: int, length: int) -> void:
         memory_bytes[to + i] = memory_bytes[from + i]
 
 
+func clear_memory():
+    for i in range(len(memory_bytes)):
+        memory_bytes[i] = 0x0
+
+
 func _get_byte_value(address: int) -> int:
-    return memory_bytes[address]
+    return memory_bytes[address % 0xFFFF]
 
 
 func _process_read_byte_side_effects(address: int):
@@ -79,4 +90,12 @@ func _process_read_byte_side_effects(address: int):
 
 
 func _process_write_byte_side_effects(address: int):
+    pass
+
+
+func _process_pre_read_byte_side_effects(address: int):
+    pass
+
+
+func _process_pre_write_byte_side_effects(address: int):
     pass

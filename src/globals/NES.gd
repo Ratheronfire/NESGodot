@@ -20,6 +20,10 @@ var last_delta: float
 ## Sets the speed of the emulated CPU. 1.0 equals the default value (60fps for NTSC/50fps for PAL), and 0.0 means the CPU is stopped.
 @export var cpu_speed_multiplier: float = 0.0
 
+@export var controllers: Array[NES_Controller]
+
+@export var verbose_output = false
+
 var cpu_memory: CPU_Memory
 var ppu_memory: PPU_Memory
 
@@ -43,6 +47,8 @@ var _frame := 0
 
 var _seconds_this_cycle := 0.0
 var _seconds_this_scanline := 0.0
+
+var _nmi_started := false
 
 var _rom_mapper: NES_Mapper
 
@@ -91,6 +97,9 @@ func init():
 
     cpu_memory.ppu_register_touched.connect(ppu_memory.on_ppu_register_touched)
 
+    for controller in controllers:
+        controller.init()
+
 
 func cpu_loop():
     var last_tick = float(Time.get_ticks_usec())
@@ -125,22 +134,23 @@ func cpu_loop():
             
             if _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
                 # VBlank begins.
-                
                 var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
                 var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
                 
                 cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
                 
-                if ppu_ctrl & 0x80 > 0:
+                if not _nmi_started and ppu_ctrl & 0x80 > 0:
                     pending_interrupt = Consts.Interrupts.NMI
+                    _nmi_started = true
                 
                 render_start.emit()
             
             if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
                 # VBlank ends.
-                
                 _frame += 1
                 _scanline = 0
+
+                _nmi_started = false
                 
                 var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
                 cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
@@ -163,13 +173,16 @@ func tick():
     if pending_interrupt == Consts.Interrupts.NMI:
         var old_pc = cpu_memory.registers[Consts.CPU_Registers.PC]
 
-        Opcodes.push_to_stack(old_pc & 0xFF)
         Opcodes.push_to_stack(old_pc >> 8)
+        Opcodes.push_to_stack(old_pc & 0xFF)
         Opcodes.push_to_stack(cpu_memory.registers[Consts.CPU_Registers.P])
+
+        if verbose_output:
+            print("[%d]: Jumping to NMI; $%02X -> $%02X" % [Time.get_ticks_usec(), old_pc, _nmi_vector])
 
         cpu_memory.registers[Consts.CPU_Registers.PC] = _nmi_vector
 
-        _cycles_before_next_instruction = 5 #TODO: Is this right?
+        _cycles_before_next_instruction = 5 # TODO: Is this right?
         
         pending_interrupt = Consts.Interrupts.NONE
         
@@ -204,6 +217,7 @@ func get_instruction_data(start_byte: int):
     if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
         print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
         _is_running = false
+        _cpu_thread.wait_to_finish()
         return
     
     var addressing_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
@@ -226,7 +240,12 @@ func get_instruction_data(start_byte: int):
         return null
 
 
-func start_running(): 
+func clear_memory():
+    cpu_memory.clear_memory()
+    ppu_memory.clear_memory()
+
+
+func start_running():
     _cycles = 0
     _scanline = 0
     _frame = 0
@@ -241,11 +260,12 @@ func start_running():
     _is_running = true
     
     print("Starting execution.")
-    _cpu_thread.start(cpu_loop)
+
+    _cpu_thread.start.call_deferred(cpu_loop)
 
 
 func stop_running():
-    if _cpu_thread != null && _cpu_thread.is_started():
+    if _cpu_thread != null && (_cpu_thread.is_alive()):
         print("Waiting for previous execution to stop.")
         _is_running = false
         _cpu_thread.wait_to_finish()

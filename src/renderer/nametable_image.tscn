@@ -3934,8 +3934,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
 
 [node name="NametableTextureRect1" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -3945,8 +3944,8 @@ offset_right = 16.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 1
 
 [node name="NametableTextureRect2" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -3956,8 +3955,8 @@ offset_right = 24.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 2
 
 [node name="NametableTextureRect3" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -3967,8 +3966,8 @@ offset_right = 32.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 3
 
 [node name="NametableTextureRect4" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -3978,8 +3977,8 @@ offset_right = 40.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 4
 
 [node name="NametableTextureRect5" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -3989,8 +3988,8 @@ offset_right = 48.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 5
 
 [node name="NametableTextureRect6" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4000,8 +3999,8 @@ offset_right = 56.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 6
 
 [node name="NametableTextureRect7" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4011,8 +4010,8 @@ offset_right = 64.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 7
 
 [node name="NametableTextureRect8" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4022,8 +4021,8 @@ offset_right = 72.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 8
 
 [node name="NametableTextureRect9" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4033,8 +4032,8 @@ offset_right = 80.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 9
 
 [node name="NametableTextureRect10" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4044,8 +4043,8 @@ offset_right = 88.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 10
 
 [node name="NametableTextureRect11" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4055,7 +4054,7 @@ offset_right = 96.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
+row = 11
 column = 11
 
 [node name="NametableTextureRect12" type="TextureRect" parent="NametableRow11"]
@@ -4066,8 +4065,8 @@ offset_right = 104.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 12
 
 [node name="NametableTextureRect13" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4077,8 +4076,8 @@ offset_right = 112.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 13
 
 [node name="NametableTextureRect14" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4088,8 +4087,8 @@ offset_right = 120.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 14
 
 [node name="NametableTextureRect15" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4099,8 +4098,8 @@ offset_right = 128.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 15
 
 [node name="NametableTextureRect16" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4110,8 +4109,8 @@ offset_right = 136.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 16
 
 [node name="NametableTextureRect17" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4121,8 +4120,8 @@ offset_right = 144.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 17
 
 [node name="NametableTextureRect18" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4132,8 +4131,8 @@ offset_right = 152.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 18
 
 [node name="NametableTextureRect19" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4143,8 +4142,8 @@ offset_right = 160.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 19
 
 [node name="NametableTextureRect20" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4154,8 +4153,8 @@ offset_right = 168.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 20
 
 [node name="NametableTextureRect21" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4165,8 +4164,8 @@ offset_right = 176.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 21
 
 [node name="NametableTextureRect22" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4176,8 +4175,8 @@ offset_right = 184.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 22
 
 [node name="NametableTextureRect23" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4187,8 +4186,8 @@ offset_right = 192.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 23
 
 [node name="NametableTextureRect24" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4198,8 +4197,8 @@ offset_right = 200.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 24
 
 [node name="NametableTextureRect25" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4209,8 +4208,8 @@ offset_right = 208.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 25
 
 [node name="NametableTextureRect26" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4220,8 +4219,8 @@ offset_right = 216.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 26
 
 [node name="NametableTextureRect27" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4231,8 +4230,8 @@ offset_right = 224.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 27
 
 [node name="NametableTextureRect28" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4242,8 +4241,8 @@ offset_right = 232.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 28
 
 [node name="NametableTextureRect29" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4253,8 +4252,8 @@ offset_right = 240.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 29
 
 [node name="NametableTextureRect30" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4264,8 +4263,8 @@ offset_right = 248.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 30
 
 [node name="NametableTextureRect31" type="TextureRect" parent="NametableRow11"]
 texture_filter = 1
@@ -4275,8 +4274,8 @@ offset_right = 256.0
 offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
-row = 3
-column = 11
+row = 11
+column = 31
 
 [node name="NametableRow12" type="Control" parent="."]
 custom_minimum_size = Vector2(256, 8)
@@ -9664,7 +9663,6 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
 
 [node name="NametableTextureRect1" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9675,7 +9673,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 1
 
 [node name="NametableTextureRect2" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9686,7 +9684,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 2
 
 [node name="NametableTextureRect3" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9697,7 +9695,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 3
 
 [node name="NametableTextureRect4" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9708,7 +9706,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 4
 
 [node name="NametableTextureRect5" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9719,7 +9717,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 5
 
 [node name="NametableTextureRect6" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9730,7 +9728,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 6
 
 [node name="NametableTextureRect7" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9741,7 +9739,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 7
 
 [node name="NametableTextureRect8" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9752,7 +9750,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 8
 
 [node name="NametableTextureRect9" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9763,7 +9761,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 9
 
 [node name="NametableTextureRect10" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9774,7 +9772,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 10
 
 [node name="NametableTextureRect11" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9796,7 +9794,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 12
 
 [node name="NametableTextureRect13" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9807,7 +9805,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 13
 
 [node name="NametableTextureRect14" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9818,7 +9816,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 14
 
 [node name="NametableTextureRect15" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9829,7 +9827,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 15
 
 [node name="NametableTextureRect16" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9840,7 +9838,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 16
 
 [node name="NametableTextureRect17" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9851,7 +9849,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 17
 
 [node name="NametableTextureRect18" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9862,7 +9860,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 18
 
 [node name="NametableTextureRect19" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9873,7 +9871,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 19
 
 [node name="NametableTextureRect20" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9884,7 +9882,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 20
 
 [node name="NametableTextureRect21" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9895,7 +9893,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 21
 
 [node name="NametableTextureRect22" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9906,7 +9904,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 22
 
 [node name="NametableTextureRect23" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9917,7 +9915,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 23
 
 [node name="NametableTextureRect24" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9928,7 +9926,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 24
 
 [node name="NametableTextureRect25" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9939,7 +9937,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 25
 
 [node name="NametableTextureRect26" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9950,7 +9948,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 26
 
 [node name="NametableTextureRect27" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9961,7 +9959,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 27
 
 [node name="NametableTextureRect28" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9972,7 +9970,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 28
 
 [node name="NametableTextureRect29" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9983,7 +9981,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 29
 
 [node name="NametableTextureRect30" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -9994,7 +9992,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 30
 
 [node name="NametableTextureRect31" type="TextureRect" parent="NametableRow27"]
 texture_filter = 1
@@ -10005,7 +10003,7 @@ offset_bottom = 8.0
 texture = SubResource("PlaceholderTexture2D_2p4vc")
 script = ExtResource("2_6usev")
 row = 27
-column = 11
+column = 31
 
 [node name="NametableRow28" type="Control" parent="."]
 custom_minimum_size = Vector2(256, 8)
