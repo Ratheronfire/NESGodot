@@ -222,3 +222,5 @@ separation_vertical = null
 [node name="PatternTablePanel" parent="." instance=ExtResource("6_tna6w")]
 
 [node name="NameTable" parent="." instance=ExtResource("7_p63qp")]
+
+[connection signal="file_selected" from="FileDialog" to="ScriptPanel" method="_on_file_dialog_file_selected"]

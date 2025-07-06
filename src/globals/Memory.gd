@@ -49,7 +49,7 @@ func write_byte(address: int, value: int, process_side_effects = true) -> void:
         return
     
     if process_side_effects:
-        _process_pre_write_byte_side_effects(address)
+        _process_pre_write_byte_side_effects(address, value)
     
     memory_bytes[address] = value
     
@@ -97,5 +97,5 @@ func _process_pre_read_byte_side_effects(address: int):
     pass
 
 
-func _process_pre_write_byte_side_effects(address: int):
+func _process_pre_write_byte_side_effects(address: int, value_to_write: int):
     pass

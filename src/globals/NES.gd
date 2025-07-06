@@ -65,6 +65,7 @@ var _is_running = false
 var _test_prev_frame := 0
 var _fps_history := []
 
+signal execution_start
 signal ticked
 signal render_start
 signal render_end
@@ -96,6 +97,8 @@ func init():
     ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(PPU_Memory.PPU_MEMORY_SIZE)
 
     cpu_memory.ppu_register_touched.connect(ppu_memory.on_ppu_register_touched)
+
+    render_end.connect(ppu_memory.on_render_end)
 
     for controller in controllers:
         controller.init()
@@ -262,6 +265,7 @@ func start_running():
     print("Starting execution.")
 
     _cpu_thread.start.call_deferred(cpu_loop)
+    execution_start.emit()
 
 
 func stop_running():

@@ -7,14 +7,14 @@ extends Window
 
 
 func _ready() -> void:
-    NES.render_end.connect(on_render_end)
+    NesRenderer.renderer_updated.connect(on_renderer_updated)
 
 
 func _process(delta: float) -> void:
     $HBoxContainer/RightControls/DrawButton.disabled = refresh_every_frame and NES.cpu_speed_multiplier > 0
 
 
-func on_render_end():
+func on_renderer_updated(_pattern_table_updates: Array, _nametable_updates: Array, _attribute_table_updates: Array, _palette_updates: Array):
     if refresh_every_frame:
         draw_pattern_tables()
 

@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://rcor2bcrbao8"]
+[gd_scene load_steps=5 format=3 uid="uid://rcor2bcrbao8"]
 
 [ext_resource type="Script" uid="uid://c2c70k20eengr" path="res://src/renderer/pattern_table.gd" id="1_wd52w"]
 [ext_resource type="PackedScene" uid="uid://be0qovgluhx1n" path="res://src/renderer/pattern_table_image.tscn" id="2_wd52w"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_66wpo"]
+size = Vector2(128, 128)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_wd52w"]
+size = Vector2(128, 128)
 
 [node name="PatternTable" type="Window"]
 auto_translate_mode = 1
@@ -28,6 +34,8 @@ size_flags_horizontal = 3
 
 [node name="PatternTableImage" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_wd52w")]
 layout_mode = 2
+size_flags_vertical = 3
+texture = SubResource("PlaceholderTexture2D_66wpo")
 
 [node name="Control" type="Control" parent="HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
@@ -36,6 +44,8 @@ size_flags_vertical = 4
 
 [node name="PatternTableImage2" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_wd52w")]
 layout_mode = 2
+size_flags_vertical = 3
+texture = SubResource("PlaceholderTexture2D_wd52w")
 is_first_table = false
 
 [node name="RightControls" type="VBoxContainer" parent="HBoxContainer"]

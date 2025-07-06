@@ -24,6 +24,13 @@ const PALETTE_DATA = 0x3F00
 
 var _buffered_ppudata_value = 0x0
 
+var _pattern_table_updates := []
+var _nametable_updates := []
+var _attribute_table_updates := []
+var _palette_updates := []
+
+signal ppu_updated
+
 
 func init_registers() -> void:
     _registers = {
@@ -32,6 +39,9 @@ func init_registers() -> void:
         Consts.CPU_Registers.PPU_X: 0,
         Consts.CPU_Registers.PPU_W: 0
     }
+
+    for i in range(len(memory_bytes)):
+        _process_updated_value(i)
 
 
 func on_ppu_register_touched(cpu_address: int, cpu_address_value: int, was_read: bool):
@@ -63,6 +73,7 @@ func on_ppu_register_touched(cpu_address: int, cpu_address_value: int, was_read:
     
     # Write PPUDATA: Copy data to PPU memory
     if not was_read and cpu_address == Consts.PPU_Registers.PPUDATA:
+        _process_pre_write_byte_side_effects(_registers[Consts.CPU_Registers.PPU_V], cpu_address_value)
         _memory_bytes[_registers[Consts.CPU_Registers.PPU_V]] = cpu_address_value
         # print("Wrote 0x%02X to PPU at address $%02X." % [cpu_address_value, _registers[Consts.CPU_Registers.PPU_V]])
     
@@ -75,13 +86,44 @@ func on_ppu_register_touched(cpu_address: int, cpu_address_value: int, was_read:
         _registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
 
 
-
 func can_write_byte(address: int) -> bool:
     return true
 
 
-func _process_read_byte_side_effects(address: int):
-    pass
+func on_render_end():
+    ppu_updated.emit(
+        _pattern_table_updates.duplicate(),
+        _nametable_updates.duplicate(),
+        _attribute_table_updates.duplicate(),
+        _palette_updates.duplicate()
+    )
+
+    _pattern_table_updates.clear()
+    _nametable_updates.clear()
+    _attribute_table_updates.clear()
+    _palette_updates.clear()
+
+
+func _process_pre_write_byte_side_effects(address: int, value_to_write: int):
+    if memory_bytes[address] != value_to_write:
+        _process_updated_value(address)
+
+
+func _process_updated_value(address: int):
+    if address < NAMETABLE_0:
+        _pattern_table_updates.append(address)
+    elif (address >= NAMETABLE_0 and address < ATTRIBUTE_TABLE_0) or \
+            (address >= NAMETABLE_1 and address < ATTRIBUTE_TABLE_1) or \
+            (address >= NAMETABLE_2 and address < ATTRIBUTE_TABLE_2) or \
+            (address >= NAMETABLE_3 and address < ATTRIBUTE_TABLE_3):
+        _nametable_updates.append(address)
+    elif (address >= ATTRIBUTE_TABLE_0 and address < NAMETABLE_1) or \
+            (address >= ATTRIBUTE_TABLE_1 and address < NAMETABLE_2) or \
+            (address >= ATTRIBUTE_TABLE_2 and address < NAMETABLE_3) or \
+            (address >= ATTRIBUTE_TABLE_3 and address < 0x3000):
+        _attribute_table_updates.append(address)
+    elif address >= PALETTE_DATA and address < 0x3F20:
+        _palette_updates.append(address)
 
 
 func _flip_w_register():

@@ -1,71 +1,82 @@
 extends Node
 
+@onready var PALETTE_LOOKUPS = {
+    'NTSC': FileAccess.get_file_as_bytes('res://assets/palette_data/2C02G_wiki.pal')
+}
 
-class Palette:
-    var colors: Array[Color] = [Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK]
+## A dictionary mapping PPU addresses to their corresponding 8x1 slivers of palette indices for their given tile.
+##   (Note that the keys are the addresses of the low bitplane bytes, and the high bytes are ignored.)
+var pattern_table_data := {}
+## A dictionary mapping PPU addresses to their corresponding nametable entries, stored as pattern table IDs.
+var nametable_data := {}
+## A dictionary mapping PPU addresses to their corresponding attribute table entries, stored as an array of palette IDs for each metatile.
+var attribute_table_data := {}
+## A list of palettes, stored as lists of Color objects.
+var palettes := []
 
-    func _init(color_hex_values: Array[int]) -> void:
-        var palette_data = FileAccess.get_file_as_bytes('res://assets/palette_data/2C02G_wiki.pal')
-
-        colors = []
-
-        for hex_value in color_hex_values:
-            var palette_index = hex_value * 3
-
-            var r = palette_data[palette_index]
-            var g = palette_data[palette_index + 1]
-            var b = palette_data[palette_index + 2]
-
-            colors.append(Color(r / 255.0, g / 255.0, b / 255.0))
-    
-    func hash():
-        return hash(colors[0]) + hash(colors[1]) + hash(colors[2]) + hash(colors[3])
-
-
-var cached_images = {}
-
-var palettes: Array[Palette]:
-    get: return _palettes
-var _palettes: Array[Palette] = []
+signal renderer_updated
 
 
 func _ready() -> void:
-    NES.render_end.connect(update_renderer_data)
+    NES.ppu_memory.ppu_updated.connect(_on_ppu_updated)
+    reset()
 
 
-func update_renderer_data():
-    _palettes = []
+func reset():
+    for byte in range(PPU_Memory.NAMETABLE_0):
+        if byte % 16 < 8:
+            pattern_table_data[byte] = [0, 0, 0, 0, 0, 0, 0, 0]
+    
+    for byte in range(PPU_Memory.NAMETABLE_0, PPU_Memory.ATTRIBUTE_TABLE_0):
+        nametable_data[byte] = 0x0
+    for byte in range(PPU_Memory.NAMETABLE_1, PPU_Memory.ATTRIBUTE_TABLE_1):
+        nametable_data[byte] = 0x0
+    for byte in range(PPU_Memory.NAMETABLE_2, PPU_Memory.ATTRIBUTE_TABLE_2):
+        nametable_data[byte] = 0x0
+    for byte in range(PPU_Memory.NAMETABLE_3, PPU_Memory.ATTRIBUTE_TABLE_3):
+        nametable_data[byte] = 0x0
+    
+    for byte in range(PPU_Memory.ATTRIBUTE_TABLE_0, PPU_Memory.NAMETABLE_1):
+        attribute_table_data[byte] = [0, 0, 0, 0]
+    for byte in range(PPU_Memory.ATTRIBUTE_TABLE_1, PPU_Memory.NAMETABLE_2):
+        attribute_table_data[byte] = [0, 0, 0, 0]
+    for byte in range(PPU_Memory.ATTRIBUTE_TABLE_2, PPU_Memory.NAMETABLE_3):
+        attribute_table_data[byte] = [0, 0, 0, 0]
+    for byte in range(PPU_Memory.ATTRIBUTE_TABLE_3, 0x3000):
+        attribute_table_data[byte] = [0, 0, 0, 0]
 
-    for i in range(PPU_Memory.PALETTE_DATA, PPU_Memory.PALETTE_DATA + 32, 4):
-        var palette = Palette.new([
-            NES.ppu_memory.memory_bytes[i],
-            NES.ppu_memory.memory_bytes[i + 1],
-            NES.ppu_memory.memory_bytes[i + 2],
-            NES.ppu_memory.memory_bytes[i + 3],
-        ])
+    palettes = [
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY],
+        [Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY]
+    ]
 
-        _palettes.append(palette)
 
+func _on_ppu_updated(pattern_table_updates: Array, nametable_updates: Array, attribute_table_updates: Array, palette_updates: Array):
+    var modified_pattern_table_addresses = []
+    for address in pattern_table_updates:
+        if address % 16 >= 8:
+            # This is the high byte of the bitplane pair; operating via the low byte for consistency.
+            if address - 8 in pattern_table_updates:
+                # ...Unless the low byte is present already, in which case we'd be repeating work.
+                continue
+            
+            address -= 8
+        
+        var low_byte = NES.ppu_memory.memory_bytes[address]
+        var high_byte = NES.ppu_memory.memory_bytes[address + 8]
 
-func get_tile_data(is_first_table: bool, tile_id: int) -> Array[int]:
-    var table_base_address = PPU_Memory.PATTERN_TABLE_0 if is_first_table else PPU_Memory.PATTERN_TABLE_1
-    var pixel_address_offset = tile_id * 16
-
-    # Tiles are defined using 2 bit planes.
-    var bit_plane_1_address = table_base_address + pixel_address_offset
-    var bit_plane_2_address = table_base_address + pixel_address_offset + 8
-
-    var pixels: Array[int] = []
-
-    # For each byte pair of this tile:
-    for i in range(8):
-        var byte_1 = NES.ppu_memory.memory_bytes[bit_plane_1_address + i]
-        var byte_2 = NES.ppu_memory.memory_bytes[bit_plane_2_address + i]
+        var pixels: Array[int] = []
 
         # For each bit of these bytes:
-        for j in range(7, -1, -1):
-            var bit_1_set = byte_1 & (2**j) > 0
-            var bit_2_set = byte_2 & (2**j) > 0
+        for i in range(7, -1, -1):
+            var bit_1_set = low_byte >> i & 0x1 == 1
+            var bit_2_set = high_byte >> i & 0x1 == 1
 
             # Assigning the appropriate palette based on the two bytes
             if not bit_1_set and not bit_2_set:
@@ -76,33 +87,39 @@ func get_tile_data(is_first_table: bool, tile_id: int) -> Array[int]:
                 pixels.append(2)
             else:
                 pixels.append(3)
+        
+        pattern_table_data[address] = pixels
+        modified_pattern_table_addresses.append(address)
     
-    return pixels
-
-
-func get_tile_image(tile_id: int, palette: Palette, is_first_table: bool) -> ImageTexture:
-    var palette_hash = palette.hash()
-
-    if is_first_table not in cached_images:
-        cached_images[is_first_table] = {}
-    if tile_id not in cached_images[is_first_table]:
-        cached_images[is_first_table][tile_id] = {}
-
-    if palette_hash not in cached_images[is_first_table][tile_id]:
-        var tile_data = get_tile_data(is_first_table, tile_id)
-
-        var image = Image.create(8, 8, false, Image.FORMAT_RGBA8)
-
-        for i in range(len(tile_data)):
-            var pixel = tile_data[i]
-            var pixel_offset = Vector2(i % 8, i / 8)
-
-            image.set_pixel(pixel_offset.x, pixel_offset.y, palette.colors[pixel])
-
-        cached_images[is_first_table][tile_id][palette_hash] = ImageTexture.create_from_image(image)
+    for address in nametable_updates:
+        nametable_data[address] = NES.ppu_memory.memory_bytes[address]
     
-    return cached_images[is_first_table][tile_id][palette_hash]
+    for address in attribute_table_updates:
+        var value = NES.ppu_memory.memory_bytes[address]
 
+        attribute_table_data[address] = [
+            value & 0x03,
+            value >> 2 & 0x03,
+            value >> 4 & 0x03,
+            value >> 6 & 0x03
+        ]
+    
+    for address in palette_updates:
+        var palette_update = NES.ppu_memory.memory_bytes[address]
 
-func clear_cache():
-    cached_images = {}
+        var hex_value = NES.ppu_memory.memory_bytes[palette_update]
+        var palette_file_index = hex_value * 3
+
+        var palette_index = (address - PPU_Memory.PALETTE_DATA) / 4
+        var color_index = 3 - (address - PPU_Memory.PALETTE_DATA) % 4
+        
+        palettes[palette_index][color_index].r = PALETTE_LOOKUPS['NTSC'][palette_file_index] / 255.0
+        palettes[palette_index][color_index].g = PALETTE_LOOKUPS['NTSC'][palette_file_index + 1] / 255.0
+        palettes[palette_index][color_index].b = PALETTE_LOOKUPS['NTSC'][palette_file_index + 2] / 255.0
+    
+    renderer_updated.emit(
+        modified_pattern_table_addresses.duplicate(),
+        nametable_updates.duplicate(),
+        attribute_table_updates.duplicate(),
+        palette_updates.duplicate()
+    )

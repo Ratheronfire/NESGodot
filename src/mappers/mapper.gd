@@ -9,11 +9,11 @@ const MAPPER_SCRIPTS = {
 
 ## The different possible file formats an NES ROM may be ripped using.
 enum FileFormat {
-    NONE,  ## No valid format could be found.
-    INES,  ## Created by Marat Fayzullin for INES, used in most official and unofficial projects.
+    NONE, ## No valid format could be found.
+    INES, ## Created by Marat Fayzullin for INES, used in most official and unofficial projects.
     NES_2, ## An extended version of the INES format.
-    FDS,   ## Created by Fan Wan Yang and Shu Kondo for fwNES; mainly useful for Famicom Disk System rips.
-    TNES,  ## Used for 3DS Virtual Console titles.
+    FDS, ## Created by Fan Wan Yang and Shu Kondo for fwNES; mainly useful for Famicom Disk System rips.
+    TNES, ## Used for 3DS Virtual Console titles.
 }
 
 var mapper_id: int:
@@ -38,9 +38,10 @@ func open_rom(path: String):
 
 
 func _copy_bank_to_ram(rom_address: int, ram_address: int, length: int, to_ppu: bool = false) -> void:
-    print("Copying 0x%04X bytes from ROM 0x%04X to RAM 0x%04X." % [
+    print("Copying 0x%04X bytes from ROM 0x%04X to %s RAM 0x%04X." % [
         length,
         rom_address,
+        "PPU" if to_ppu else "CPU",
         ram_address
     ])
     

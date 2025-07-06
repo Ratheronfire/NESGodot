@@ -74,7 +74,20 @@ func load_last_run():
 
     if loaded_file_json:
         _file_type = loaded_file_json['file_type']
-        _on_FileDialog_file_selected(loaded_file_json['file_path'])
+        run_file(loaded_file_json['file_path'])
+
+
+func run_file(path):
+    print("Loading %s." % path)
+    _file_path = path
+    file_text.text = _file_path
+
+    await NES.stop_running()
+    
+    init_system()
+    save_last_run()
+
+    NES.start_running()
 
 
 func on_files_dropped(files):
@@ -88,18 +101,6 @@ func on_files_dropped(files):
 
 func _on_LoadButton_pressed():
     file_dialog.popup_centered()
-
-
-func _on_FileDialog_file_selected(path):
-    _file_path = path
-    file_text.text = _file_path
-
-    await NES.stop_running()
-    
-    init_system()
-    save_last_run()
-
-    NES.start_running()
 
 
 func _on_RunScriptButton_pressed():
@@ -131,3 +132,7 @@ func _on_StepButton_pressed():
 
 func _on_file_type_option_button_item_selected(index: int) -> void:
     _file_type = index
+
+
+func _on_file_dialog_file_selected(path: String) -> void:
+    run_file(path)
