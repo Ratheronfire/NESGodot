@@ -75,7 +75,6 @@ func on_ppu_register_touched(cpu_address: int, cpu_address_value: int, was_read:
         _registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
 
 
-
 func can_write_byte(address: int) -> bool:
     return true
 

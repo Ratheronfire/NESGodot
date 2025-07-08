@@ -12,8 +12,6 @@ const PAL_SCANLINES := 239
 const NTSC_VBLANK_SCANLINES := 20
 const PAL_VBLANK_SCANLINES := 70
 
-var last_delta: float
-
 ## The number of CPU instructions to run per second. -1 to run at max speed, 0 to run by manual steps only.
 @export var instructions_per_second: int = 0
 
@@ -45,6 +43,7 @@ var frame: int:
         return _frame
 var _frame := 0
 
+var _next_frame_start_time := 0.0
 var _seconds_this_cycle := 0.0
 var _seconds_this_scanline := 0.0
 
@@ -102,65 +101,90 @@ func init():
 
 
 func cpu_loop():
-    var last_tick = float(Time.get_ticks_usec())
+    var last_tick = float(Time.get_ticks_msec())
+
+    var frame_start_time = last_tick
+    var tick_count = 0
     
-    var runs_per_frame = 10000
+    var runs_per_frame = 1000
     var runs = 0
-    
+
+    var frames_rendered = 0
+
     while _is_running:
-        var tick = float(Time.get_ticks_usec())
-        var delta = (tick - last_tick) / 1000000.0
-        last_delta = delta
-        
         runs += 1
         if runs >= runs_per_frame:
             runs = 0
-            ticked.emit.call_deferred()
             await get_tree().process_frame
         
+        var tick_time = float(Time.get_ticks_msec())
+        var delta = (tick_time - last_tick) / 1000.0
+
         var adjusted_delta = delta * cpu_speed_multiplier
-        _seconds_this_cycle += adjusted_delta
-        _seconds_this_scanline += adjusted_delta
-        
-        if _seconds_this_cycle >= NTSC_SECONDS_PER_CYCLE:
-            _seconds_this_cycle = 0.0
-            
-            _cycles += 1
-            _cycles_before_next_instruction -= 1
-            
-            if _seconds_this_scanline > NTSC_CYCLES_PER_SCANLINE * NTSC_SECONDS_PER_CYCLE:
-                _scanline += 1
-                _seconds_this_scanline = 0.0
-            
-            if _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
-                # VBlank begins.
-                var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
-                var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
-                
-                cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
-                
-                if not _nmi_started and ppu_ctrl & 0x80 > 0:
-                    pending_interrupt = Consts.Interrupts.NMI
-                    _nmi_started = true
-                
-                render_start.emit()
-            
-            if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
-                # VBlank ends.
-                _frame += 1
-                _scanline = 0
 
-                _nmi_started = false
-                
-                var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
-                cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
+        # _seconds_this_cycle += adjusted_delta
+        # _seconds_this_scanline += adjusted_delta
+        # if _seconds_this_cycle >= NTSC_SECONDS_PER_CYCLE:
+            # _seconds_this_cycle = 0.0
+        _cycles += _cycles_before_next_instruction
 
-                render_end.emit()
-            
-            if _cycles_before_next_instruction <= 0:
-                tick()
+        var frames_to_render = max(1, floor(cpu_speed_multiplier / 100))
+
+        if cpu_speed_multiplier == 0.0:
+            await get_tree().process_frame
         
-        last_tick = tick
+        if _next_frame_start_time > 0:
+            _next_frame_start_time -= adjusted_delta
+            print('yielding')
+            await get_tree().process_frame
+            continue
+        
+        if _cycles > NTSC_CYCLES_PER_SCANLINE * _scanline:
+            _scanline += 1
+        
+        if not _nmi_started and _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
+            # VBlank begins.
+            var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+            var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
+            
+            cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
+            
+            if ppu_ctrl & 0x80 > 0:
+                pending_interrupt = Consts.Interrupts.NMI
+                _nmi_started = true
+            
+            render_start.emit()
+        
+        if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
+            print('Frame ended after %d ticks (%d cycles). Total frame time: %f seconds.' % [tick_count, _cycles, ((last_tick - frame_start_time) / 1000.0)])
+            tick_count = 0
+            frame_start_time = last_tick
+
+            # VBlank ends.
+            _frame += 1
+            _scanline = 0
+            _cycles = 0
+            
+            var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+            cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
+
+            frames_rendered += 1
+            
+            render_end.emit.call_deferred()
+            ticked.emit.call_deferred()
+
+            if frames_rendered >= frames_to_render:
+                _next_frame_start_time = NTSC_SECONDS_PER_CYCLE * NTSC_CYCLES_PER_SCANLINE * (NTSC_SCANLINES + NTSC_VBLANK_SCANLINES)
+
+                await get_tree().process_frame
+                frames_rendered = 0
+
+            _nmi_started = false
+        
+        tick()
+        tick_count += 1
+        
+        last_tick = tick_time
 
 
 func advance_to_next_tick():

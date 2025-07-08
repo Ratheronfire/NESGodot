@@ -9,11 +9,11 @@ const MAPPER_SCRIPTS = {
 
 ## The different possible file formats an NES ROM may be ripped using.
 enum FileFormat {
-    NONE,  ## No valid format could be found.
-    INES,  ## Created by Marat Fayzullin for INES, used in most official and unofficial projects.
+    NONE, ## No valid format could be found.
+    INES, ## Created by Marat Fayzullin for INES, used in most official and unofficial projects.
     NES_2, ## An extended version of the INES format.
-    FDS,   ## Created by Fan Wan Yang and Shu Kondo for fwNES; mainly useful for Famicom Disk System rips.
-    TNES,  ## Used for 3DS Virtual Console titles.
+    FDS, ## Created by Fan Wan Yang and Shu Kondo for fwNES; mainly useful for Famicom Disk System rips.
+    TNES, ## Used for 3DS Virtual Console titles.
 }
 
 var mapper_id: int:
@@ -110,6 +110,8 @@ static func create_mapper(rom_path: String) -> NES_Mapper:
         
         if tnes_mapper_id in mapper_translations:
             mapper_id = mapper_translations[tnes_mapper_id]
+    
+    print('ROM header details: ROM format %s; Mapper ID %d.' % [FileFormat.find_key(header_format), mapper_id])
     
     if mapper_id in MAPPER_SCRIPTS:
         mapper.set_script(MAPPER_SCRIPTS[mapper_id])
