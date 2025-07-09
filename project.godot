@@ -13,7 +13,7 @@ config_version=5
 config/name="NESGodot"
 config/description="No Description"
 run/main_scene="res://src/debug_display/NESDebug.tscn"
-config/features=PackedStringArray("4.4")
+config/features=PackedStringArray("4.4", "C#")
 config/icon="res://icon.png"
 
 [autoload]
@@ -30,9 +30,13 @@ NesRenderer="*res://src/renderer/nes_renderer.tscn"
 window/subwindows/embed_subwindows=false
 window/stretch/mode="2d"
 
+[dotnet]
+
+project/assembly_name="NESGodot"
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/spanning_table/plugin.cfg", "res://addons/table_container/plugin.cfg", "res://addons/gdUnit4/plugin.cfg")
+enabled=PackedStringArray("res://addons/spanning_table/plugin.cfg", "res://addons/table_container/plugin.cfg")
 
 [input]
 

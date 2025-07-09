@@ -28,19 +28,19 @@ var ppu_memory: PPU_Memory
 var pending_interrupt := Consts.Interrupts.NONE
 
 var cycles: int:
-    get:
-        return _cycles
+	get:
+		return _cycles
 var _cycles := 0
 var _cycles_before_next_instruction := 0
 
 var scanline: int:
-    get:
-        return _scanline
+	get:
+		return _scanline
 var _scanline := 0
 
 var frame: int:
-    get:
-        return _frame
+	get:
+		return _frame
 var _frame := 0
 
 var _next_frame_start_time := 0.0
@@ -70,336 +70,335 @@ signal render_end
 
 
 func _ready():
-    init()
+	init()
 
 
 func _process(delta: float) -> void:
-    var frame_diff = _frame - _test_prev_frame
-    
-    _fps_history.append((_frame - _test_prev_frame) / delta)
-    if len(_fps_history) > 100:
-        _fps_history.pop_front()
-    
-    var fps_avg = 0.0
-    for fps in _fps_history:
-        fps_avg += fps
-    fps_avg /= len(_fps_history)
-    
-    #print("Current framerate: %f" % fps_avg)
-    
-    _test_prev_frame = _frame
+	var frame_diff = _frame - _test_prev_frame
+	
+	_fps_history.append((_frame - _test_prev_frame) / delta)
+	if len(_fps_history) > 100:
+		_fps_history.pop_front()
+	
+	var fps_avg = 0.0
+	for fps in _fps_history:
+		fps_avg += fps
+	fps_avg /= len(_fps_history)
+	
+	#print("Current framerate: %f" % fps_avg)
+	
+	_test_prev_frame = _frame
 
 
 func init():
-    cpu_memory = preload("res://src/globals/CPU_Memory.gd").new(CPU_Memory.CPU_MEMORY_SIZE)
-    ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(PPU_Memory.PPU_MEMORY_SIZE)
+	cpu_memory = preload("res://src/globals/CPU_Memory.gd").new(CPU_Memory.CPU_MEMORY_SIZE)
+	ppu_memory = preload("res://src/globals/PPU_Memory.gd").new(PPU_Memory.PPU_MEMORY_SIZE)
 
-    cpu_memory.ppu_register_touched.connect(ppu_memory.on_ppu_register_touched)
+	cpu_memory.ppu_register_touched.connect(ppu_memory.on_ppu_register_touched)
 
-    for controller in controllers:
-        controller.init()
+	for controller in controllers:
+		controller.init()
 
 
 func cpu_loop():
-    var last_tick = float(Time.get_ticks_msec())
+	var last_tick = float(Time.get_ticks_msec())
 
-    var frame_start_time = last_tick
-    var tick_count = 0
-    
-    var runs_per_frame = 1000
-    var runs = 0
+	var frame_start_time = last_tick
+	var tick_count = 0
+	
+	var runs_per_frame = 1000
+	var runs = 0
 
-    var frames_rendered = 0
+	var frames_rendered = 0
 
-    while _is_running:
-        runs += 1
-        if runs >= runs_per_frame:
-            runs = 0
-            await get_tree().process_frame
-        
-        var tick_time = float(Time.get_ticks_msec())
-        var delta = (tick_time - last_tick) / 1000.0
+	while _is_running:
+		runs += 1
+		if runs >= runs_per_frame:
+			runs = 0
+			await get_tree().process_frame
+		
+		var tick_time = float(Time.get_ticks_msec())
+		var delta = (tick_time - last_tick) / 1000.0
 
-        var adjusted_delta = delta * cpu_speed_multiplier
+		var adjusted_delta = delta * cpu_speed_multiplier
 
-        # _seconds_this_cycle += adjusted_delta
-        # _seconds_this_scanline += adjusted_delta
-        # if _seconds_this_cycle >= NTSC_SECONDS_PER_CYCLE:
-            # _seconds_this_cycle = 0.0
-        _cycles += _cycles_before_next_instruction
+		# _seconds_this_cycle += adjusted_delta
+		# _seconds_this_scanline += adjusted_delta
+		# if _seconds_this_cycle >= NTSC_SECONDS_PER_CYCLE:
+			# _seconds_this_cycle = 0.0
+		_cycles += _cycles_before_next_instruction
 
-        var frames_to_render = max(1, floor(cpu_speed_multiplier / 100))
+		var frames_to_render = max(1, floor(cpu_speed_multiplier / 100))
 
-        if cpu_speed_multiplier == 0.0:
-            await get_tree().process_frame
-        
-        if _next_frame_start_time > 0:
-            _next_frame_start_time -= adjusted_delta
-            print('yielding')
-            await get_tree().process_frame
-            continue
-        
-        if _cycles > NTSC_CYCLES_PER_SCANLINE * _scanline:
-            _scanline += 1
-        
-        if not _nmi_started and _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
-            # VBlank begins.
-            var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
-            var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
-            
-            cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
-            
-            if ppu_ctrl & 0x80 > 0:
-                pending_interrupt = Consts.Interrupts.NMI
-                _nmi_started = true
-            
-            render_start.emit()
-        
-        if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
-            print('Frame ended after %d ticks (%d cycles). Total frame time: %f seconds.' % [tick_count, _cycles, ((last_tick - frame_start_time) / 1000.0)])
-            tick_count = 0
-            frame_start_time = last_tick
+		if cpu_speed_multiplier == 0.0:
+			await get_tree().process_frame
+		
+		if _next_frame_start_time > 0:
+			_next_frame_start_time -= adjusted_delta
+			await get_tree().process_frame
+			continue
+		
+		if _cycles > NTSC_CYCLES_PER_SCANLINE * _scanline:
+			_scanline += 1
+		
+		if not _nmi_started and _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
+			# VBlank begins.
+			var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+			var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
+			
+			cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
+			
+			if ppu_ctrl & 0x80 > 0:
+				pending_interrupt = Consts.Interrupts.NMI
+				_nmi_started = true
+			
+			render_start.emit()
+		
+		if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
+			print('Frame ended after %d ticks (%d cycles). Total frame time: %f seconds.' % [tick_count, _cycles, ((last_tick - frame_start_time) / 1000.0)])
+			tick_count = 0
+			frame_start_time = last_tick
 
-            # VBlank ends.
-            _frame += 1
-            _scanline = 0
-            _cycles = 0
-            
-            var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
-            cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
+			# VBlank ends.
+			_frame += 1
+			_scanline = 0
+			_cycles = 0
+			
+			var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+			cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status & 0x7F, false)
 
-            frames_rendered += 1
-            
-            render_end.emit.call_deferred()
-            ticked.emit.call_deferred()
+			frames_rendered += 1
+			
+			render_end.emit.call_deferred()
+			ticked.emit.call_deferred()
 
-            if frames_rendered >= frames_to_render:
-                _next_frame_start_time = NTSC_SECONDS_PER_CYCLE * NTSC_CYCLES_PER_SCANLINE * (NTSC_SCANLINES + NTSC_VBLANK_SCANLINES)
+			if frames_rendered >= frames_to_render:
+				_next_frame_start_time = NTSC_SECONDS_PER_CYCLE * NTSC_CYCLES_PER_SCANLINE * (NTSC_SCANLINES + NTSC_VBLANK_SCANLINES)
 
-                await get_tree().process_frame
-                frames_rendered = 0
+				await get_tree().process_frame
+				frames_rendered = 0
 
-            _nmi_started = false
-        
-        tick()
-        tick_count += 1
-        
-        last_tick = tick_time
+			_nmi_started = false
+		
+		tick()
+		tick_count += 1
+		
+		last_tick = tick_time
 
 
 func advance_to_next_tick():
-    _cycles += _cycles_before_next_instruction
+	_cycles += _cycles_before_next_instruction
 
 
 func tick():
-    var pc = cpu_memory.registers[Consts.CPU_Registers.PC]
-    
-    if pending_interrupt == Consts.Interrupts.NMI:
-        var old_pc = cpu_memory.registers[Consts.CPU_Registers.PC]
+	var pc = cpu_memory.registers[Consts.CPU_Registers.PC]
+	
+	if pending_interrupt == Consts.Interrupts.NMI:
+		var old_pc = cpu_memory.registers[Consts.CPU_Registers.PC]
 
-        Opcodes.push_to_stack(old_pc >> 8)
-        Opcodes.push_to_stack(old_pc & 0xFF)
-        Opcodes.push_to_stack(cpu_memory.registers[Consts.CPU_Registers.P])
+		Opcodes.push_to_stack(old_pc >> 8)
+		Opcodes.push_to_stack(old_pc & 0xFF)
+		Opcodes.push_to_stack(cpu_memory.registers[Consts.CPU_Registers.P])
 
-        if verbose_output:
-            print("[%d]: Jumping to NMI; $%02X -> $%02X" % [Time.get_ticks_usec(), old_pc, _nmi_vector])
+		if verbose_output:
+			print("[%d]: Jumping to NMI; $%02X -> $%02X" % [Time.get_ticks_usec(), old_pc, _nmi_vector])
 
-        cpu_memory.registers[Consts.CPU_Registers.PC] = _nmi_vector
+		cpu_memory.registers[Consts.CPU_Registers.PC] = _nmi_vector
 
-        _cycles_before_next_instruction = 5 # TODO: Is this right?
-        
-        pending_interrupt = Consts.Interrupts.NONE
-        
-        var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
-        cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
-        
-        return
-    
-    get_instruction_data(pc)
-    
-    var starting_operand = _instruction_data.context.value
-    
-    _instruction_data.execute()
-    
-    _cycles_before_next_instruction = Consts.OPCODE_DATA[_instruction_data.opcode]['cycles']
-    
-    #if instruction_data.context.address_mode in [
-        #Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y,
-        #Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.Relative
-    #]:
-        #if starting_operand & 0xFF00 != instruction_data.context.value & 0xFF00:
-            #_cycles_before_next_instruction += 1
-    
-    if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
-        # Don't increment the program counter if we just jumped
-        cpu_memory.registers[Consts.CPU_Registers.PC] += _instruction_data.bytes_to_read
+		_cycles_before_next_instruction = 5 # TODO: Is this right?
+		
+		pending_interrupt = Consts.Interrupts.NONE
+		
+		var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
+		cpu_memory.write_byte(Consts.PPU_Registers.PPUSTATUS, ppu_status | 0x80, false)
+		
+		return
+	
+	get_instruction_data(pc)
+	
+	var starting_operand = _instruction_data.context.value
+	
+	_instruction_data.execute()
+	
+	_cycles_before_next_instruction = Consts.OPCODE_DATA[_instruction_data.opcode]['cycles']
+	
+	#if instruction_data.context.address_mode in [
+		#Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y,
+		#Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.Relative
+	#]:
+		#if starting_operand & 0xFF00 != instruction_data.context.value & 0xFF00:
+			#_cycles_before_next_instruction += 1
+	
+	if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
+		# Don't increment the program counter if we just jumped
+		cpu_memory.registers[Consts.CPU_Registers.PC] += _instruction_data.bytes_to_read
 
 
 func get_instruction_data(start_byte: int):
-    var next_opcode = cpu_memory.read_byte(start_byte, false)
-    
-    if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
-        print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
-        _is_running = false
-        _cpu_thread.wait_to_finish()
-        return
-    
-    var addressing_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
-    var bytes_to_read = Consts.BYTES_PER_MODE[addressing_mode] - 1
+	var next_opcode = cpu_memory.read_byte(start_byte, false)
+	
+	if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
+		print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
+		_is_running = false
+		_cpu_thread.wait_to_finish()
+		return
+	
+	var addressing_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
+	var bytes_to_read = Consts.BYTES_PER_MODE[addressing_mode] - 1
 
-    var value_low = 0
-    var value_high = 0
-    
-    if bytes_to_read >= 1:
-        value_low = cpu_memory.read_byte(start_byte + 1, false)
-    if bytes_to_read >= 2:
-        value_high = cpu_memory.read_byte(start_byte + 2, false)
-    
-    _instruction_data.opcode = next_opcode
-    _instruction_data.context.address_mode = addressing_mode
-    _instruction_data.context.value = value_low + (value_high << 8)
-    
-    if not Opcodes.has_method(_instruction_data.instruction):
-        assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
-        return null
+	var value_low = 0
+	var value_high = 0
+	
+	if bytes_to_read >= 1:
+		value_low = cpu_memory.read_byte(start_byte + 1, false)
+	if bytes_to_read >= 2:
+		value_high = cpu_memory.read_byte(start_byte + 2, false)
+	
+	_instruction_data.opcode = next_opcode
+	_instruction_data.context.address_mode = addressing_mode
+	_instruction_data.context.value = value_low + (value_high << 8)
+	
+	if not Opcodes.has_method(_instruction_data.instruction):
+		assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
+		return null
 
 
 func clear_memory():
-    cpu_memory.clear_memory()
-    ppu_memory.clear_memory()
+	cpu_memory.clear_memory()
+	ppu_memory.clear_memory()
 
 
 func start_running():
-    _cycles = 0
-    _scanline = 0
-    _frame = 0
-    
-    _seconds_this_cycle = 0.0
-    _seconds_this_scanline = 0.0
-    
-    cpu_memory.init_registers()
-    ppu_memory.init_registers()
-    
-    ticked.emit()
-    _is_running = true
-    
-    print("Starting execution.")
+	_cycles = 0
+	_scanline = 0
+	_frame = 0
+	
+	_seconds_this_cycle = 0.0
+	_seconds_this_scanline = 0.0
+	
+	cpu_memory.init_registers()
+	ppu_memory.init_registers()
+	
+	ticked.emit()
+	_is_running = true
+	
+	print("Starting execution.")
 
-    _cpu_thread.start.call_deferred(cpu_loop)
+	_cpu_thread.start.call_deferred(cpu_loop)
 
 
 func stop_running():
-    if _cpu_thread != null && (_cpu_thread.is_alive()):
-        print("Waiting for previous execution to stop.")
-        _is_running = false
-        _cpu_thread.wait_to_finish()
+	if _cpu_thread != null && (_cpu_thread.is_alive()):
+		print("Waiting for previous execution to stop.")
+		_is_running = false
+		_cpu_thread.wait_to_finish()
 
 
 func setup_rom(rom_path: String):
-    var rom_bytes = FileAccess.get_file_as_bytes(rom_path)
+	var rom_bytes = FileAccess.get_file_as_bytes(rom_path)
 
-    if len(rom_bytes) < 16000:
-        # This probably isn't a ROM.
-        print("ROM %s is too small, is this really a ROM?" % rom_path)
-        return
-    
-    _rom_mapper = NES_Mapper.create_mapper(rom_path)
-    if _rom_mapper == null:
-        print("Unable to find mapper emulator for %s." % rom_path)
-        return
-    
-    _rom_mapper.load_initial_map()
-    
-    _nmi_vector = cpu_memory.read_word(0xFFFA, false)
-    _reset_vector = cpu_memory.read_word(0xFFFC, false)
-    _irq_vector = cpu_memory.read_word(0xFFFE, false)
-    
-    cpu_memory.registers[Consts.CPU_Registers.PC] = _reset_vector
+	if len(rom_bytes) < 16000:
+		# This probably isn't a ROM.
+		print("ROM %s is too small, is this really a ROM?" % rom_path)
+		return
+	
+	_rom_mapper = NES_Mapper.create_mapper(rom_path)
+	if _rom_mapper == null:
+		print("Unable to find mapper emulator for %s." % rom_path)
+		return
+	
+	_rom_mapper.load_initial_map()
+	
+	_nmi_vector = cpu_memory.read_word(0xFFFA, false)
+	_reset_vector = cpu_memory.read_word(0xFFFC, false)
+	_irq_vector = cpu_memory.read_word(0xFFFE, false)
+	
+	cpu_memory.registers[Consts.CPU_Registers.PC] = _reset_vector
 
 
 func get_status_flag(status: int):
-    return cpu_memory.registers[Consts.CPU_Registers.P] & status
+	return cpu_memory.registers[Consts.CPU_Registers.P] & status
 
 
 func set_status_flag(status: int, state: bool):
-    if state:
-        cpu_memory.registers[Consts.CPU_Registers.P] |= status
-    else:
-        cpu_memory.registers[Consts.CPU_Registers.P] &= ~status
+	if state:
+		cpu_memory.registers[Consts.CPU_Registers.P] |= status
+	else:
+		cpu_memory.registers[Consts.CPU_Registers.P] &= ~status
 
 
 func compile_script(script: String) -> PackedByteArray:
-    var bytecode = PackedByteArray()
-    var labels = {}
-    
-    var lines = []
-    
-    # Trimming excess whitespace
-    for line in script.split("\n"):
-        var trimmed_line = line.strip_edges().split(";")[0]
-        
-        if trimmed_line != "":
-            lines.append(trimmed_line)
-    
-    # Pre-scanning the script for labels, making note of their byte offsets
-    var bytes_so_far = 0
-    for line in lines:
-        var operands = line.split(" ")
-        
-        if len(operands) == 1:
-            if ":" in operands[0]:
-                # This is a new label
-                var label = operands[0].replace(":", "")
-                labels[label] = bytes_so_far
-            else:
-                bytes_so_far += Consts.BYTES_PER_MODE[Consts.AddressingModes.Implied]
-        else:
-            var context = Opcodes.determine_addressing_context(operands[0], operands[1])
-            bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
-    
-    # Replacing the labels with their newly calculated addresses
-    bytes_so_far = 0
-    for i in range(len(lines)):
-        var line = lines[i]
-        
-        var operands = line.split(" ")
-        if len(operands) == 1:
-            if not ":" in operands[0]:
-                bytes_so_far += Consts.BYTES_PER_MODE[Consts.AddressingModes.Implied]
-        elif len(operands) > 1:
-            var is_branch = operands[0] in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]
-            
-            var context = Opcodes.determine_addressing_context(operands[0], operands[1])
-            bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
-            
-            for label in labels:
-                if is_branch:
-                    operands[1] = operands[1].replace(label, str(labels[label] - bytes_so_far))
-                else:
-                    operands[1] = operands[1].replace(label, str(CPU_Memory.CARTRIDGE_ADDRESS + labels[label]))
-            
-            lines[i] = operands[0] + " " + operands[1]
-    
-    # Parsing the script into bytecode line by line
-    for line in lines:
-        var operands = line.split(" ")
-        
-        if len(operands) == 1 and not ":" in operands[0]:
-            bytecode.append(Consts.get_opcode(line, Consts.AddressingModes.Implied))
-        elif len(operands) > 1:
-            var is_branch = operands[0] in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]
-            
-            var context = Opcodes.determine_addressing_context(operands[0], operands[1])
-            if is_branch:
-                context[0] = Consts.AddressingModes.Relative
-            
-            bytecode.append(Consts.get_opcode(operands[0], context[0]))
-            
-            var data_byte_count = Consts.BYTES_PER_MODE[context[0]]
-            if data_byte_count >= 2:
-                bytecode.append(context.value & 0xFF)
-            if data_byte_count >= 3:
-                bytecode.append(context.value >> 8)
-    
-    bytecode.append(0xFF)
-    return bytecode
+	var bytecode = PackedByteArray()
+	var labels = {}
+	
+	var lines = []
+	
+	# Trimming excess whitespace
+	for line in script.split("\n"):
+		var trimmed_line = line.strip_edges().split(";")[0]
+		
+		if trimmed_line != "":
+			lines.append(trimmed_line)
+	
+	# Pre-scanning the script for labels, making note of their byte offsets
+	var bytes_so_far = 0
+	for line in lines:
+		var operands = line.split(" ")
+		
+		if len(operands) == 1:
+			if ":" in operands[0]:
+				# This is a new label
+				var label = operands[0].replace(":", "")
+				labels[label] = bytes_so_far
+			else:
+				bytes_so_far += Consts.BYTES_PER_MODE[Consts.AddressingModes.Implied]
+		else:
+			var context = Opcodes.determine_addressing_context(operands[0], operands[1])
+			bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
+	
+	# Replacing the labels with their newly calculated addresses
+	bytes_so_far = 0
+	for i in range(len(lines)):
+		var line = lines[i]
+		
+		var operands = line.split(" ")
+		if len(operands) == 1:
+			if not ":" in operands[0]:
+				bytes_so_far += Consts.BYTES_PER_MODE[Consts.AddressingModes.Implied]
+		elif len(operands) > 1:
+			var is_branch = operands[0] in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]
+			
+			var context = Opcodes.determine_addressing_context(operands[0], operands[1])
+			bytes_so_far += Consts.BYTES_PER_MODE[context[0]]
+			
+			for label in labels:
+				if is_branch:
+					operands[1] = operands[1].replace(label, str(labels[label] - bytes_so_far))
+				else:
+					operands[1] = operands[1].replace(label, str(CPU_Memory.CARTRIDGE_ADDRESS + labels[label]))
+			
+			lines[i] = operands[0] + " " + operands[1]
+	
+	# Parsing the script into bytecode line by line
+	for line in lines:
+		var operands = line.split(" ")
+		
+		if len(operands) == 1 and not ":" in operands[0]:
+			bytecode.append(Consts.get_opcode(line, Consts.AddressingModes.Implied))
+		elif len(operands) > 1:
+			var is_branch = operands[0] in ["BCC", "BCS", "BNE", "BEQ", "BPL", "BMI", "BVC", "BVS"]
+			
+			var context = Opcodes.determine_addressing_context(operands[0], operands[1])
+			if is_branch:
+				context[0] = Consts.AddressingModes.Relative
+			
+			bytecode.append(Consts.get_opcode(operands[0], context[0]))
+			
+			var data_byte_count = Consts.BYTES_PER_MODE[context[0]]
+			if data_byte_count >= 2:
+				bytecode.append(context.value & 0xFF)
+			if data_byte_count >= 3:
+				bytecode.append(context.value >> 8)
+	
+	bytecode.append(0xFF)
+	return bytecode

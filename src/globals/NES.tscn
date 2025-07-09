@@ -1,13 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://blui2juuwx3ur"]
+[gd_scene load_steps=2 format=3 uid="uid://darm7i1wi55yh"]
 
-[ext_resource type="Script" uid="uid://cksrkum5g8a78" path="res://src/globals/NES.gd" id="1"]
-[ext_resource type="Script" uid="uid://d0gw4jhm8y1r4" path="res://src/input/controller.gd" id="2_t2g8l"]
-[ext_resource type="Script" uid="uid://dfab1bmbec1bs" path="res://src/input/nes_standard_controller.gd" id="3_405fv"]
-
-[sub_resource type="Resource" id="Resource_m06lu"]
-script = ExtResource("3_405fv")
-metadata/_custom_type_script = "uid://dfab1bmbec1bs"
+[ext_resource type="Script" uid="uid://dttprelru50af" path="res://src/csharp/NES.cs" id="1_4eoqb"]
 
 [node name="NES" type="Node"]
-script = ExtResource("1")
-controllers = Array[ExtResource("2_t2g8l")]([SubResource("Resource_m06lu")])
+script = ExtResource("1_4eoqb")

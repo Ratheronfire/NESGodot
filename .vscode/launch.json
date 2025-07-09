@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
             "name": "GDScript: Launch Project",
             "type": "godot",
@@ -14,6 +13,16 @@
             "debug_paths": false,
             "debug_navigation": false,
             "additional_options": ""
+        },
+        {
+            "name": "Play",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${env:GODOT4}",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
         }
     ]
 }
