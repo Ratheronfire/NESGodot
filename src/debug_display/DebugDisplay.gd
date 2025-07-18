@@ -13,7 +13,7 @@ extends Control
 
 @onready var memory = $MemoryPanel/VBoxContainer/SpanningTableContainer
 
-@onready var last_delta_label = $LastDeltaPanel/RichTextLabel
+@onready var fps_label = $FpsPanel/RichTextLabel
 @onready var last_command_label = $ScriptPanel/VBoxContainer/LastCommandLabel
 
 var _page = 0
@@ -24,7 +24,7 @@ func _ready():
 
 
 func on_ticked():
-	# last_delta_label.text = "Last Delta: %f" % NES.last_delta
+	fps_label.text = "Frames/Second: %f" % NES.fps_avg
 	if weakref(NES._instruction_data).get_ref():
 		var bytes = Consts.BYTES_PER_MODE[NES._instruction_data.context.address_mode]
 		

@@ -190,23 +190,24 @@ file_mode = 0
 access = 2
 show_hidden_files = true
 
-[node name="LastDeltaPanel" type="Panel" parent="."]
+[node name="FpsPanel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -187.0
-offset_top = -43.0
+offset_left = -275.0
+offset_top = -31.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="LastDeltaPanel"]
-layout_mode = 0
+[node name="RichTextLabel" type="RichTextLabel" parent="FpsPanel"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-text = "Last Delta: 0"
+text = "Frames/Second: 0"
 
 [node name="TableContainer" type="VBoxContainer" parent="."]
 visible = false

@@ -1,22 +1,16 @@
 class_name Memory
 extends Resource
 
-var memory_bytes:
-    get: return _memory_bytes
+var memory_bytes = []
 
-var _memory_bytes = []
-
-var registers: Dictionary[Consts.CPU_Registers, int]:
-    get: return _registers
-
-var _registers: Dictionary[Consts.CPU_Registers, int]
+var registers: Dictionary[Consts.CPU_Registers, int] = {}
 
 
 func _init(memory_size: int) -> void:
-    _memory_bytes = []
+    memory_bytes = []
 
     for i in range(memory_size):
-        _memory_bytes.append(0)
+        memory_bytes.append(0)
     
     init_registers()
 
@@ -29,13 +23,12 @@ func get_memory_size() -> int:
 
 
 func read_byte(address: int, process_side_effects = true) -> int:
-    if process_side_effects:
-        _process_pre_read_byte_side_effects(address)
+    if not process_side_effects:
+        return memory_bytes[address]
     
-    var return_value = _get_byte_value(address)
-    
-    if process_side_effects:
-        _process_read_byte_side_effects(address)
+    _process_pre_read_byte_side_effects(address)
+    var return_value = memory_bytes[address]
+    _process_read_byte_side_effects(address)
     
     return return_value
 
@@ -48,13 +41,13 @@ func write_byte(address: int, value: int, process_side_effects = true) -> void:
     if not can_write_byte(address):
         return
     
-    if process_side_effects:
-        _process_pre_write_byte_side_effects(address)
+    if not process_side_effects:
+        memory_bytes[address] = value
+        return
     
+    _process_pre_write_byte_side_effects(address)
     memory_bytes[address] = value
-    
-    if process_side_effects:
-        _process_write_byte_side_effects(address)
+    _process_write_byte_side_effects(address)
 
 
 func can_write_byte(address: int) -> bool:
@@ -79,10 +72,6 @@ func copy_ram(from: int, to: int, length: int) -> void:
 func clear_memory():
     for i in range(len(memory_bytes)):
         memory_bytes[i] = 0x0
-
-
-func _get_byte_value(address: int) -> int:
-    return memory_bytes[address % 0xFFFF]
 
 
 func _process_read_byte_side_effects(address: int):

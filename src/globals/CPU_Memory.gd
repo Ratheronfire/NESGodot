@@ -21,7 +21,7 @@ signal controller_poll_event
 
 
 func init_registers() -> void:
-    _registers = {
+    registers = {
         Consts.CPU_Registers.A:  0x00,
         Consts.CPU_Registers.X:  0x00,
         Consts.CPU_Registers.Y:  0x00,
@@ -35,15 +35,20 @@ func can_write_byte(address: int) -> bool:
     return true
 
 
-func _get_byte_value(address: int) -> int:
+func read_byte(address: int, process_side_effects = true) -> int:
     if address >= 0x0800 and address < 0x2000:
-        var relative_address = address % 0x0800
-        return memory_bytes[relative_address]
+        address &= 0x07FF
     elif address >= 0x2008 and address < 0x4000:
-        var relative_address = 0x2000 + ((address - 0x2000) % 0x08)
-        return memory_bytes[relative_address]
+        address = 0x2000 + ((address - 0x2000) & 0x07)
+
+    if not process_side_effects:
+        return memory_bytes[address]
     
-    return super._get_byte_value(address)
+    _process_pre_read_byte_side_effects(address)
+    var return_value = memory_bytes[address]
+    _process_read_byte_side_effects(address)
+    
+    return return_value
 
 
 func _process_pre_read_byte_side_effects(address: int):

@@ -61,8 +61,12 @@ var _is_running = false
 
 @onready var _cpu_thread: Thread = Thread.new()
 
+var fps_avg := 0.0
 var _test_prev_frame := 0
 var _fps_history := []
+
+var _frame_start_time := 0.0
+var _prev_frame_start_time := 0.0
 
 signal ticked
 signal render_start
@@ -74,18 +78,16 @@ func _ready():
 
 
 func _process(delta: float) -> void:
-    var frame_diff = _frame - _test_prev_frame
-    
-    _fps_history.append((_frame - _test_prev_frame) / delta)
-    if len(_fps_history) > 100:
+    _fps_history.append((_frame_start_time - _prev_frame_start_time) / 1000.0)
+    if len(_fps_history) > 10:
         _fps_history.pop_front()
     
-    var fps_avg = 0.0
+    fps_avg = 0.0
     for fps in _fps_history:
         fps_avg += fps
     fps_avg /= len(_fps_history)
-    
-    #print("Current framerate: %f" % fps_avg)
+
+    fps_avg = 1 / fps_avg
     
     _test_prev_frame = _frame
 
@@ -103,16 +105,15 @@ func init():
 func cpu_loop():
     var last_tick = float(Time.get_ticks_msec())
 
-    var frame_start_time = last_tick
-    var tick_count = 0
+    _frame_start_time = last_tick
+    _prev_frame_start_time = last_tick
     
-    var runs_per_frame = 1000
+    var runs_per_frame = 10000
     var runs = 0
 
     var frames_rendered = 0
 
     while _is_running:
-        runs += 1
         if runs >= runs_per_frame:
             runs = 0
             await get_tree().process_frame
@@ -135,7 +136,6 @@ func cpu_loop():
         
         if _next_frame_start_time > 0:
             _next_frame_start_time -= adjusted_delta
-            print('yielding')
             await get_tree().process_frame
             continue
         
@@ -144,6 +144,7 @@ func cpu_loop():
         
         if not _nmi_started and _scanline > NTSC_SCANLINES and cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false) & 0x80 == 0:
             # VBlank begins.
+
             var ppu_status = cpu_memory.read_byte(Consts.PPU_Registers.PPUSTATUS, false)
             var ppu_ctrl = cpu_memory.read_byte(Consts.PPU_Registers.PPUCTRL, false)
             
@@ -156,11 +157,11 @@ func cpu_loop():
             render_start.emit()
         
         if _scanline > NTSC_SCANLINES + NTSC_VBLANK_SCANLINES:
-            print('Frame ended after %d ticks (%d cycles). Total frame time: %f seconds.' % [tick_count, _cycles, ((last_tick - frame_start_time) / 1000.0)])
-            tick_count = 0
-            frame_start_time = last_tick
-
             # VBlank ends.
+
+            _prev_frame_start_time = _frame_start_time
+            _frame_start_time = last_tick
+
             _frame += 1
             _scanline = 0
             _cycles = 0
@@ -181,8 +182,8 @@ func cpu_loop():
 
             _nmi_started = false
         
+        runs += 1
         tick()
-        tick_count += 1
         
         last_tick = tick_time
 
