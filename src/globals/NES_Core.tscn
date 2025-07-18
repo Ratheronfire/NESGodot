@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://25npsl1awiu6"]
+
+[ext_resource type="Script" uid="uid://dttprelru50af" path="res://src/csharp/NES.cs" id="1_pssj1"]
+[ext_resource type="Script" uid="uid://mipf517jfurb" path="res://src/csharp/CPUMemory.cs" id="2_lj6nk"]
+[ext_resource type="Script" uid="uid://d2ij25ux5g1dy" path="res://src/csharp/PPUMemory.cs" id="3_buam4"]
+[ext_resource type="Script" uid="uid://by1p6rna631h0" path="res://src/csharp/Opcodes.cs" id="4_lj6nk"]
+
+[node name="NesCore" type="Node"]
+
+[node name="NES" type="Node" parent="."]
+script = ExtResource("1_pssj1")
+
+[node name="CPUMemory" type="Node" parent="NES"]
+script = ExtResource("2_lj6nk")
+MemorySize = 65535
+
+[node name="PPUMemory" type="Node" parent="NES"]
+script = ExtResource("3_buam4")
+MemorySize = 16383
+
+[node name="Opcodes" type="Node" parent="NES"]
+script = ExtResource("4_lj6nk")
+
+[node name="Controllers" type="Node" parent="."]

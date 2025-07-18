@@ -19,15 +19,21 @@ public abstract partial class Memory : Node
     {
         Instance = this;
 
-        _bytes = new List<int>(MemorySize);
+        Init(MemorySize);
         InitRegisters();
+    }
+
+    public void Init(int memorySize)
+    {
+        MemorySize = memorySize;
+        _bytes = new List<int>(MemorySize);
     }
 
     public int ReadByte(int address)
     {
         ProcessPreReadByteSideEffects(address);
 
-        int returnValue = _bytes[address % 0xFFFF];
+        int returnValue = GetByteValue(address);
 
         ProcessReadByteSideEffects(address);
 
@@ -54,6 +60,11 @@ public abstract partial class Memory : Node
         {
             _bytes[i] = 0;
         }
+    }
+
+    protected virtual int GetByteValue(int address)
+    {
+        return _bytes[address % 0xFFFF];
     }
 
     protected abstract void InitRegisters();

@@ -108,6 +108,18 @@ public partial class Consts : Node
         Negative = 0x80
     }
 
+    public enum PpuRegisters
+    {
+        PPUCTRL   = 0x2000,
+        PPUMASK   = 0x2001,
+        PPUSTATUS = 0x2002,
+        OAMDDR    = 0x2003,
+        OAMDATA1  = 0x2004,
+        PPUSCROLL = 0x2005,
+        PPUADDR   = 0x2006,
+        PPUDATA   = 0x2007
+    }
+
     /// <summary>
     /// The different modes of addressing data for an instruction.
     /// </summary>

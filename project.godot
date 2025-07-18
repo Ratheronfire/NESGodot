@@ -18,12 +18,9 @@ config/icon="res://icon.png"
 
 [autoload]
 
-NES="*res://src/globals/NES.tscn"
-Opcodes="*res://src/globals/Opcodes.tscn"
 Helpers="*res://src/globals/Helpers.tscn"
 LastOpenedFiles="*res://addons/file-editor/scripts/LastOpenedFiles.gd"
 Consts="*res://src/globals/Consts.gd"
-NesRenderer="*res://src/renderer/nes_renderer.tscn"
 
 [display]
 
