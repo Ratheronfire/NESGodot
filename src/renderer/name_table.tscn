@@ -38,7 +38,7 @@ size_flags_vertical = 4
 [node name="NametableImage2" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_r318o")]
 layout_mode = 2
 size_flags_horizontal = 4
-is_first_table = false
+nametable_id = 1
 
 [node name="RightControls" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2

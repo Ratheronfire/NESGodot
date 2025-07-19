@@ -47,6 +47,20 @@ func update_renderer_data():
         _palettes.append(palette)
 
 
+func get_palette_for_nametable_tile(nametable_id: int, row: int, column: int) -> Palette:
+    var attribute_address = PPU_Memory.ATTRIBUTE_TABLES[nametable_id] + (floor(row / 4) * 8) + floor(column / 4)
+    var attribute_byte = NES.ppu_memory.memory_bytes[attribute_address]
+
+    if row % 4 >= 2 and column % 4 >= 2:
+        attribute_byte >>= 6;
+    elif row % 4 >= 2 and column % 4 < 2:
+        attribute_byte >>= 4;
+    elif row % 4 < 2 and column % 4 >= 2:
+        attribute_byte >>= 2;
+        
+    return palettes[attribute_byte & 0b00000011];
+
+
 func get_tile_data(is_first_table: bool, tile_id: int) -> Array[int]:
     var table_base_address = PPU_Memory.PATTERN_TABLE_0 if is_first_table else PPU_Memory.PATTERN_TABLE_1
     var pixel_address_offset = tile_id * 16
