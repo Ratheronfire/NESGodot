@@ -110,7 +110,7 @@ func cpu_loop():
     _frame_start_time = last_tick
     _prev_frame_start_time = last_tick
     
-    var runs_per_frame = 10000
+    var runs_per_frame = 1000
     var runs = 0
 
     var frames_rendered = 0
@@ -279,10 +279,6 @@ func get_instruction_data(start_byte: int):
         _instruction_data.context.value = value_low + (value_high << 8)
 
         _cached_opcode_data[start_byte] = [next_opcode, _instruction_data.context.value]
-        
-        if not Opcodes.has_method(_instruction_data.instruction):
-            assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
-            return null
 
 
 func clear_memory():
