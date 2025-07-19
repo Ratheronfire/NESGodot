@@ -22,6 +22,8 @@ const PAL_VBLANK_SCANLINES := 70
 
 @export var verbose_output = false
 
+var is_stepping = false
+
 var cpu_memory: CPU_Memory
 var ppu_memory: PPU_Memory
 
@@ -127,12 +129,14 @@ func cpu_loop():
         # _seconds_this_scanline += adjusted_delta
         # if _seconds_this_cycle >= NTSC_SECONDS_PER_CYCLE:
             # _seconds_this_cycle = 0.0
-        _cycles += _cycles_before_next_instruction
 
         var frames_to_render = max(1, floor(cpu_speed_multiplier / 100))
 
         if cpu_speed_multiplier == 0.0:
             await get_tree().process_frame
+            continue
+        
+        _cycles += _cycles_before_next_instruction
         
         if _next_frame_start_time > 0:
             _next_frame_start_time -= adjusted_delta
@@ -184,12 +188,18 @@ func cpu_loop():
         
         runs += 1
         tick()
+
+        if is_stepping:
+            is_stepping = false
+            cpu_speed_multiplier = 0.0
+            ticked.emit.call_deferred()
         
         last_tick = tick_time
 
 
 func advance_to_next_tick():
-    _cycles += _cycles_before_next_instruction
+    is_stepping = true
+    cpu_speed_multiplier = 1.0
 
 
 func tick():
@@ -217,18 +227,16 @@ func tick():
         return
     
     get_instruction_data(pc)
-    
-    var starting_operand = _instruction_data.context.value
-    
+        
     _instruction_data.execute()
     
     _cycles_before_next_instruction = Consts.OPCODE_DATA[_instruction_data.opcode]['cycles']
     
-    #if instruction_data.context.address_mode in [
+    #if instruction_data.address_mode in [
         #Consts.AddressingModes.Absolute_X, Consts.AddressingModes.Absolute_Y,
         #Consts.AddressingModes.ZPInd_Y, Consts.AddressingModes.Relative
     #]:
-        #if starting_operand & 0xFF00 != instruction_data.context.value & 0xFF00:
+        #if starting_operand & 0xFF00 != instruction_data.value & 0xFF00:
             #_cycles_before_next_instruction += 1
     
     if cpu_memory.registers[Consts.CPU_Registers.PC] == pc:
@@ -236,38 +244,52 @@ func tick():
         cpu_memory.registers[Consts.CPU_Registers.PC] += _instruction_data.bytes_to_read
 
 
-func get_instruction_data(start_byte: int):
-    var next_opcode = cpu_memory.read_byte(start_byte, false)
-    
-    if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
-        print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
-        _is_running = false
-        _cpu_thread.wait_to_finish()
-        return
-    
-    var addressing_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
-    var bytes_to_read = Consts.BYTES_PER_MODE[addressing_mode] - 1
+var _cached_opcode_data = {}
 
-    var value_low = 0
-    var value_high = 0
-    
-    if bytes_to_read >= 1:
-        value_low = cpu_memory.read_byte(start_byte + 1, false)
-    if bytes_to_read >= 2:
-        value_high = cpu_memory.read_byte(start_byte + 2, false)
-    
-    _instruction_data.opcode = next_opcode
-    _instruction_data.context.address_mode = addressing_mode
-    _instruction_data.context.value = value_low + (value_high << 8)
-    
-    if not Opcodes.has_method(_instruction_data.instruction):
-        assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
-        return null
+
+func get_instruction_data(start_byte: int):
+    if start_byte in _cached_opcode_data:
+        var opcode_data = _cached_opcode_data[start_byte]
+
+        _instruction_data.opcode = opcode_data[0]
+        _instruction_data.context.value = opcode_data[1]
+        _instruction_data.context.address_mode = Consts.OPCODE_DATA[opcode_data[0]]['address_mode']
+    else:
+        var next_opcode = cpu_memory.read_byte(start_byte, false)
+        
+        if next_opcode == 0xFF or next_opcode == 0 or next_opcode not in Consts.OPCODE_DATA:
+            print("[Thread ID %s] Invalid opcode %02X encountered at address $%04X, stopping execution." % [_cpu_thread.get_id(), next_opcode, start_byte])
+            _is_running = false
+            _cpu_thread.wait_to_finish()
+            return
+        
+        _instruction_data.opcode = next_opcode
+        _instruction_data.context.address_mode = Consts.OPCODE_DATA[next_opcode]['address_mode']
+
+        var bytes_to_read = Consts.BYTES_PER_MODE[_instruction_data.context.address_mode] - 1
+
+        var value_low = 0
+        var value_high = 0
+        
+        if bytes_to_read >= 1:
+            value_low = cpu_memory.read_byte(start_byte + 1, false)
+        if bytes_to_read >= 2:
+            value_high = cpu_memory.read_byte(start_byte + 2, false)
+        
+        _instruction_data.context.value = value_low + (value_high << 8)
+
+        _cached_opcode_data[start_byte] = [next_opcode, _instruction_data.context.value]
+        
+        if not Opcodes.has_method(_instruction_data.instruction):
+            assert(false, 'Unrecognized instruction: %s' % _instruction_data.instruction)
+            return null
 
 
 func clear_memory():
     cpu_memory.clear_memory()
     ppu_memory.clear_memory()
+    
+    _cached_opcode_data.clear()
 
 
 func start_running():

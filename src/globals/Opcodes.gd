@@ -20,7 +20,7 @@ class InstructionData:
         return Consts.BYTES_PER_MODE[ self.context.address_mode]
     
     func execute():
-        INSTRUCTION_METHODS[ self.instruction].call(context)
+        HARDCODED_OPCODE_FUNCTIONS[self.opcode].call(context)
     
     func _to_string():
         var operand_str = " $%02X" % context.value
@@ -48,16 +48,25 @@ class InstructionData:
         
         return self.instruction + operand_str
 
-    var INSTRUCTION_METHODS = {
-        'ADC': Opcodes.ADC, 'AND': Opcodes.AND, 'ASL': Opcodes.ASL, 'BCC': Opcodes.BCC, 'BCS': Opcodes.BCS, 'BEQ': Opcodes.BEQ, 'BIT': Opcodes.BIT,
-        'BMI': Opcodes.BMI, 'BNE': Opcodes.BNE, 'BPL': Opcodes.BPL, 'BRK': Opcodes.BRK, 'BVC': Opcodes.BVC, 'BVS': Opcodes.BVS, 'CLC': Opcodes.CLC,
-        'CLD': Opcodes.CLD, 'CLI': Opcodes.CLI, 'CLV': Opcodes.CLV, 'CMP': Opcodes.CMP, 'CPX': Opcodes.CPX, 'CPY': Opcodes.CPY, 'DEC': Opcodes.DEC,
-        'DEX': Opcodes.DEX, 'DEY': Opcodes.DEY, 'EOR': Opcodes.EOR, 'INC': Opcodes.INC, 'INX': Opcodes.INX, 'INY': Opcodes.INY, 'JMP': Opcodes.JMP,
-        'JSR': Opcodes.JSR, 'LDA': Opcodes.LDA, 'LDX': Opcodes.LDX, 'LDY': Opcodes.LDY, 'LSR': Opcodes.LSR, 'NOP': Opcodes.NOP, 'ORA': Opcodes.ORA,
-        'PHA': Opcodes.PHA, 'PHP': Opcodes.PHP, 'PLA': Opcodes.PLA, 'PLP': Opcodes.PLP, 'ROL': Opcodes.ROL, 'ROR': Opcodes.ROR, 'RTI': Opcodes.RTI,
-        'RTS': Opcodes.RTS, 'SBC': Opcodes.SBC, 'SEC': Opcodes.SEC, 'SED': Opcodes.SED, 'SEI': Opcodes.SEI, 'STA': Opcodes.STA, 'STX': Opcodes.STX,
-        'STY': Opcodes.STY, 'TAX': Opcodes.TAX, 'TAY': Opcodes.TAY, 'TSX': Opcodes.TSX, 'TXA': Opcodes.TXA, 'TXS': Opcodes.TXS, 'TYA': Opcodes.TYA,
-    }
+    var HARDCODED_OPCODE_FUNCTIONS = [
+        #       x0           x1           x2           x3           x4           x5           x6           x7           x8           x9           xA           xB           xC           xD           xE           xF
+        Opcodes.BRK, Opcodes.ORA, Opcodes.STP, Opcodes.SLO, Opcodes.NOP, Opcodes.ORA, Opcodes.ASL, Opcodes.SLO, Opcodes.PHP, Opcodes.ORA, Opcodes.ASL, Opcodes.ANC, Opcodes.NOP, Opcodes.ORA, Opcodes.ASL, Opcodes.SLO, # 0x
+        Opcodes.BPL, Opcodes.ORA, Opcodes.STP, Opcodes.SLO, Opcodes.NOP, Opcodes.ORA, Opcodes.ASL, Opcodes.SLO, Opcodes.CLC, Opcodes.ORA, Opcodes.NOP, Opcodes.SLO, Opcodes.NOP, Opcodes.ORA, Opcodes.ASL, Opcodes.SLO, # 1x
+        Opcodes.JSR, Opcodes.AND, Opcodes.STP, Opcodes.RLA, Opcodes.BIT, Opcodes.AND, Opcodes.ROL, Opcodes.RLA, Opcodes.PLP, Opcodes.AND, Opcodes.ROL, Opcodes.ANC, Opcodes.BIT, Opcodes.AND, Opcodes.ROL, Opcodes.RLA, # 2x
+        Opcodes.BMI, Opcodes.AND, Opcodes.STP, Opcodes.RLA, Opcodes.NOP, Opcodes.AND, Opcodes.ROL, Opcodes.RLA, Opcodes.SEC, Opcodes.AND, Opcodes.NOP, Opcodes.RLA, Opcodes.NOP, Opcodes.AND, Opcodes.ROL, Opcodes.RLA, # 3x
+        Opcodes.RTI, Opcodes.EOR, Opcodes.STP, Opcodes.SRE, Opcodes.NOP, Opcodes.EOR, Opcodes.LSR, Opcodes.SRE, Opcodes.PHA, Opcodes.EOR, Opcodes.LSR, Opcodes.ALR, Opcodes.JMP, Opcodes.EOR, Opcodes.LSR, Opcodes.SRE, # 4x
+        Opcodes.BVC, Opcodes.EOR, Opcodes.STP, Opcodes.SRE, Opcodes.NOP, Opcodes.EOR, Opcodes.LSR, Opcodes.SRE, Opcodes.CLI, Opcodes.EOR, Opcodes.NOP, Opcodes.SRE, Opcodes.NOP, Opcodes.EOR, Opcodes.LSR, Opcodes.SRE, # 5x
+        Opcodes.RTS, Opcodes.ADC, Opcodes.STP, Opcodes.RRA, Opcodes.NOP, Opcodes.ADC, Opcodes.ROR, Opcodes.RRA, Opcodes.PLA, Opcodes.ADC, Opcodes.ROR, Opcodes.ARR, Opcodes.JMP, Opcodes.ADC, Opcodes.ROR, Opcodes.RRA, # 6x
+        Opcodes.BVS, Opcodes.ADC, Opcodes.STP, Opcodes.RRA, Opcodes.NOP, Opcodes.ADC, Opcodes.ROR, Opcodes.RRA, Opcodes.SEI, Opcodes.ADC, Opcodes.NOP, Opcodes.RRA, Opcodes.NOP, Opcodes.ADC, Opcodes.ROR, Opcodes.RRA, # 7x
+        Opcodes.NOP, Opcodes.STA, Opcodes.NOP, Opcodes.SAX, Opcodes.STY, Opcodes.STA, Opcodes.STX, Opcodes.SAX, Opcodes.DEY, Opcodes.NOP, Opcodes.TXA, Opcodes.XAA, Opcodes.STY, Opcodes.STA, Opcodes.STX, Opcodes.SAX, # 8x
+        Opcodes.BCC, Opcodes.STA, Opcodes.STP, Opcodes.AHX, Opcodes.STY, Opcodes.STA, Opcodes.STX, Opcodes.SAX, Opcodes.TYA, Opcodes.STA, Opcodes.TXS, Opcodes.TAS, Opcodes.SHY, Opcodes.STA, Opcodes.SHX, Opcodes.AHX, # 9x
+        Opcodes.LDY, Opcodes.LDA, Opcodes.LDX, Opcodes.LAX, Opcodes.LDY, Opcodes.LDA, Opcodes.LDX, Opcodes.LAX, Opcodes.TAY, Opcodes.LDA, Opcodes.TAX, Opcodes.LAX, Opcodes.LDY, Opcodes.LDA, Opcodes.LDX, Opcodes.LAX, # Ax
+        Opcodes.BCS, Opcodes.LDA, Opcodes.STP, Opcodes.LAX, Opcodes.LDY, Opcodes.LDA, Opcodes.LDX, Opcodes.LAX, Opcodes.CLV, Opcodes.LDA, Opcodes.TSX, Opcodes.LAS, Opcodes.LDY, Opcodes.LDA, Opcodes.LDX, Opcodes.LAX, # Bx
+        Opcodes.CPY, Opcodes.CMP, Opcodes.NOP, Opcodes.DCP, Opcodes.CPY, Opcodes.CMP, Opcodes.DEC, Opcodes.DCP, Opcodes.INY, Opcodes.CMP, Opcodes.DEX, Opcodes.AXS, Opcodes.CPY, Opcodes.CMP, Opcodes.DEC, Opcodes.DCP, # Cx
+        Opcodes.BNE, Opcodes.CMP, Opcodes.STP, Opcodes.DCP, Opcodes.NOP, Opcodes.CMP, Opcodes.DEC, Opcodes.DCP, Opcodes.CLD, Opcodes.CMP, Opcodes.NOP, Opcodes.DCP, Opcodes.NOP, Opcodes.CMP, Opcodes.DEC, Opcodes.DCP, # Dx
+        Opcodes.CPX, Opcodes.SBC, Opcodes.NOP, Opcodes.ISC, Opcodes.CPX, Opcodes.SBC, Opcodes.INC, Opcodes.ISC, Opcodes.INX, Opcodes.SBC, Opcodes.NOP, Opcodes.SBC, Opcodes.CPX, Opcodes.SBC, Opcodes.INC, Opcodes.ISC, # Ex
+        Opcodes.BEQ, Opcodes.SBC, Opcodes.STP, Opcodes.ISC, Opcodes.NOP, Opcodes.SBC, Opcodes.INC, Opcodes.ISC, Opcodes.SED, Opcodes.SBC, Opcodes.NOP, Opcodes.ISC, Opcodes.NOP, Opcodes.SBC, Opcodes.INC, Opcodes.ISC, # Fx
+    ]
 
 
 class OperandAddressingContext:
@@ -596,6 +605,82 @@ func NOP(context: OperandAddressingContext):
     pass
 
 
+func STP(context: OperandAddressingContext):
+    pass
+
+
+func SLO(context: OperandAddressingContext):
+    pass
+
+
+func ANC(context: OperandAddressingContext):
+    pass
+
+
+func RLA(context: OperandAddressingContext):
+    pass
+
+
+func SRE(context: OperandAddressingContext):
+    pass
+
+
+func ALR(context: OperandAddressingContext):
+    pass
+
+
+func ARR(context: OperandAddressingContext):
+    pass
+
+
+func RRA(context: OperandAddressingContext):
+    pass
+
+
+func SAX(context: OperandAddressingContext):
+    pass
+
+
+func XAA(context: OperandAddressingContext):
+    pass
+
+
+func AHX(context: OperandAddressingContext):
+    pass
+
+
+func TAS(context: OperandAddressingContext):
+    pass
+
+
+func SHY(context: OperandAddressingContext):
+    pass
+
+
+func SHX(context: OperandAddressingContext):
+    pass
+
+
+func LAX(context: OperandAddressingContext):
+    pass
+
+
+func LAS(context: OperandAddressingContext):
+    pass
+
+
+func DCP(context: OperandAddressingContext):
+    pass
+
+
+func AXS(context: OperandAddressingContext):
+    pass
+
+
+func ISC(context: OperandAddressingContext):
+    pass
+
+
 func determine_addressing_context(instruction: String, operand: String) -> Array:
     var regex = RegEx.new()
     var result: RegExMatch
@@ -721,10 +806,13 @@ func _determine_memory_address(context: OperandAddressingContext):
         else:
             address = NES.cpu_memory.read_word(address)
 
-    elif context.address_mode in [Consts.AddressingModes.Absolute_X, Consts.AddressingModes.ZeroPage_X, Consts.AddressingModes.ZPInd_X]:
+    elif context.address_mode == Consts.AddressingModes.Absolute_X \
+            or context.address_mode == Consts.AddressingModes.ZeroPage_X \
+            or context.address_mode == Consts.AddressingModes.ZPInd_X:
         # Indexing by X
         address += NES.cpu_memory.registers[Consts.CPU_Registers.X]
-    elif context.address_mode in [Consts.AddressingModes.Absolute_Y, Consts.AddressingModes.ZeroPage_Y]:
+    elif context.address_mode == Consts.AddressingModes.Absolute_Y \
+            or context.address_mode == Consts.AddressingModes.ZeroPage_Y:
         # Indexing by Y (ZPInd_Y is handled separately below.)
         address += NES.cpu_memory.registers[Consts.CPU_Registers.Y]
     elif context.address_mode == Consts.AddressingModes.Relative:
@@ -733,7 +821,8 @@ func _determine_memory_address(context: OperandAddressingContext):
             address -= 0x100
         assert(address >= -128 and address <= 127)
         
-    if context.address_mode in [Consts.AddressingModes.ZeroPage_X, Consts.AddressingModes.ZeroPage_Y]:
+    if context.address_mode == Consts.AddressingModes.ZeroPage_X \
+            or context.address_mode == Consts.AddressingModes.ZeroPage_Y:
         # Ensuring we stay on the zero page
         address %= 0x100
     elif context.address_mode == Consts.AddressingModes.ZPInd_X:

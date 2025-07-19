@@ -1,16 +1,16 @@
 class_name Memory
 extends Resource
 
-var memory_bytes = []
+var memory_bytes: PackedByteArray
 
 var registers: Dictionary[Consts.CPU_Registers, int] = {}
 
 
 func _init(memory_size: int) -> void:
-    memory_bytes = []
+    memory_bytes = PackedByteArray()
 
-    for i in range(memory_size):
-        memory_bytes.append(0)
+    memory_bytes.resize(memory_size)
+    memory_bytes.fill(0)
     
     init_registers()
 
@@ -70,8 +70,7 @@ func copy_ram(from: int, to: int, length: int) -> void:
 
 
 func clear_memory():
-    for i in range(len(memory_bytes)):
-        memory_bytes[i] = 0x0
+    memory_bytes.fill(0)
 
 
 func _process_read_byte_side_effects(address: int):

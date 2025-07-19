@@ -126,7 +126,6 @@ func _on_cpu_speed_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_StepButton_pressed():
     NES.advance_to_next_tick()
-    NES.tick()
 
 
 func _on_file_type_option_button_item_selected(index: int) -> void:
