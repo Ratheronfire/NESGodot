@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bmhnmmq6ikml8" path="res://src/debug_display/debug_table.tscn" id="3_3vw4w"]
 [ext_resource type="PackedScene" uid="uid://y3uroqwkr7rs" path="res://src/debug_display/script_panel.tscn" id="4_p63qp"]
 [ext_resource type="PackedScene" uid="uid://rcor2bcrbao8" path="res://src/renderer/pattern_table.tscn" id="6_tna6w"]
-[ext_resource type="Script" uid="uid://dbnn0bgm33eyb" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
+[ext_resource type="Script" uid="uid://bu7623d1gg8vq" path="res://addons/table_container/table_container.gd" id="6_u81j0"]
 [ext_resource type="PackedScene" uid="uid://ca223huxpi88m" path="res://src/renderer/name_table.tscn" id="7_p63qp"]
 
 [node name="DebugDisplay" type="Control"]
@@ -184,7 +184,7 @@ layout_mode = 1
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
-size = Vector2i(800, 500)
+size = Vector2i(894, 500)
 ok_button_text = "Open"
 file_mode = 0
 access = 2

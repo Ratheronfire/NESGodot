@@ -21,52 +21,52 @@ signal controller_poll_event
 
 
 func init_registers() -> void:
-    registers = {
-        Consts.CPU_Registers.A:  0x00,
-        Consts.CPU_Registers.X:  0x00,
-        Consts.CPU_Registers.Y:  0x00,
-        Consts.CPU_Registers.PC: read_word(0xFFFC),
-        Consts.CPU_Registers.SP: 0xFD,
-        Consts.CPU_Registers.P:  0x34
-    }
+	registers = {
+		Consts.CPU_Registers.A:  0x00,
+		Consts.CPU_Registers.X:  0x00,
+		Consts.CPU_Registers.Y:  0x00,
+		Consts.CPU_Registers.PC: read_word(0xFFFC),
+		Consts.CPU_Registers.SP: 0xFD,
+		Consts.CPU_Registers.P:  0x34
+	}
 
 
 func can_write_byte(address: int) -> bool:
-    return true
+	return true
 
 
 func read_byte(address: int, process_side_effects = true) -> int:
-    if address >= 0x0800 and address < 0x2000:
-        address &= 0x07FF
-    elif address >= 0x2008 and address < 0x4000:
-        address = 0x2000 + ((address - 0x2000) & 0x07)
+	if address >= 0x0800 and address < 0x2000:
+		address &= 0x07FF
+	elif address >= 0x2008 and address < 0x4000:
+		address = 0x2000 + ((address - 0x2000) & 0x07)
 
-    if not process_side_effects:
-        return memory_bytes[address]
-    
-    _process_pre_read_byte_side_effects(address)
-    var return_value = memory_bytes[address]
-    _process_read_byte_side_effects(address)
-    
-    return return_value
+	if not process_side_effects:
+		return memory_bytes[address]
+	
+	_process_pre_read_byte_side_effects(address)
+	var return_value = memory_bytes[address]
+	_process_read_byte_side_effects(address)
+	
+	return return_value
 
 
 func _process_pre_read_byte_side_effects(address: int):
-    if address == CONTROLLER_REGISTER:
-        controller_poll_event.emit(true, memory_bytes[address])
+	if address == CONTROLLER_REGISTER:
+		controller_poll_event.emit(true, memory_bytes[address])
 
 
 func _process_read_byte_side_effects(address: int):
-    if address >= PPU_REGISTERS and address < PPU_MIRROR:
-        ppu_register_touched.emit(address, memory_bytes[address], true)
+	if address >= PPU_REGISTERS and address < PPU_MIRROR:
+		ppu_register_touched.emit(address, memory_bytes[address], true)
 
-    if address == Consts.PPU_Registers.PPUSTATUS:
-        memory_bytes[address] &= 0x7F
+	if address == Consts.PPU_Registers.PPUSTATUS:
+		memory_bytes[address] &= 0x7F
 
 
 func _process_write_byte_side_effects(address: int):
-    if address >= PPU_REGISTERS and address < PPU_MIRROR:
-        ppu_register_touched.emit(address, memory_bytes[address], false)
-    
-    if address == CONTROLLER_REGISTER:
-        controller_poll_event.emit(false, memory_bytes[address])
+	if address >= PPU_REGISTERS and address < PPU_MIRROR:
+		ppu_register_touched.emit(address, memory_bytes[address], false)
+	
+	if address == CONTROLLER_REGISTER:
+		controller_poll_event.emit(false, memory_bytes[address])

@@ -20,27 +20,27 @@ var _page = 0
 
 
 func _ready():
-    NES.ticked.connect(on_ticked)
+	NES.ticked.connect(on_ticked)
 
 
 func on_ticked():
-    fps_label.text = "Frames/Second: %f" % NES.fps_avg
-    if weakref(NES._instruction_data).get_ref():
-        var bytes = Consts.BYTES_PER_MODE[NES._instruction_data.context.address_mode]
-        
-        last_command_label.text = "Last Command: %s %s(%s, %d Byte%s)" % [
-            NES._instruction_data.instruction,
-            (("$%02X" % NES._instruction_data.context.value) + " ") if NES._instruction_data.context.address_mode != Consts.AddressingModes.Implied else "",
-            Consts.AddressingModes.keys()[NES._instruction_data.context.address_mode],
-            bytes, "" if bytes == 1 else "s"
-        ]
-    
-    a_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.A]
-    x_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.X]
-    y_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.Y]
-    pc_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC]
-    sp_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.SP]
-    p_label.text = "0b%s" % Helpers.to_binary_string(NES.cpu_memory.registers[Consts.CPU_Registers.P])
-    cycles_label.text = str(NES.cycles)
-    scanline_label.text = str(NES.scanline)
-    frame_label.text = str(NES.frame)
+	fps_label.text = "Frames/Second: %f" % NES.fps_avg
+	if weakref(NES._instruction_data).get_ref():
+		var bytes = Consts.BYTES_PER_MODE[NES._instruction_data.context.address_mode]
+		
+		last_command_label.text = "Last Command: %s %s(%s, %d Byte%s)" % [
+			NES._instruction_data.instruction,
+			(("$%02X" % NES._instruction_data.context.value) + " ") if NES._instruction_data.context.address_mode != Consts.AddressingModes.Implied else "",
+			Consts.AddressingModes.keys()[NES._instruction_data.context.address_mode],
+			bytes, "" if bytes == 1 else "s"
+		]
+	
+	a_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.A]
+	x_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.X]
+	y_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.Y]
+	pc_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.PC]
+	sp_label.text = "0x%02X" % NES.cpu_memory.registers[Consts.CPU_Registers.SP]
+	p_label.text = "0b%s" % Helpers.to_binary_string(NES.cpu_memory.registers[Consts.CPU_Registers.P])
+	cycles_label.text = str(NES.cycles)
+	scanline_label.text = str(NES.scanline)
+	frame_label.text = str(NES.frame)

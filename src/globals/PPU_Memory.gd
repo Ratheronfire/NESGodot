@@ -17,62 +17,62 @@ var _buffered_ppudata_value = 0x0
 
 
 func init_registers() -> void:
-    registers = {
-        Consts.CPU_Registers.PPU_V: 0,
-        Consts.CPU_Registers.PPU_T: 0,
-        Consts.CPU_Registers.PPU_X: 0,
-        Consts.CPU_Registers.PPU_W: 0
-    }
+	registers = {
+		Consts.CPU_Registers.PPU_V: 0,
+		Consts.CPU_Registers.PPU_T: 0,
+		Consts.CPU_Registers.PPU_X: 0,
+		Consts.CPU_Registers.PPU_W: 0
+	}
 
 
 func on_ppu_register_touched(cpu_address: int, cpu_address_value: int, was_read: bool):
-    # Read PPUSTATUS: Clear W register
-    if cpu_address == Consts.PPU_Registers.PPUSTATUS and was_read:
-        registers[Consts.CPU_Registers.PPU_W] = 0
-    
-    # Read PPUDATA: Update buffer for next read
-    if was_read and cpu_address == Consts.PPU_Registers.PPUDATA:
-        NES.cpu_memory.memory_bytes[Consts.PPU_Registers.PPUDATA] = _buffered_ppudata_value
-        _buffered_ppudata_value = memory_bytes[registers[Consts.CPU_Registers.PPU_V]]
-    
-    # Write PPUSCROLL: Update x/y scroll data
-    if not was_read and cpu_address == Consts.PPU_Registers.PPUSCROLL:
-        # TODO: Update x/y scroll values
-        _flip_w_register()
-    
-    # Write PPUADDR: Update high or low byte of VRAM address
-    if not was_read and cpu_address == Consts.PPU_Registers.PPUADDR:
-        if registers[Consts.CPU_Registers.PPU_W] == 0:
-            registers[Consts.CPU_Registers.PPU_V] &= 0x00FF
-            registers[Consts.CPU_Registers.PPU_V] |= (cpu_address_value << 8)
-        else:
-            registers[Consts.CPU_Registers.PPU_V] &= 0xFF00
-            registers[Consts.CPU_Registers.PPU_V] |= cpu_address_value
+	# Read PPUSTATUS: Clear W register
+	if cpu_address == Consts.PPU_Registers.PPUSTATUS and was_read:
+		registers[Consts.CPU_Registers.PPU_W] = 0
+	
+	# Read PPUDATA: Update buffer for next read
+	if was_read and cpu_address == Consts.PPU_Registers.PPUDATA:
+		NES.cpu_memory.memory_bytes[Consts.PPU_Registers.PPUDATA] = _buffered_ppudata_value
+		_buffered_ppudata_value = memory_bytes[registers[Consts.CPU_Registers.PPU_V]]
+	
+	# Write PPUSCROLL: Update x/y scroll data
+	if not was_read and cpu_address == Consts.PPU_Registers.PPUSCROLL:
+		# TODO: Update x/y scroll values
+		_flip_w_register()
+	
+	# Write PPUADDR: Update high or low byte of VRAM address
+	if not was_read and cpu_address == Consts.PPU_Registers.PPUADDR:
+		if registers[Consts.CPU_Registers.PPU_W] == 0:
+			registers[Consts.CPU_Registers.PPU_V] &= 0x00FF
+			registers[Consts.CPU_Registers.PPU_V] |= (cpu_address_value << 8)
+		else:
+			registers[Consts.CPU_Registers.PPU_V] &= 0xFF00
+			registers[Consts.CPU_Registers.PPU_V] |= cpu_address_value
 
-        registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
-        _flip_w_register()
-    
-    # Write PPUDATA: Copy data to PPU memory
-    if not was_read and cpu_address == Consts.PPU_Registers.PPUDATA:
-        memory_bytes[registers[Consts.CPU_Registers.PPU_V]] = cpu_address_value
-        # print("Wrote 0x%02X to PPU at address $%02X." % [cpu_address_value, registers[Consts.CPU_Registers.PPU_V]])
-    
-    # If PPUDATA was accessed, increment by the value specified in PPUCTRL
-    if cpu_address == Consts.PPU_Registers.PPUDATA:
-        var vram_increment_flag = NES.cpu_memory.memory_bytes[Consts.PPU_Registers.PPUCTRL] & 0x0004
-        var vram_address_increment = 32 if vram_increment_flag > 0 else 1
+		registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
+		_flip_w_register()
+	
+	# Write PPUDATA: Copy data to PPU memory
+	if not was_read and cpu_address == Consts.PPU_Registers.PPUDATA:
+		memory_bytes[registers[Consts.CPU_Registers.PPU_V]] = cpu_address_value
+		# print("Wrote 0x%02X to PPU at address $%02X." % [cpu_address_value, registers[Consts.CPU_Registers.PPU_V]])
+	
+	# If PPUDATA was accessed, increment by the value specified in PPUCTRL
+	if cpu_address == Consts.PPU_Registers.PPUDATA:
+		var vram_increment_flag = NES.cpu_memory.memory_bytes[Consts.PPU_Registers.PPUCTRL] & 0x0004
+		var vram_address_increment = 32 if vram_increment_flag > 0 else 1
 
-        registers[Consts.CPU_Registers.PPU_V] += vram_address_increment
-        registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
+		registers[Consts.CPU_Registers.PPU_V] += vram_address_increment
+		registers[Consts.CPU_Registers.PPU_V] &= 0x3FFF
 
 
 func can_write_byte(address: int) -> bool:
-    return true
+	return true
 
 
 func _process_read_byte_side_effects(address: int):
-    pass
+	pass
 
 
 func _flip_w_register():
-    registers[Consts.CPU_Registers.PPU_W] = 1 if registers[Consts.CPU_Registers.PPU_W] == 0 else 0
+	registers[Consts.CPU_Registers.PPU_W] = 1 if registers[Consts.CPU_Registers.PPU_W] == 0 else 0
